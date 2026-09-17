@@ -106,6 +106,8 @@ test('首頁搜尋片段、放寬條件保留關鍵字、返回搜尋',async({pa
  await expect(page.getByLabel('搜尋問題',{exact:true})).toHaveValue('429');
  await expect(page.locator('#result-count')).toHaveText('找到 1 個問題');
  await expect(page.locator('#result-list mark').first()).toContainText('429');
+ // Returning to search must work before the detail page's external scripts load.
+ await page.route('**/_astro/*.js',route=>route.abort());
  const searchURL=page.url();await page.locator('#result-list h2 a').first().click();
  await page.locator('#back-to-search').click();await expect(page).toHaveURL(searchURL);
 });
@@ -123,4 +125,13 @@ test('手機首屏可看見第一題，複製按鈕靠近標題',async({page})=>
  await first.locator('h2 a').click();
  const gap=await page.evaluate(()=>document.querySelector('#copy-link')!.getBoundingClientRect().top-document.querySelector('.answer h1')!.getBoundingClientRect().bottom);
  expect(gap).toBeLessThan(150);
+});
+
+test('返回搜尋拒絕外站及非搜尋路徑',async({page,baseURL})=>{
+ await page.goto('./');
+ for(const value of ['https://example.org/','/unrelated/','javascript:alert(1)']){
+  await page.evaluate(value=>sessionStorage.setItem('qa-last-search',value),value);
+  await page.goto('questions/'+info.searchableIds[0]+'/');
+  expect(await page.locator('#back-to-search').evaluate((el:HTMLAnchorElement)=>el.href)).toBe(baseURL+'questions/');
+ }
 });

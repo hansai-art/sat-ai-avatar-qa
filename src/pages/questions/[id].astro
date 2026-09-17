@@ -19,6 +19,16 @@ const platforms:Record<string,string>={windows:'Windows',macos:'macOS',linux:'Li
 ---
 <BaseLayout title={d.title} description={d.summary} noindex={!indexed}>
   <nav class="breadcrumb" aria-label="所在位置"><a href={href('/questions/')} id="back-to-search">全部問題</a><span>/</span><span>{label('types',d.type)}</span></nav>
+  <script is:inline define:vars={{searchPaths:[href('/'),href('/questions/')]}}>
+    try {
+      const previous=new URL(sessionStorage.getItem('qa-last-search')||searchPaths[1],location.origin);
+      if(previous.origin===location.origin&&searchPaths.includes(previous.pathname)) {
+        const back=document.querySelector('#back-to-search');
+        back.href=previous.pathname+previous.search;
+        if(previous.search)back.textContent='返回搜尋結果';
+      }
+    }catch{}
+  </script>
   <div class="article-shell"><article class="answer" data-pagefind-body={indexed?true:undefined}>
     <p class="eyebrow">{q.id.toUpperCase()} <span aria-hidden="true">/</span> {label('types',d.type)}</p>
     <h1 data-pagefind-meta="title" data-pagefind-weight="5">{d.title}</h1>
@@ -45,12 +55,8 @@ const platforms:Record<string,string>={windows:'Windows',macos:'macOS',linux:'Li
   </article>
   <aside class="article-aside">{toc.length>1&&<nav aria-label="文章目錄"><p class="nav-label">這一頁的內容</p>{toc.map(h=><a href={`#${h.slug}`}>{h.text}</a>)}</nav>}<a class="outline-button" href="https://sat.cool/course/201">回到課程 ↗</a><p class="muted">搭配{d.chapterRefs.map(id=>label('chapters',id)).join('、')}閱讀</p></aside></div>
   {related.length>0&&<section><div class="section-heading"><h2>你可能也會遇到</h2></div><div class="featured-grid">{related.map(item=><QuestionCard question={item}/>)}</div></section>}
-  <div id="detail-config" data-base={import.meta.env.BASE_URL}></div>
 </BaseLayout>
 <script>
-  import {safeReturn} from '../../lib/paths.mjs';
-  const base=document.querySelector<HTMLElement>('#detail-config')!.dataset.base!;
-  try {const back=document.querySelector<HTMLAnchorElement>('#back-to-search')!;back.href=safeReturn(sessionStorage.getItem('qa-last-search')||'',location.origin,base);}catch{}
   document.querySelector('#copy-link')?.addEventListener('click',async()=>{
     const url=location.origin+location.pathname;
     const status=document.querySelector<HTMLElement>('#copy-status')!;

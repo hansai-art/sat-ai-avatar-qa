@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {withBase,normalizeBase,safeHttps,safeReturn} from '../src/lib/paths.mjs';
+import {withBase,normalizeBase,safeHttps} from '../src/lib/paths.mjs';
 import {parseState,serializeState,queryOptions} from '../src/lib/search-state.mjs';
 import {questionSchema,validateQuestions,visibleQuestions,publishedQuestions,isDate} from '../src/lib/schema.mjs';
 import safety from '../scripts/remark-safety.mjs';
@@ -15,12 +15,6 @@ test('base path 只加一次，拒絕越界及外部路徑',()=>{
 test('外連拒絕腳本、HTTP、登入憑證與 token',()=>{
  assert.equal(safeHttps('https://example.com/watch?t=20'),true);
  for(const url of ['javascript:alert(1)','http://example.com','https://a:b@example.com','https://example.com/?api_key=123'])assert.equal(safeHttps(url),false);
-});
-test('返回搜尋限制同來源及同一站內路徑',()=>{
- assert.equal(safeReturn('https://evil.test','https://example.com','/qa/'),'/qa/questions/');
- assert.equal(safeReturn('/qa/questions/?q=TG','https://example.com','/qa/'),'/qa/questions/?q=TG');
- assert.equal(safeReturn('/qa/?q=TG','https://example.com','/qa/'),'/qa/?q=TG');
- assert.equal(safeReturn('/?q=TG','https://example.com','/qa/'),'/qa/questions/');
 });
 test('搜尋 NFKC、200 字元上限、非法頁碼與重複參數',()=>{
  const {state}=parseState('q=　ＴＧ   429　&q=bad&chapter=nope&page=999999999&unknown=x',taxonomy);

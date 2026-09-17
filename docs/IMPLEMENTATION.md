@@ -45,3 +45,5 @@
 沿用 Astro 與 Pagefind，未新增套件。首頁改用共用 Listing，完整列出所有問題；第一章不分小節。新增 questionOrigin、askedBy 與公開名稱／來源驗證。搜尋依提問來源分組，保留組內關聯度或更新排序，顯示安全的命中片段。手機篩選收合、清除條件保留關鍵字、複製連結移至標題附近。
 
 Astro 的內容快取存於 node_modules/.astro；只清 .astro 無法更新匯入 schema 的預設值。build 改用官方 --force 選項，確保既有 Markdown 在 schema 更新後重新解析。
+
+公開瀏覽器測試發現快速返回會早於問題頁的外部 module 完成載入。返回連結改用緊鄰導覽的 inline script，先驗證同來源與允許的搜尋路徑，再從 sessionStorage 還原；不依賴網路載入後才更新連結。已加入阻擋外部 script 的回歸案例與惡意返回網址測試。
