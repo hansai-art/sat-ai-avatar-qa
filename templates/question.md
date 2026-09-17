@@ -11,6 +11,8 @@ errorMessages: []
 publication: "draft"
 answerStatus: "unverified"
 contentOrigin: "real"
+questionOrigin: "asked"
+askedBy: [] # 填入可公開名稱與原討論網址：[{name: "名稱", sourceUrl: "HTTPS 網址"}]
 createdAt: "YYYY-MM-DD"
 updatedAt: "YYYY-MM-DD"
 verifiedAt: null

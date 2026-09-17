@@ -25,5 +25,5 @@ export function relatedQuestions(q:Question,all:Question[]) {
   const score=(x:Question)=>x.data.toolRefs.filter(t=>q.data.toolRefs.includes(t)).length*2+x.data.chapterRefs.filter(c=>q.data.chapterRefs.includes(c)).length+Number(x.data.type===q.data.type);
   const explicit=q.data.related.map(id=>candidates.find(x=>x.id===id)).filter(Boolean) as Question[];
   const extra=candidates.filter(x=>!q.data.related.includes(x.id)&&score(x)>0).sort((a,b)=>score(b)-score(a)||b.data.updatedAt.localeCompare(a.data.updatedAt)||a.id.localeCompare(b.id));
-  return [...explicit,...extra].slice(0,4);
+  return [...explicit,...extra].sort((a,b)=>Number(a.data.questionOrigin==='anticipated')-Number(b.data.questionOrigin==='anticipated')).slice(0,4);
 }

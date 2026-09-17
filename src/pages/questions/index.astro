@@ -4,5 +4,5 @@ import Listing from '../../components/Listing.astro';
 import {getPublished,taxonomy,href} from '../../lib/content';
 const questions=await getPublished();
 ---
-<BaseLayout title="搜尋與全部問題" noindex><Listing questions={questions} title="搜尋與全部問題" description="用關鍵字搜尋，或縮小章節、工具與問題類型。" root="/questions/" dynamic/><div id="search-config" data-base={import.meta.env.BASE_URL} data-taxonomy={JSON.stringify(taxonomy)} data-total={questions.length}></div><p class="search-help">找不到需要的答案？<a href={href('/chapters/')}>按章節瀏覽</a>，或<a href="https://sat.cool/course/201/comment">回課程留言提問 ↗</a></p></BaseLayout>
+<BaseLayout title="搜尋與全部問題" noindex searchFirst><Listing questions={questions} title="搜尋與全部問題" description="用關鍵字搜尋，或縮小章節、工具與問題類型。" root="/questions/" dynamic showAll/><div id="search-config" data-root="/questions/" data-base={import.meta.env.BASE_URL} data-taxonomy={JSON.stringify(taxonomy)} data-total={questions.length}></div><p class="search-help">找不到需要的答案？<a href={href('/chapters/')}>按章節瀏覽</a>，或<a href="https://sat.cool/course/201/comment">回課程留言提問 ↗</a></p></BaseLayout>
 <script>import '../../scripts/search';</script>

@@ -3,11 +3,11 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {withBase,normalizeBase,safeHttps,safeReturn} from '../src/lib/paths.mjs';
 import {parseState,serializeState,queryOptions} from '../src/lib/search-state.mjs';
-import {questionSchema,validateQuestions,visibleQuestions,isDate} from '../src/lib/schema.mjs';
+import {questionSchema,validateQuestions,visibleQuestions,publishedQuestions,isDate} from '../src/lib/schema.mjs';
 import safety from '../scripts/remark-safety.mjs';
 const taxonomy=JSON.parse(fs.readFileSync('src/data/taxonomy.json','utf8'));
 const confirmed=()=>{const t=structuredClone(taxonomy);for(const c of t.chapters){c.confirmed=true;for(const l of c.lessons)l.confirmed=true;}return t;};
-const make=(override={})=>({id:'qa-000100',body:'## 如何處理\n這是測試正文，和摘要不同。',data:questionSchema.parse({title:'真實結構的測試問題',summary:'這是只用在測試的摘要，確認內容驗證可以拒絕錯誤。',chapterRefs:['ch01'],toolRefs:['hermes-agent'],type:'setup',createdAt:'2026-09-17',updatedAt:'2026-09-17',publication:'published',answerStatus:'verified',reviewedBy:'hans',verifiedAt:'2026-09-17',sources:[{kind:'instructor',title:'測試來源'}],...override})});
+const make=(override={})=>({id:'qa-000100',body:'## 如何處理\n這是測試正文，和摘要不同。',data:questionSchema.parse({title:'真實結構的測試問題',summary:'這是只用在測試的摘要，確認內容驗證可以拒絕錯誤。',chapterRefs:['ch01'],toolRefs:['hermes-agent'],type:'setup',createdAt:'2026-09-17',updatedAt:'2026-09-17',publication:'published',answerStatus:'verified',reviewedBy:'hans',askedBy:[{name:'僅供單元測試',sourceUrl:'https://example.org/discussion'}],verifiedAt:'2026-09-17',sources:[{kind:'instructor',title:'測試來源'}],...override})});
 test('base path 只加一次，拒絕越界及外部路徑',()=>{
  assert.equal(withBase('/questions/','/qa/'),'/qa/questions/');assert.equal(withBase('/qa/questions/','/qa/'),'/qa/questions/');assert.equal(normalizeBase('/'),'/');
  for(const p of ['//evil.test','/../secret','/%2e%2e/secret','https://evil.test'])assert.throws(()=>withBase(p,'/qa/'));
@@ -19,6 +19,8 @@ test('外連拒絕腳本、HTTP、登入憑證與 token',()=>{
 test('返回搜尋限制同來源及同一站內路徑',()=>{
  assert.equal(safeReturn('https://evil.test','https://example.com','/qa/'),'/qa/questions/');
  assert.equal(safeReturn('/qa/questions/?q=TG','https://example.com','/qa/'),'/qa/questions/?q=TG');
+ assert.equal(safeReturn('/qa/?q=TG','https://example.com','/qa/'),'/qa/?q=TG');
+ assert.equal(safeReturn('/?q=TG','https://example.com','/qa/'),'/qa/questions/');
 });
 test('搜尋 NFKC、200 字元上限、非法頁碼與重複參數',()=>{
  const {state}=parseState('q=　ＴＧ   429　&q=bad&chapter=nope&page=999999999&unknown=x',taxonomy);
@@ -27,7 +29,8 @@ test('搜尋 NFKC、200 字元上限、非法頁碼與重複參數',()=>{
  assert.equal(serializeState(state),'q=TG+429');
 });
 test('有效小節補上章節，衝突時保留章節',()=>{
- assert.equal(parseState('lesson=ch01-03',taxonomy).state.chapter,'ch01');
+ assert.equal(parseState('lesson=ch01-03',taxonomy).state.chapter,'ch01');assert.equal(parseState('lesson=ch01-03',taxonomy).state.lesson,'');
+ assert.equal(parseState('lesson=ch02-01',taxonomy).state.lesson,'ch02-01');
  assert.equal(parseState('chapter=ch02&lesson=ch01-03',taxonomy).state.lesson,'');
 });
 test('查詢參數只篩選合法值，關聯排序不被覆蓋',()=>{
@@ -46,6 +49,8 @@ test('正式內容需人工確認與來源，不能只改 published',()=>{
 });
 test('拒絕未核對課綱、未來日期、錯誤日期順序',()=>{
  assert.throws(()=>validateQuestions([make()],taxonomy,'production','2026-09-17'));
+ const t=confirmed();for(const l of t.chapters.find(c=>c.id==='ch01').lessons)l.confirmed=false;
+ assert.doesNotThrow(()=>validateQuestions([make()],t,'production','2026-09-17'));
  for(const change of [{updatedAt:'2026-09-18'},{updatedAt:'2026-09-16'}])assert.throws(()=>validateQuestions([make(change)],confirmed(),'production','2026-09-17'));
 });
 test('發布模式隔離草稿與示範資料',()=>{
@@ -65,4 +70,13 @@ test('Markdown 拒絕 HTML、危險連結、圖片越界與缺少替代文字',(
  const check=node=>safety()({type:'root',children:[node]},{path:process.cwd()+'/src/content/questions/qa-000001.md'});
  for(const node of [{type:'html',value:'<script>alert(1)</script>'},{type:'link',url:'javascript:alert(1)'},{type:'image',alt:'圖',url:'../../../../etc/passwd'},{type:'image',alt:'',url:'test.png'}])assert.throws(()=>check(node));
  assert.doesNotThrow(()=>check({type:'code',value:'<script>alert(1)</script>'}));
+});
+
+test('學員問題需有可追溯的署名，延伸問題不可偽裝提問',()=>{
+ const asked=make(),anticipated={...make({questionOrigin:'anticipated',askedBy:[]}),id:'qa-000101'};
+ assert.throws(()=>validateQuestions([make({askedBy:[]})],confirmed(),'production','2026-09-17'));
+ assert.throws(()=>validateQuestions([make({questionOrigin:'anticipated'})],confirmed(),'production','2026-09-17'));
+ assert.throws(()=>make({askedBy:[{name:'測試',sourceUrl:'javascript:alert(1)'}]}));
+ assert.doesNotThrow(()=>validateQuestions([asked,anticipated],confirmed(),'production','2026-09-17'));
+ assert.deepEqual(publishedQuestions([anticipated,asked]).map(q=>q.id),[asked.id,anticipated.id]);
 });

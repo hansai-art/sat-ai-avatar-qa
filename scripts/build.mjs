@@ -10,7 +10,8 @@ rmSync('dist',{recursive:true,force:true});
 // 同一個環境切換模式時必須重新套用資料過濾與路由。
 rmSync('.astro',{recursive:true,force:true});
 const astroPackage=JSON.parse(readFileSync('node_modules/astro/package.json','utf8'));
-const child=spawnSync(process.execPath,[path.join('node_modules/astro',astroPackage.bin.astro),'build'],{stdio:'inherit',env:process.env});
+// Imported schema defaults must also refresh unchanged Markdown in Astro's content cache.
+const child=spawnSync(process.execPath,[path.join('node_modules/astro',astroPackage.bin.astro),'build','--force'],{stdio:'inherit',env:process.env});
 if(child.status!==0)process.exit(child.status || 1);
 const info=JSON.parse(readFileSync('dist/build-info.json','utf8'));
 try {

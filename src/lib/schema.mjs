@@ -15,6 +15,8 @@ export const questionSchema = z.object({
   publication: z.enum(['draft','published','archived']).default('draft'),
   answerStatus: z.enum(['unverified','verified','needs-update']).default('unverified'),
   contentOrigin: z.enum(['real','demo']).default('real'),
+  questionOrigin: z.enum(['asked','anticipated']).default('asked'),
+  askedBy: z.array(z.object({name:text(1,80),sourceUrl:https}).strict()).max(20).default([]),
   createdAt: date, updatedAt: date, verifiedAt: date.nullable().default(null),
   reviewedBy: nullableText, reviewNote: nullableText, appliesTo: nullableText,
   featured: z.boolean().default(false), related: refs.max(4).default([]), supersededBy: nullableText,
@@ -44,7 +46,7 @@ export function validateQuestions(entries, taxonomy, mode, today=todayTaipei()) 
   }
   for(const chapter of taxonomy.chapters) {
     if(new Set(chapter.lessons.map(l=>l.order)).size!==chapter.lessons.length) fail(chapter.id,'小節 order 重複');
-    if(mode==='production' && (!chapter.confirmed || chapter.lessons.some(l=>!l.confirmed))) fail(chapter.id,'請先核對課綱並設定 confirmed=true');
+    if(mode==='production' && (!chapter.confirmed || chapter.id!=='ch01' && chapter.lessons.some(l=>!l.confirmed))) fail(chapter.id,'請先核對課綱並設定 confirmed=true');
   }
   for(const q of entries) {
     const d=q.data, id=q.id;
@@ -61,7 +63,9 @@ export function validateQuestions(entries, taxonomy, mode, today=todayTaipei()) 
     if(d.publication==='published') {
       if(d.answerStatus==='unverified' || !d.reviewedBy || !d.verifiedAt || !d.sources.length) fail(id,'已發布問答需要審核者、確認日與來源');
       if(!q.body?.trim() || q.body.trim()===d.summary) fail(id,'已發布問答需完整正文');
+      if(d.contentOrigin==='real' && d.questionOrigin==='asked' && !d.askedBy.length) fail(id,'學員已問的正式問題需提供可公開的提問者名稱與原討論網址');
     }
+    if(d.questionOrigin==='anticipated' && d.askedBy.length) fail(id,'延伸問題不可標記為學員提問');
     if(Buffer.byteLength(q.body || '')>200*1024) fail(id,'正文超過 200KiB');
     if((d.publication==='archived' || d.answerStatus==='needs-update') && !d.reviewNote) fail(id,'請填寫公開提醒');
     if(d.featured && (d.publication!=='published' || d.answerStatus!=='verified')) fail(id,'只有已發布且已確認的問答可精選');
@@ -76,4 +80,4 @@ export function validateQuestions(entries, taxonomy, mode, today=todayTaipei()) 
   return entries;
 }
 export function visibleQuestions(entries,mode) { return entries.filter(q=>q.data.contentOrigin===(mode==='demo'?'demo':'real') && q.data.publication!=='draft'); }
-export function publishedQuestions(entries) { return entries.filter(q=>q.data.publication==='published').sort((a,b)=>b.data.updatedAt.localeCompare(a.data.updatedAt)||a.id.localeCompare(b.id)); }
+export function publishedQuestions(entries) { return entries.filter(q=>q.data.publication==='published').sort((a,b)=>Number(a.data.questionOrigin==='anticipated')-Number(b.data.questionOrigin==='anticipated')||b.data.updatedAt.localeCompare(a.data.updatedAt)||a.id.localeCompare(b.id)); }

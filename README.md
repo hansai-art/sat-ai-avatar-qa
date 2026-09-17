@@ -10,8 +10,9 @@
 
 ## 已包含的功能
 
-- 中文與英文關鍵字、工具別名及錯誤碼搜尋。
-- 章節、小節、工具與問題類型交叉篩選，條件可由網址還原。
+- 首頁直接列出全部問題，搜尋支援中文與英文、工具別名、錯誤碼及命中片段。
+- 學員已問優先、延伸問題排後；正式學員問題標示提問者可公開名稱與原討論連結。
+- 章節、工具與問題類型交叉篩選，更多條件預設收合。第一章集中顯示，不分小節；其他章節保留小節篩選。條件可由網址還原，清除篩選保留關鍵字。
 - 第 1～9 章、跨章與通用入口。45 個小節標題取自「林思翰知識衛星課程回答」Skill 的 2026-09 教材快照，尚待核對最新課綱。
 - 單題永久網址、Markdown 正文、圖片、程式碼、表格、影片外連、來源、相關問題及複製連結。
 - 更新與人工確認日期、待更新提醒、封存與替代題。
@@ -54,7 +55,7 @@ npm run test:e2e
 3. 編輯 `src/content/questions/qa-xxxxxx.md`，參照 [資料規格](docs/SPEC.md)。檔名就是固定 ID，不因標題改動而更名。
 4. 圖片放在 `src/assets/questions/qa-xxxxxx/`，再從 Markdown 使用相對路徑引用，例如 `../../assets/questions/qa-xxxxxx/screen.png`。圖片要有 alt，每張小於 2MiB，發布前完成去識別化。
 5. `videos` 填安全 HTTPS 網址、標題與說明；不支援影片上傳或 iframe。
-6. 核對來源後填 `reviewedBy: hans` 與 `verifiedAt`，設定 `answerStatus: verified`、`publication: published`。`contentOrigin` 必須是 `real`。
+6. 學員已問設 `questionOrigin: asked`，填 `askedBy` 的可公開 `name` 與原討論 `sourceUrl`。推測問題設 `anticipated`、`askedBy: []`，需由實際問題延伸並另行核對答案。核對來源後填 `reviewedBy: hans` 與 `verifiedAt`，設定 `answerStatus: verified`、`publication: published`。`contentOrigin` 必須是 `real`。
 7. 更新 `updatedAt`。只有重新人工確認，才更新 `verifiedAt`。
 8. 執行品質檢查與正式建置，經分支／PR 合併。
 

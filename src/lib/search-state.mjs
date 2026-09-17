@@ -10,7 +10,7 @@ export function parseState(query,taxonomy) {
   const lesson=params.get('lesson');
   if(lesson) {
     const owner=taxonomy.chapters.find(c=>c.lessons.some(l=>l.id===lesson));
-    if(owner && (!state.chapter || owner.id===state.chapter)) {state.chapter=owner.id;state.lesson=lesson;} else notices.push('已清除無效的小節條件');
+    if(owner && (!state.chapter || owner.id===state.chapter)) {state.chapter=owner.id;state.lesson=owner.id==='ch01'?'':lesson;} else notices.push('已清除無效的小節條件');
   }
   return {state,notices:[...new Set(notices)]};
 }

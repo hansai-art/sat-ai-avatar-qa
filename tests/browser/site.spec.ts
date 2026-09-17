@@ -4,7 +4,9 @@ const info=JSON.parse(fs.readFileSync('dist/build-info.json','utf8'));
 test('首頁、章節與行動版沒有整頁溢出',async({page})=>{
  await page.goto('./');await expect(page.getByRole('heading',{name:'你遇到什麼問題？'})).toBeVisible();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBeTruthy();
- await page.locator('.chapter-tile').first().click();await expect(page.getByRole('heading',{name:'第 1 章',exact:true})).toBeVisible();
+ await expect(page.locator('#static-results .question-card')).toHaveCount(info.searchableIds.length);
+ await page.locator('#static-results .tag').first().click();await expect(page.getByRole('heading',{name:'第 1 章',exact:true})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'本章小節'})).toHaveCount(0);
 });
 test('搜尋、篩選交集與 URL 還原',async({page})=>{
  test.skip(info.mode!=='demo','此案例使用合成示範題');
@@ -40,8 +42,8 @@ test('不執行搜尋字串中的 HTML',async({page})=>{
  await expect(page.locator('#live-results')).toHaveAttribute('aria-busy','false');
  await expect(page.locator('#live-results img')).toHaveCount(0);expect(dialogOpened).toBe(false);
 });
-test('停用 JavaScript 仍可讀取問題與分頁',async({browser,baseURL})=>{
- const context=await browser.newContext({javaScriptEnabled:false});const page=await context.newPage();await page.goto(baseURL+'questions/');await expect(page.locator('#static-results .question-card').first()).toBeVisible();await page.locator('#static-results h2 a').first().click();await expect(page.locator('.answer h1')).toBeVisible();await context.close();
+test('停用 JavaScript 仍可讀取完整列表與問題',async({browser,baseURL})=>{
+ const context=await browser.newContext({javaScriptEnabled:false});const page=await context.newPage();await page.goto(baseURL!);await expect(page.locator('#static-results .question-card')).toHaveCount(info.searchableIds.length);await page.locator('#static-results h2 a').first().click();await expect(page.locator('.answer h1')).toBeVisible();await context.close();
 });
 test('公開示範提示、固定網址與部署版本',async({page,request,baseURL})=>{
  test.skip(info.mode!=='demo','此案例驗證示範部署');
@@ -56,17 +58,18 @@ test('公開示範提示、固定網址與部署版本',async({page,request,base
   expect(await (await request.get(baseURL+'sitemap.xml')).text()).not.toContain('<loc>');
  }
 });
-test('TG 別名及工具、小節、類型交叉篩選',async({page})=>{
+test('TG 別名及章節、工具、類型交叉篩選',async({page})=>{
  test.skip(info.mode!=='demo','此案例使用合成示範題');
  await page.goto('questions/?q=TG');await expect(page.locator('#result-count')).toHaveText('找到 1 個問題');
  await page.getByLabel('搜尋問題',{exact:true}).fill('');
  await page.getByLabel('課程章節',{exact:true}).selectOption('ch01');
+ await page.locator('.filter-panel summary').click();
  await page.getByLabel('使用工具',{exact:true}).selectOption('hermes-agent');
  await page.getByLabel('問題類型',{exact:true}).selectOption('setup');
- await page.getByLabel('課程小節',{exact:true}).selectOption('ch01-03');
+ await expect(page.getByLabel('課程小節',{exact:true})).toBeHidden();
  await expect(page.locator('#result-list')).toContainText('安裝問題應該附上哪些資訊');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
- await page.reload();await expect(page.getByLabel('課程小節',{exact:true})).toHaveValue('ch01-03');
+ await page.reload();await expect(page.getByLabel('課程章節',{exact:true})).toHaveValue('ch01');await expect(page.locator('#filter-summary')).toContainText('Hermes');
 });
 test('單題直接載入、圖片原尺寸與複製連結',async({page,context,baseURL})=>{
  test.skip(info.mode!=='demo','此案例使用合成媒體');
@@ -94,4 +97,30 @@ test('草稿與不存在的頁面回傳 404 並保留入口',async({page})=>{
   await expect(page.getByRole('heading',{name:'這個頁面不存在'})).toBeVisible();
   await expect(page.getByRole('link',{name:'搜尋問題',exact:true})).toBeVisible();
  }
+});
+
+test('首頁搜尋片段、放寬條件保留關鍵字、返回搜尋',async({page})=>{
+ test.skip(info.mode!=='demo','此案例使用合成示範題');
+ await page.goto('./?q=429&chapter=ch02');
+ await page.getByRole('button',{name:'清除篩選，保留關鍵字'}).click();
+ await expect(page.getByLabel('搜尋問題',{exact:true})).toHaveValue('429');
+ await expect(page.locator('#result-count')).toHaveText('找到 1 個問題');
+ await expect(page.locator('#result-list mark').first()).toContainText('429');
+ const searchURL=page.url();await page.locator('#result-list h2 a').first().click();
+ await page.locator('#back-to-search').click();await expect(page).toHaveURL(searchURL);
+});
+test('完整列表與搜尋結果皆將延伸問題排後，第一章舊小節網址合併',async({page})=>{
+ test.skip(info.mode!=='demo','此案例使用合成示範題');
+ await page.goto('./');await expect(page.locator('#static-results .question-card').last()).toHaveAttribute('data-question-id','qa-900015');
+ await expect(page.locator('#static-results .question-card').last()).toContainText('示範 · 延伸問題');
+ await page.goto('./?sort=updated&page=2');await expect(page.locator('#result-list .question-card').last()).toHaveAttribute('data-question-id','qa-900015');
+ await page.goto('./?lesson=ch01-03');await expect(page.getByLabel('課程章節',{exact:true})).toHaveValue('ch01');
+ await expect(page).not.toHaveURL(/lesson=/);await expect(page.locator('#result-list .question-card')).toHaveCount(3);
+});
+test('手機首屏可看見第一題，複製按鈕靠近標題',async({page})=>{
+ await page.goto('./');const first=page.locator('#static-results .question-card').first();
+ expect(await first.evaluate(el=>el.getBoundingClientRect().top)).toBeLessThan(600);
+ await first.locator('h2 a').click();
+ const gap=await page.evaluate(()=>document.querySelector('#copy-link')!.getBoundingClientRect().top-document.querySelector('.answer h1')!.getBoundingClientRect().bottom);
+ expect(gap).toBeLessThan(150);
 });

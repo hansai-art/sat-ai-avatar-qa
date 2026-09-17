@@ -8,10 +8,13 @@ const q=Astro.props.question as Question,d=q.data;
 const {Content,headings}=await render(q);
 const all=await getQuestions();
 const related=relatedQuestions(q,all);
-const lessons=taxonomy.chapters.flatMap(c=>c.lessons).filter(l=>d.lessonRefs.includes(l.id));
+const lessons=taxonomy.chapters.filter(c=>c.id!=='ch01').flatMap(c=>c.lessons).filter(l=>d.lessonRefs.includes(l.id));
 const aliases=taxonomy.tools.filter(t=>d.toolRefs.includes(t.id)).flatMap(t=>t.aliases);
 const toc=headings.filter(h=>h.depth===2);
 const indexed=d.publication==='published';
+const sourceLabels:Record<string,string>={official:'官方文件',instructor:'講師說明',course:'課程資料',community:'社群討論',other:'補充資料'};
+const sourceOrder=['official','instructor','course','community','other'];
+const sources=[...d.sources].sort((a,b)=>sourceOrder.indexOf(a.kind)-sourceOrder.indexOf(b.kind));
 const platforms:Record<string,string>={windows:'Windows',macos:'macOS',linux:'Linux',ios:'iOS',android:'Android',web:'網頁'};
 ---
 <BaseLayout title={d.title} description={d.summary} noindex={!indexed}>
@@ -19,6 +22,8 @@ const platforms:Record<string,string>={windows:'Windows',macos:'macOS',linux:'Li
   <div class="article-shell"><article class="answer" data-pagefind-body={indexed?true:undefined}>
     <p class="eyebrow">{q.id.toUpperCase()} <span aria-hidden="true">/</span> {label('types',d.type)}</p>
     <h1 data-pagefind-meta="title" data-pagefind-weight="5">{d.title}</h1>
+    <div class="question-provenance" data-pagefind-ignore><span class:list={['origin-badge',{anticipated:d.questionOrigin==='anticipated'}]}>{buildMode==='demo'?'示範 · ':''}{d.questionOrigin==='anticipated'?'延伸問題':'學員已問'}</span>{d.askedBy.length>0&&<p class="asker">提問：{d.askedBy.map((person,index)=><>{index>0?'、':''}<a href={person.sourceUrl} target="_blank" rel="noopener noreferrer">{person.name} · 原討論 ↗</a></>)}</p>}{d.questionOrigin==='anticipated'&&<p class="muted">由既有問題延伸整理，尚未收到學員提問。</p>}</div>
+  <div class="article-actions" data-pagefind-ignore><button type="button" class="outline-button" id="copy-link">複製這題連結</button><span id="copy-status" role="status"></span><input id="copy-fallback" readonly aria-label="可手動複製的問題網址" hidden/></div>
     {d.publication==='archived'&&<aside class="notice warning" data-pagefind-ignore><strong>這題已封存</strong><p>{d.reviewNote}</p>{d.supersededBy&&<a href={href(`/questions/${d.supersededBy}/`)}>閱讀更新後的答案 →</a>}</aside>}
     {d.answerStatus==='needs-update'&&<aside class="notice warning"><strong>這份答案待更新</strong><p>{d.reviewNote}</p></aside>}
     <div class="short-answer"><span class="short-answer-label">{buildMode==='demo'?'簡答版型示範':'先看答案'}</span><p data-pagefind-meta="summary" data-pagefind-weight="3">{d.summary}</p></div>
@@ -33,12 +38,12 @@ const platforms:Record<string,string>={windows:'Windows',macos:'macOS',linux:'Li
     <div class="prose"><Content/></div>
     {d.errorMessages.length>0&&<section class="error-text"><h2>錯誤訊息原文</h2>{d.errorMessages.map(error=><pre data-pagefind-weight="3"><code>{error}</code></pre>)}</section>}
     {d.videos.length>0&&<section class="video-section"><h2>影片補充</h2>{d.videos.map(v=><a class="video-card" href={v.url} target="_blank" rel="noopener noreferrer"><span class="play-icon" aria-hidden="true">▶</span><div><h3>{v.title}</h3><p>{v.description}</p>{v.timestampLabel&&<small>{v.timestampLabel}</small>}</div><span aria-hidden="true">↗</span></a>)}</section>}
-    <section class="sources"><h2>資料來源</h2><ul>{d.sources.map(s=><li>{s.url?<a href={s.url} target="_blank" rel="noopener noreferrer">{s.title} ↗</a>:<span>{s.title}</span>}{s.checkedAt&&<span class="muted"> · 核對於 {s.checkedAt}</span>}{s.note&&<p>{s.note}</p>}</li>)}</ul></section>
+    <section class="sources"><h2>參考資料與相關討論</h2><ul>{sources.map(s=><li><span class="source-kind">{sourceLabels[s.kind]}</span>{s.url?<a href={s.url} target="_blank" rel="noopener noreferrer">{s.title} ↗</a>:<span>{s.title}</span>}{s.checkedAt&&<span class="muted"> · 核對於 {s.checkedAt}</span>}{s.note&&<p>{s.note}</p>}</li>)}</ul></section>
     {(d.keywords.length>0||aliases.length>0)&&<details class="search-terms"><summary>相關搜尋用語</summary><p data-pagefind-weight="2">{[...new Set([...d.keywords,...aliases])].join('、')}</p></details>}
+    <span hidden data-pagefind-filter={`origin:${d.questionOrigin}`} data-pagefind-meta={`questionOrigin:${d.questionOrigin}`}></span><span hidden data-pagefind-meta={`askedBy:${d.askedBy.map(p=>p.name).join('、')}`}></span><span hidden data-pagefind-meta={`contentOrigin:${d.contentOrigin}`}></span>
     <span hidden data-pagefind-meta={`qaId:${q.id}`}></span><span hidden data-pagefind-meta={`updatedAt:${d.updatedAt}`} data-pagefind-sort={`updated:${d.updatedAt}`}></span><span hidden data-pagefind-meta={`answerStatus:${d.answerStatus}`}></span><span hidden data-pagefind-meta={`chapters:${d.chapterRefs.join(',')}`}></span><span hidden data-pagefind-meta={`tools:${d.toolRefs.join(',')}`}></span><span hidden data-pagefind-meta={`type:${d.type}`}></span>
   </article>
   <aside class="article-aside">{toc.length>1&&<nav aria-label="文章目錄"><p class="nav-label">這一頁的內容</p>{toc.map(h=><a href={`#${h.slug}`}>{h.text}</a>)}</nav>}<a class="outline-button" href="https://sat.cool/course/201">回到課程 ↗</a><p class="muted">搭配{d.chapterRefs.map(id=>label('chapters',id)).join('、')}閱讀</p></aside></div>
-  <div class="article-actions"><button type="button" class="outline-button" id="copy-link">複製這題連結</button><span id="copy-status" role="status"></span><input id="copy-fallback" readonly aria-label="可手動複製的問題網址" hidden/></div>
   {related.length>0&&<section><div class="section-heading"><h2>你可能也會遇到</h2></div><div class="featured-grid">{related.map(item=><QuestionCard question={item}/>)}</div></section>}
   <div id="detail-config" data-base={import.meta.env.BASE_URL}></div>
 </BaseLayout>

@@ -16,6 +16,6 @@ export function safeHttps(value) {
 export function safeReturn(value, origin, base) {
   try {
     const url = new URL(value, origin);
-    return url.origin === origin && url.pathname === withBase('/questions/', base) ? url.pathname + url.search : withBase('/questions/', base);
+    return url.origin === origin && [withBase('/', base),withBase('/questions/', base)].includes(url.pathname) ? url.pathname + url.search : withBase('/questions/', base);
   } catch { return withBase('/questions/', base); }
 }

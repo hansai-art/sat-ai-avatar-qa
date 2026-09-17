@@ -112,6 +112,8 @@ flowchart TD
 | publication | enum，預設 draft | draft、published、archived |
 | answerStatus | enum，預設 unverified | unverified、verified、needs-update |
 | contentOrigin | enum，預設 real | real、demo；demo 必須可見標示 |
+| questionOrigin | enum，預設 asked | asked 為學員已問；anticipated 為延伸問題，列表與搜尋排後 |
+| askedBy | array，預設 [] | 每項 name 為可公開名稱、sourceUrl 為安全 HTTPS 原討論網址；real＋published＋asked 必填，anticipated 必須為空 |
 | createdAt | YYYY-MM-DD，必填 | 初次建立日，Asia/Taipei |
 | updatedAt | YYYY-MM-DD，必填 | 實質內容更新日，不因部署自動刷新 |
 | verifiedAt | YYYY-MM-DD 或 null | 最近一次人工確認日；不能自動產生 |
@@ -158,7 +160,7 @@ draft 只代表不產生網站頁面，不提供隱私保護。公開 repository
 - checkedAt：選填，YYYY-MM-DD；表示實際核對日。
 - note：選填，簡短公開說明。
 
-來源可以是「講師審核的課程問答整理」，不強迫為私人對話製造公開網址。未具公開連結的來源仍需經指定編輯者審核。任何內部來源 ID、完整對話備份、原提問者資料另留在非公開工作區，不放公開 frontmatter。
+來源可以是「講師審核的課程問答整理」，不強迫為私人對話製造公開網址。未具公開連結的來源仍需經指定編輯者審核。內部來源 ID 與完整對話備份留在非公開工作區。依 Hans 最新要求，可公開的提問者名稱與原討論網址放入 askedBy，其他個資不公開。
 
 source 種類代表資料來處，不等於正確性保證。引用官方文件時，正文要說明它支持哪個判斷，不能只貼網站首頁。
 
@@ -224,7 +226,7 @@ taxonomy.json 包含四類資料及編輯者顯示資訊：
 
 此為節錄格式示例。實作已包含 ch01～ch09、general、六個問題類型及 45 個小節標題。小節取自 Hans 指定的「林思翰知識衛星課程回答」Skill 教材快照，非即時平台課綱；confirmed 仍為 false，待正式內容進站前核對。general 是通用分類，不偽裝成第十章。
 
-每個 lesson 含 id、order、title、confirmed、url（選填），例如 ch01-05。可先依有來源的教材快照建立小節；只有正式課綱已核對後，才設 confirmed=true。章名可改，ID 穩定。production 模式要求正式章節與存在的小節均 confirmed=true；空章仍可存在。
+每個 lesson 含 id、order、title、confirmed、url（選填），例如 ch01-05。可先依有來源的教材快照建立小節；只有正式課綱已核對後，才設 confirmed=true。章名可改，ID 穩定。production 模式要求正式章節 confirmed=true；第二章以後存在的小節也需 confirmed=true。第一章舊小節只保留歷史資料，不影響查詢或正式發布；空章仍可存在。
 
 分類驗證：ID 唯一、order 不重複、lesson 只歸屬單一章、別名不得指向多個不同工具、contributors ID 可解析。平台清單用程式固定 enum，不增加第五份分類檔案。
 
@@ -247,7 +249,7 @@ BUILD_MODE 只允許 demo 或 production，預設 production。
 | /questions/ | 全部問題與搜尋；靜態頁加搜尋增強 |
 | /questions/qa-000001/ | 單題，從非 draft 的可發布資料生成 |
 | /chapters/ | 全部章節總覽 |
-| /chapters/ch01/ | 該章問題與小節入口 |
+| /chapters/ch01/ | 第一章全部問題，不提供小節入口 |
 | /tools/ | 有內容的工具總覽 |
 | /tools/hermes-agent/ | 工具問題清單 |
 | /types/troubleshooting/ | 問題類型清單 |
@@ -255,9 +257,9 @@ BUILD_MODE 只允許 demo 或 production，預設 production。
 | /404.html | Cloudflare Pages 靜態 404 文件 |
 | /sitemap.xml | 正式可索引頁面清單 |
 
-分類頁與全部問題頁須先輸出可閱讀的靜態列表；數量多時採一般連結分頁，預定 /questions/page/2/、/chapters/ch01/page/2/ 等。每頁 12 筆，避免一頁輸出 1,000 張卡片。
+首頁、全部問題頁與第一章直接輸出完整靜態列表，使用精簡卡片避免重複摘要。其他分類頁與動態搜尋結果每頁 12 筆。保留既有 /questions/page/2/ 等網址相容性。
 
-只有 /questions/ 啟用動態搜尋結果控制器，互動狀態統一使用該路徑的 query state。其他分類頁與靜態分頁使用一般 GET 搜尋表單，帶初始 chapter／tool／type 導向 /questions/。V1 不另建每一組篩選組合的靜態頁，也不依賴 SPA history fallback。
+首頁 / 與 /questions/ 共用動態搜尋控制器，query state 保持在使用者進入的路徑。其他分類頁與靜態分頁使用一般 GET 搜尋表單，帶初始 chapter／tool／type 導向 /questions/。V1 不另建每一組篩選組合的靜態頁，也不依賴 SPA history fallback。
 
 ### 4.1 base path 契約
 
@@ -277,13 +279,13 @@ Astro config：
 
 ### 5.1 首頁
 
-順序：產品名稱與一句用途 → 搜尋 → 第 1～9 章／通用入口 → 最多 6 題精選 → 最多 6 題最近更新。
+順序：標題與一句用途 → 搜尋 → 章節篩選與收合的更多篩選 → 完整問題列表。
 
-- 精選取 published＋verified＋featured，按 updatedAt 倒序；不足不填假題。
-- 最近更新取 published，含 needs-update 但顯示標記。
-- 全站題數以 canonical ID 去重計算；跨章題不重複計入總數。
-- 各章題數可重複涵蓋同一題，因此各章數字加總不保證等於總題數。
-- 零題章節可開啟，顯示「本章尚無整理問答」及全部問題入口。
+- 列表不再拆成精選與最近更新，不重複顯示同一題。
+- 學員已問優先，延伸問題排後；各組依 updatedAt 倒序、ID 排序。
+- 全部列表省略重複摘要，搜尋結果改顯示命中片段。
+- 姓名與原討論只使用已核對、可公開的資料；demo 不填真實學員姓名。
+- 各章題數可以重複涵蓋跨章題，總題數仍以 ID 去重。
 
 ### 5.2 問題卡片
 
@@ -294,14 +296,14 @@ Astro config：
 ### 5.3 問題頁
 
 顯示順序：
-1. 導覽路徑與標題。
+1. 導覽路徑、標題、問題來源、提問者與複製連結。
 2. 已封存／待更新提醒（如有）。
 3. 簡短答案 summary。
 4. 工具、章節、小節、類型、適用系統與版本。
 5. 最近內容更新日及最後人工確認日。
 6. Markdown 正文、圖片與必要程式碼。
 7. 影片連結、來源。
-8. 相關問題、複製連結、回到查找入口。
+8. 相關問題與回到查找入口。
 
 正文建議使用「如何處理」「為什麼」「還是不行時」等符合題目的小標；不強制所有文章使用相同段落。頁面已有 H1，正文從 H2 開始。兩個以上 H2 才顯示簡單文章目錄，避免短題增加空架構。
 
@@ -365,7 +367,7 @@ URL 參數：
 | sort | relevance 或 updated |
 | page | 整數 ≥1，預設 1 |
 
-未知參數忽略；未知分類值清除並以不阻擋操作的文字提示。lesson 有效且未指定 chapter 時，自動補其章節；兩者衝突時清除 lesson，保留 chapter。重複參數只取第一個，解析後序列化成唯一狀態。
+未知參數忽略；未知分類值清除並以不阻擋操作的文字提示。第一章舊 lesson 參數轉成 chapter=ch01，不再限縮小節。其他 lesson 有效且未指定 chapter 時，自動補其章節；兩者衝突時清除 lesson，保留 chapter。重複參數只取第一個，解析後序列化成唯一狀態。
 
 只輸入空白視為空搜尋；保留原文供使用者看見，正規化字串僅用於查詢。英文大小寫不作不同工具；繁簡轉換、任意拼字容錯及通用語意搜尋不在 V1 的保證範圍。
 
@@ -380,7 +382,7 @@ URL 參數：
 5. chapter、lesson、tool、type 之間取 AND；各篩選器 V1 都是單選。
 6. 有 q 的預設為 relevance，不傳 sort override；無 q 預設 updated 倒序。
 7. 使用者選 updated 時傳 updated:desc，承認此排序會取代相關性排名。
-8. Pagefind 回傳所有命中的 result reference，但只載入目前頁的 12 筆詳情。
+8. 依 origin=asked 與 anticipated 分別查詢 Pagefind，先合併學員已問的 result reference，再合併延伸問題；只載入目前頁的 12 筆詳情。命中片段只重建純文字與 mark 標記，不插入任意 HTML。
 9. 每次條件或頁碼變更遞增 request sequence；只有最後一次請求可更新畫面，避免較慢的舊搜尋覆蓋新結果。
 10. 結果減少造成 page 超出範圍時，回到最後一個有效頁；條件變更則直接第 1 頁。零結果不顯示空分頁。
 
@@ -392,7 +394,7 @@ URL 參數：
 - 明確提交、篩選與分頁可 pushState；相同正規化狀態不重複新增。
 - popstate 重新解析 URL 並恢復畫面；重新整理也能重建相同條件。
 - 搜尋結果仍用一般 a 連結導向問題頁，保留瀏覽器原生返回。
-- 問題頁的「返回搜尋」可使用本分頁 sessionStorage 中最後一個站內搜尋 URL；只接受同 origin、同 base、/questions/ 路徑。無有效記錄就回全部問題。
+- 問題頁的「返回搜尋」可使用本分頁 sessionStorage 中最後一個站內搜尋 URL；只接受同 origin、同 base 的首頁或 /questions/ 路徑。無有效記錄就回全部問題。
 - 不接受任意 returnUrl 造成外部跳轉，也不把使用者查詢放進公開內容正本。
 
 ### 6.5 結果數、狀態與失敗
@@ -400,7 +402,7 @@ URL 參數：
 必須區分 initial、loading、success、empty、error：
 - loading：顯示正在搜尋；結果區 aria-busy，不移動焦點。
 - success：顯示當前交集後的總結果數。
-- empty：顯示查詢文字、清除篩選及改用工具／錯誤碼的建議。
+- empty：顯示查詢文字、清除篩選但保留關鍵字、查看全部問題及改用工具／錯誤碼的建議。
 - error：顯示「搜尋暫時無法載入」，可重試；提供靜態章節入口。
 - 分類總覽的數量為該分類全部 published 題數，不假裝是當前交叉條件的即時數量。
 - 不必在每個 filter option 顯示動態數量，以減少複雜度。
@@ -592,7 +594,7 @@ GitHub 的版本歷史可恢復程式與已提交內容；圖片若沒有提交�
 
 | 測例 | 對應 PRD | 操作／輸入 | 預期結果 |
 |---|---|---|---|
-| T-01 | FR-01 | 首頁放跨章題、精選題、零題章 | 總數去重、章節數正確、不顯示假熱門 |
+| T-01 | FR-01 | 首頁完整列表、學員與延伸問題 | 題目去重、學員優先、延伸排後 |
 | T-02 | FR-02 | 20 組標註 query，含繁中、英文、429、錯誤片段 | 至少 18 組預期答案在前 5；精確標題／主錯誤碼全數達標 |
 | T-03 | FR-02 | TG／Telegram、愛馬仕／Hermes 別名 | 相關題能命中，不要求結果排序完全相同 |
 | T-04 | FR-03 | 章節＋工具＋類型的有交集／無交集資料 | 只顯示交集、零結果數正確 |
