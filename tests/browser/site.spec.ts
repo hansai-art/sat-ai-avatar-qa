@@ -30,7 +30,7 @@ test('索引載入失敗有重試與章節入口',async({page})=>{
 });
 test('問題頁圖片與影片外連',async({page})=>{
  test.skip(info.mode!=='demo','此案例使用合成媒體');
- await page.goto('questions/qa-900001/');const img=page.locator('.prose img');await expect(img).toBeVisible();expect(await img.evaluate((el:HTMLImageElement)=>el.naturalWidth)).toBeGreaterThan(0);
+ await page.goto('questions/qa-900001/');const img=page.locator('.prose img');await img.scrollIntoViewIfNeeded();await expect.poll(()=>img.evaluate((el:HTMLImageElement)=>el.naturalWidth)).toBeGreaterThan(0);
  await page.goto('questions/qa-900010/');await expect(page.locator('.video-card')).toHaveAttribute('rel','noopener noreferrer');
 });
 test('不執行搜尋字串中的 HTML',async({page})=>{
