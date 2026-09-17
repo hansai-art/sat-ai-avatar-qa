@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {todayTaipei} from '../src/lib/schema.mjs';
+const dir='src/content/questions';
+const ids=fs.readdirSync(dir).filter(n=>/^qa-\d{6}\.md$/.test(n)).map(n=>Number(n.slice(3,9)));
+const id='qa-'+String(Math.max(0,...ids)+1).padStart(6,'0');
+const file=path.join(dir,id+'.md');
+if(!/^qa-\d{6}$/.test(id))throw new Error('ID 已超出範圍');
+const template=fs.readFileSync('templates/question.md','utf8').replaceAll('YYYY-MM-DD',todayTaipei());
+fs.writeFileSync(file,template,{flag:'wx'});
+fs.mkdirSync(path.join('src/assets/questions',id),{recursive:true});
+console.log(`已建立 ${file}（草稿）。圖片放 src/assets/questions/${id}/。`);

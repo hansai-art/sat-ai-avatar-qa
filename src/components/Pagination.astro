@@ -1,0 +1,7 @@
+---
+import {href} from '../lib/content';
+interface Props {page:number;total:number;root:string;}
+const {page,total,root}=Astro.props;
+const link=(n:number)=>href(n===1?root:`${root}page/${n}/`);
+---
+{total>1&&<nav class="pagination" aria-label="問題分頁">{page>1?<a href={link(page-1)}>上一頁</a>:<span></span>}<span>第 {page} / {total} 頁</span>{page<total?<a href={link(page+1)}>下一頁</a>:<span></span>}</nav>}

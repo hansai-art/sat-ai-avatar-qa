@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SearchForm from '../components/SearchForm.astro';
+import QuestionCard from '../components/QuestionCard.astro';
+import {getPublished,taxonomy,href,buildMode} from '../lib/content';
+const questions=await getPublished();
+const featured=questions.filter(q=>q.data.featured).slice(0,6);
+---
+<BaseLayout title="問答首頁">
+  <section class="home-search"><div class="eyebrow">AI 分身 <span aria-hidden="true">/</span> 學習支援</div><h1>你遇到什麼問題？</h1><p class="lead">從課程章節、使用工具，找到已整理的解答。</p><SearchForm/><div class="quick-topics"><span>快速查找</span>{taxonomy.tools.slice(0,3).map(t=><a href={href(`/tools/${t.id}/`)}>{t.name}</a>)}<a href={href('/types/setup/')}>安裝與設定</a></div></section>
+  <section class="chapter-section"><div class="section-heading"><h2>跟著課程找答案</h2><a href={href('/chapters/')}>全部章節 <span aria-hidden="true">↗</span></a></div><div class="chapter-grid">{taxonomy.chapters.filter(c=>c.id!=='general').map(c=><a class="chapter-tile" href={href(`/chapters/${c.id}/`)}><span class="tile-number">{String(c.order).padStart(2,'0')}</span><div><h3>{c.title}</h3><p>{questions.filter(q=>q.data.chapterRefs.includes(c.id)).length} 個{buildMode==='demo'?'示範':''}問題</p></div><span class="tile-arrow" aria-hidden="true">↗</span></a>)}</div><a class="general-link" href={href('/chapters/general/')}>跨章與通用問題 →</a></section>
+  {featured.length>0&&<section><div class="section-heading"><h2>{buildMode==='demo'?'精選版型示範':'精選問答'}</h2><span class="muted">按編輯選題整理</span></div><div class="featured-grid">{featured.map(q=><QuestionCard question={q}/>)}</div></section>}
+  <section><div class="section-heading"><h2>最近更新</h2><a href={href('/questions/')}>查看全部 {questions.length} 題 ↗</a></div><div class="question-list">{questions.slice(0,6).map(q=><QuestionCard question={q}/>)}</div></section>
+</BaseLayout>

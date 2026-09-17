@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import {buildMode} from '../lib/content';
+---
+<BaseLayout title="使用與更新說明"><div class="page-heading"><p class="eyebrow">ABOUT THIS LIBRARY</p><h1>讓解答可以再被找到</h1><p class="lead">整理知識衛星 AI 分身課程的常見問題，提供可分享、可查找的答案。</p></div><div class="prose about-copy">
+{buildMode==='demo'&&<aside class="notice warning"><strong>目前是網站架構預覽</strong><p>題目、答案與媒體範例皆為版型測試。正式問答、圖片與影片由 Hans 提供後，再經整理發布。</p></aside>}
+<h2>怎麼找答案</h2><p>可以搜尋工具名稱、錯誤訊息或遇到的狀況，也可以依課程章節、工具和問題類型縮小範圍。同一題可能屬於多個章節，但只保留一份答案。</p>
+<h2>答案有適用條件</h2><p>每題會列出內容更新時間、人工確認日期與資料來源。工具版本改變時，舊做法可能不再適用；看到「待更新」提醒，先確認題目提到的版本與前提。</p>
+<h2>圖片與影片</h2><p>圖片保留操作重點，移除學員姓名、帳號和金鑰等私人資訊。影片提供外部連結與內容說明，觀看權限仍依原平台設定。</p>
+<h2>公開閱讀與查詢</h2><p>問答公開閱讀，不需要登入。站內搜尋在瀏覽器執行，不會呼叫 AI 產生新答案。託管服務仍可能保留一般存取紀錄。</p>
+<h2>回報問題</h2><p>如果答案過期，或沒有找到相同情況，請到<a href="https://sat.cool/course/201/comment">課程留言區</a>提供問題網址、工具版本與完整錯誤文字。截圖請先遮蔽個人資料與金鑰。</p>
+<h2>內容使用</h2><p>公開閱讀不代表問答與圖片可任意轉載。引用請註明來源；教材及第三方素材依各自權利與授權使用。</p>
+</div></BaseLayout>

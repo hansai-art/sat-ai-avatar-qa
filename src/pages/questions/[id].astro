@@ -1,0 +1,58 @@
+---
+import {render} from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import QuestionCard from '../../components/QuestionCard.astro';
+import {getQuestions,taxonomy,href,label,relatedQuestions,buildMode,type Question} from '../../lib/content';
+export async function getStaticPaths(){return (await getQuestions()).map(q=>({params:{id:q.id},props:{question:q}}));}
+const q=Astro.props.question as Question,d=q.data;
+const {Content,headings}=await render(q);
+const all=await getQuestions();
+const related=relatedQuestions(q,all);
+const lessons=taxonomy.chapters.flatMap(c=>c.lessons).filter(l=>d.lessonRefs.includes(l.id));
+const aliases=taxonomy.tools.filter(t=>d.toolRefs.includes(t.id)).flatMap(t=>t.aliases);
+const toc=headings.filter(h=>h.depth===2);
+const indexed=d.publication==='published';
+const platforms:Record<string,string>={windows:'Windows',macos:'macOS',linux:'Linux',ios:'iOS',android:'Android',web:'網頁'};
+---
+<BaseLayout title={d.title} description={d.summary} noindex={!indexed}>
+  <nav class="breadcrumb" aria-label="所在位置"><a href={href('/questions/')} id="back-to-search">全部問題</a><span>/</span><span>{label('types',d.type)}</span></nav>
+  <div class="article-shell"><article class="answer" data-pagefind-body={indexed?true:undefined}>
+    <p class="eyebrow">{q.id.toUpperCase()} <span aria-hidden="true">/</span> {label('types',d.type)}</p>
+    <h1 data-pagefind-meta="title" data-pagefind-weight="5">{d.title}</h1>
+    {d.publication==='archived'&&<aside class="notice warning" data-pagefind-ignore><strong>這題已封存</strong><p>{d.reviewNote}</p>{d.supersededBy&&<a href={href(`/questions/${d.supersededBy}/`)}>閱讀更新後的答案 →</a>}</aside>}
+    {d.answerStatus==='needs-update'&&<aside class="notice warning"><strong>這份答案待更新</strong><p>{d.reviewNote}</p></aside>}
+    <div class="short-answer"><span class="short-answer-label">{buildMode==='demo'?'簡答版型示範':'先看答案'}</span><p data-pagefind-meta="summary" data-pagefind-weight="3">{d.summary}</p></div>
+    <div class="article-tags tag-list">
+      {d.chapterRefs.map(id=><a class="tag" href={href(`/chapters/${id}/`)} data-pagefind-filter={`chapter:${id}`}>{label('chapters',id)}</a>)}
+      {d.toolRefs.map(id=><a class="tag tool-tag" href={href(`/tools/${id}/`)} data-pagefind-filter={`tool:${id}`}>{label('tools',id)}</a>)}
+      <a class="tag" href={href(`/types/${d.type}/`)} data-pagefind-filter={`type:${d.type}`}>{label('types',d.type)}</a>
+      {lessons.map(l=><span class="tag" data-pagefind-filter={`lesson:${l.id}`}>{l.title}</span>)}
+    </div>
+    <div class="article-dates" data-pagefind-ignore><span>內容更新 <time datetime={d.updatedAt}>{d.updatedAt}</time></span><span>{buildMode==='demo'?'示範日期':'人工確認'} {d.verifiedAt||'未確認'}</span>{d.reviewedBy&&<span>{taxonomy.contributors.find(c=>c.id===d.reviewedBy)?.name}</span>}</div>
+    {(d.appliesTo||d.platforms.length>0)&&<p class="applies-to"><strong>適用情況</strong> {[d.appliesTo,...d.platforms.map(p=>platforms[p])].filter(Boolean).join(' · ')}</p>}
+    <div class="prose"><Content/></div>
+    {d.errorMessages.length>0&&<section class="error-text"><h2>錯誤訊息原文</h2>{d.errorMessages.map(error=><pre data-pagefind-weight="3"><code>{error}</code></pre>)}</section>}
+    {d.videos.length>0&&<section class="video-section"><h2>影片補充</h2>{d.videos.map(v=><a class="video-card" href={v.url} target="_blank" rel="noopener noreferrer"><span class="play-icon" aria-hidden="true">▶</span><div><h3>{v.title}</h3><p>{v.description}</p>{v.timestampLabel&&<small>{v.timestampLabel}</small>}</div><span aria-hidden="true">↗</span></a>)}</section>}
+    <section class="sources"><h2>資料來源</h2><ul>{d.sources.map(s=><li>{s.url?<a href={s.url} target="_blank" rel="noopener noreferrer">{s.title} ↗</a>:<span>{s.title}</span>}{s.checkedAt&&<span class="muted"> · 核對於 {s.checkedAt}</span>}{s.note&&<p>{s.note}</p>}</li>)}</ul></section>
+    {(d.keywords.length>0||aliases.length>0)&&<details class="search-terms"><summary>相關搜尋用語</summary><p data-pagefind-weight="2">{[...new Set([...d.keywords,...aliases])].join('、')}</p></details>}
+    <span hidden data-pagefind-meta={`qaId:${q.id}`}></span><span hidden data-pagefind-meta={`updatedAt:${d.updatedAt}`} data-pagefind-sort={`updated:${d.updatedAt}`}></span><span hidden data-pagefind-meta={`answerStatus:${d.answerStatus}`}></span><span hidden data-pagefind-meta={`chapters:${d.chapterRefs.join(',')}`}></span><span hidden data-pagefind-meta={`tools:${d.toolRefs.join(',')}`}></span><span hidden data-pagefind-meta={`type:${d.type}`}></span>
+  </article>
+  <aside class="article-aside">{toc.length>1&&<nav aria-label="文章目錄"><p class="nav-label">這一頁的內容</p>{toc.map(h=><a href={`#${h.slug}`}>{h.text}</a>)}</nav>}<a class="outline-button" href="https://sat.cool/course/201">回到課程 ↗</a><p class="muted">搭配{d.chapterRefs.map(id=>label('chapters',id)).join('、')}閱讀</p></aside></div>
+  <div class="article-actions"><button type="button" class="outline-button" id="copy-link">複製這題連結</button><span id="copy-status" role="status"></span><input id="copy-fallback" readonly aria-label="可手動複製的問題網址" hidden/></div>
+  {related.length>0&&<section><div class="section-heading"><h2>你可能也會遇到</h2></div><div class="featured-grid">{related.map(item=><QuestionCard question={item}/>)}</div></section>}
+  <div id="detail-config" data-base={import.meta.env.BASE_URL}></div>
+</BaseLayout>
+<script>
+  import {safeReturn} from '../../lib/paths.mjs';
+  const base=document.querySelector<HTMLElement>('#detail-config')!.dataset.base!;
+  try {const back=document.querySelector<HTMLAnchorElement>('#back-to-search')!;back.href=safeReturn(sessionStorage.getItem('qa-last-search')||'',location.origin,base);}catch{}
+  document.querySelector('#copy-link')?.addEventListener('click',async()=>{
+    const url=location.origin+location.pathname;
+    const status=document.querySelector<HTMLElement>('#copy-status')!;
+    try{await navigator.clipboard.writeText(url);status.textContent='已複製連結';}
+    catch{const input=document.querySelector<HTMLInputElement>('#copy-fallback')!;input.hidden=false;input.value=url;input.focus();input.select();status.textContent='請手動複製下方網址';}
+  });
+  for(const img of document.querySelectorAll<HTMLImageElement>('.prose img')) {
+    if(!img.closest('a')){const a=document.createElement('a');a.href=img.currentSrc||img.src;a.target='_blank';a.rel='noopener noreferrer';a.setAttribute('aria-label','開啟圖片：'+img.alt);img.before(a);a.append(img);}
+  }
+</script>

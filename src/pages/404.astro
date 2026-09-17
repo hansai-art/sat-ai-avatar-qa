@@ -1,0 +1,5 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import {href} from '../lib/content';
+---
+<BaseLayout title="找不到這個頁面" noindex><div class="empty-state not-found"><p class="eyebrow">404</p><h1>這個頁面不存在</h1><p>網址可能有誤，可以回到問答庫重新查找。</p><a class="primary-button" href={href('/questions/')}>搜尋問題</a></div></BaseLayout>
