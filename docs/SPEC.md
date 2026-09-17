@@ -4,11 +4,11 @@
 - 狀態：實作基準；網站架構已完成首版實作，實際驗證結果另列於交付專案 docs/ACCEPTANCE.md，不將全部規劃測例視為已通過
 - 日期：2026-09-17
 - 對應需求：[sat-ai-avatar-qa-PRD.md](PRD.md)
-- 建議 repository：sat-ai-avatar-qa，名稱待建立時核對
+- repository：hansai-art/sat-ai-avatar-qa，已建立 public
 - 目標：GitHub 管理程式與經整理的公開內容，Cloudflare Pages 建置與發布；GitHub Actions 品質檢查，GitHub Pages 保留備用。
 - 閱讀權限：Hans 已確認公開閱讀，不設登入。正式問答、圖片與影片由 Hans 提供；開發端負責架構與內容格式。
 
-> 1.2 部署更新：依「簡單、快速、免費，避開 GitHub Pages 流量限制」的要求，主方案改為 GitHub 管理內容、Cloudflare Pages 發布。以下 GitHub Pages 部署段落保留作備用；本更新優先。採純靜態網站，不啟用付費後端。Hans 已確認 Cloudflare 完成串接；接手環境需核對實際存取能力，GitHub 專案與部署狀態仍待確認。尚無已驗證的公開網址。具體設定見交付專案 docs/CLOUDFLARE.md；完整接手任務見 docs/CODEX-HANDOFF.md。
+> 2026-09-18 部署更新：已建立公開 repository [hansai-art/sat-ai-avatar-qa](https://github.com/hansai-art/sat-ai-avatar-qa)，Cloudflare Pages 已發布 [demo 示範站](https://sat-ai-avatar-qa.pages.dev)。main 透過 Git integration 自動發布；GitHub Actions 獨立執行品質檢查，Cloudflare 不等待其結果。GitHub Pages 停用。正式內容與課綱審核仍待 Hans 提供與確認；實測證據見 [ACCEPTANCE.md](ACCEPTANCE.md)。
 
 ## 1. 架構與責任
 
@@ -37,10 +37,11 @@ flowchart TD
   B --> C{"編輯審核"}
   C -->|"需補充"| B
   C -->|"通過"| D["GitHub 內容與程式"]
-  D --> E["Actions 建置與檢查"]
-  E --> F{"檢查通過"}
+  D --> E["Cloudflare 建置與檢查"]
+  D --> I["GitHub Actions 獨立瀏覽器檢查"]
+  E --> F{"建置檢查通過"}
   F -->|"否"| D
-  F -->|"是"| G["GitHub Pages"]
+  F -->|"是"| G["Cloudflare Pages"]
   G --> H["瀏覽器閱讀與本地搜尋"]
 ```
 
@@ -59,7 +60,7 @@ flowchart TD
 | 路徑 | 用途 |
 |---|---|
 | .github/workflows/check.yml | Pull Request 品質檢查，不部署 |
-| .github/workflows/deploy.yml | main 分支檢查與 Pages 部署 |
+| .github/workflows/deploy.yml | GitHub Pages 歷史備用，已停用 |
 | docs/PRD.md、docs/SPEC.md | 將本次兩份文件放入專案後的標準位置；同步更新互相連結 |
 | src/content/questions/qa-000001.md | 公開可編輯的問答檔案 |
 | src/data/taxonomy.json | 所有分類與工具別名 |
@@ -251,7 +252,7 @@ BUILD_MODE 只允許 demo 或 production，預設 production。
 | /tools/hermes-agent/ | 工具問題清單 |
 | /types/troubleshooting/ | 問題類型清單 |
 | /about/ | 使用方式、更新與資料說明 |
-| /404.html | GitHub Pages 404 文件 |
+| /404.html | Cloudflare Pages 靜態 404 文件 |
 | /sitemap.xml | 正式可索引頁面清單 |
 
 分類頁與全部問題頁須先輸出可閱讀的靜態列表；數量多時採一般連結分頁，預定 /questions/page/2/、/chapters/ch01/page/2/ 等。每頁 12 筆，避免一頁輸出 1,000 張卡片。
@@ -262,15 +263,15 @@ BUILD_MODE 只允許 demo 或 production，預設 production。
 
 Astro config：
 - output=static。
-- site 為經核實的 GitHub Pages origin。
-- base 為 /實際repository名稱；若未來改為根網域，改為 /。
+- site 為經核實的 `https://sat-ai-avatar-qa.pages.dev`。
+- Cloudflare base 固定 `/`；專案子路徑只保留作可攜性測試。
 - trailingSlash=always。
 
 所有內部連結、搜尋表單 action、圖片、CSS、JS、Pagefind 模組、canonical、sitemap、404 返回入口必須以同一份設定生成。不得散落硬編碼 repository 名稱，不可對 Pagefind 已回傳的完整結果 URL 重複加 base。
 
 唯一 helper withBase(path) 處理站內路徑，應保證只加一次 base、拒絕站內路徑中的 ..、不改動安全外部 HTTPS URL。主題、課程與影片外連另走 external URL 驗證，不混用此函式。
 
-GitHub Pages 不執行 Astro 伺服器路由。每一個可直接開啟的問題網址必須有對應 index.html，不用把所有 404 導向首頁掩蓋缺頁。
+本專案 Cloudflare Pages 使用純靜態輸出，不執行 Astro 伺服器路由。每一個可直接開啟的問題網址必須有對應 index.html，不用把所有 404 導向首頁掩蓋缺頁。
 
 ## 5. 畫面規格
 
@@ -531,36 +532,19 @@ videos: []
 
 ### 11.1 Repository 與發布模型
 
-建議採公開 repository＋公開 Pages，內容限經整理可公開的教學支援資料。若使用者選私人 repository，需先核實帳號的 Pages 方案支援；私人原始碼不等於網站自動僅學員可讀。
+公開 repository 為 hansai-art/sat-ai-avatar-qa，main 為 Cloudflare 公開網站分支；本次 `BUILD_MODE=demo`。GitHub Pages 未啟用，備用 deploy.yml 已停用，PUBLISH_ENABLED 未設定。正式內容與課綱審核完成後，才將 Cloudflare 的 BUILD_MODE 改成 production。
 
-main 是正式發布分支。架構階段先停用自動正式發布；工作流程提供明確的 demo／production 手動選項。正式內容完成後設定 PUBLISH_ENABLED=true，啟用 main 自動 production 發布。一般內容與程式改動透過分支／PR 檢查後合併。單人編輯可由擁有權限的編輯者核可；不要求一個人的專案一定找到第二個帳號才能發布。分支保護依帳號可用功能設定，至少在操作流程上要求檢查通過。
+### 11.2 GitHub 品質檢查
 
-GitHub Pages Source 設為 GitHub Actions。部署檔採官方維護的 checkout、Node setup、Pages 設定、artifact upload 與 deploy 動作；實作時使用當時官方支援版並釘選可追溯版本／SHA，不在本規劃中捏造 Action SHA。
+check.yml 在 PR 與 main push 執行 npm ci、Astro check、13 項單元測試、demo 建置及 Playwright。矩陣驗證根路徑與 /sat-ai-avatar-qa/ 子路徑，各包含桌面與 360px viewport。PR 只有 contents:read，不部署；不用 pull_request_target 執行外部分支。
 
-### 11.2 Pull Request 工作流程
+### 11.3 Cloudflare main 自動發布
 
-1. checkout PR commit。
-2. 安裝指定 Node 與 npm ci。
-3. 執行 check、unit。
-4. 以 production 模式建置真實公開內容；尚無正式資料的 M1/M2 分支另用明確 demo 測試 job。
-5. 對生成產物執行 e2e 及必要的路徑檢查。
-6. 回報通過／失敗；不進行 Pages 部署。
+Cloudflare Git integration 監聽 main，preview 分支自動部署設為 none。從 GitHub clone 對應 commit，使用 Node 24.19.0，執行 npm run build:cloudflare，輸出 dist。SITE_URL=https://sat-ai-avatar-qa.pages.dev，base 固定 /。
 
-PR 不使用有部署秘密的 pull_request_target 來執行來自不受信任分支的程式。
+build:cloudflare 依序檢查型別、單元測試、內容、Pagefind 索引與靜態產物，任何失敗即中止。Cloudflare 成功後發布同一份產物；GitHub Actions 的瀏覽器矩陣獨立執行，Cloudflare 不等待它。沒有新增付費方案、Functions 或資料庫。
 
-### 11.3 main 部署工作流程
-
-1. checkout 被核可的 main commit。
-2. npm ci → check → unit → production build → e2e。
-3. 全部通過後，將同一份已測試 dist 上傳為 Pages artifact。
-4. deploy job 使用 pages:write、id-token:write 等必要權限與 github-pages environment。
-5. 相同網站使用 concurrency 防止舊部署覆蓋新版本。
-6. 部署回傳成功後，對實際公開網址執行 smoke check。
-7. 記錄完整 commit SHA、部署結果、實際網址與正式發布時間。
-
-不在測試後另外重建未測試產物。Actions 中的依賴快取只包含可安全重用的依賴資料，不快取會夾帶上一版問答的 dist。
-
-正式網址只能取自實際 Pages／部署結果；文件中不宣稱 OWNER.github.io 佔位符是可用連結。
+src/pages/build-info.json.ts 記錄 CF_PAGES_COMMIT_SHA（CI 本機建置可使用 GITHUB_SHA）。發布後以 VERIFY_URL 與 VERIFY_COMMIT 執行 tests/browser/site.spec.ts，比對公開版本、搜尋、圖片、外連及 404。部署證據記在 ACCEPTANCE.md。
 
 ### 11.4 發布後 smoke check
 
@@ -646,7 +630,7 @@ Node 內建測試負責狀態解析、路徑、日期、分類引用、替代循
 4. production 不含 demo、未審題或私人原始檔。
 5. 搜尋、分類、內容頁、媒體與錯誤狀態通過核心測試。
 6. 實際 repository 與 Pages 網址取得並記錄，base 配置正確。
-7. Actions 失敗不部署、成功才回報正式網址。
+7. Cloudflare 建置檢查失敗不部署；Actions 獨立執行，不能聲稱已設未存在的 CI 發布閘門。
 8. 完成正式站 smoke check 與一次可回復操作演練。
 9. 真人使用驗收狀態如實標示；有未達標項目就列出，不宣稱全部驗收完成。
 10. README 包含不依賴 AI 也能新增／修訂內容的最短步驟。

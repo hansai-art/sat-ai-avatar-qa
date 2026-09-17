@@ -1,14 +1,14 @@
 # 知識衛星 AI 分身課程問答庫｜PRD
 
 - 文件版本：1.3
-- 文件狀態：公開閱讀與內容分工已定案；網站架構已完成首版實作，正式內容與 GitHub 發布待完成
+- 文件狀態：公開閱讀與內容分工已定案；網站架構已完成首版實作，demo 已公開發布，正式內容待提供
 - 規劃日期：2026-09-17
 - 產品負責人：Hans 林思翰
 - 對應技術文件：[sat-ai-avatar-qa-SPEC.md](SPEC.md)
-- 建議專案代稱：sat-ai-avatar-qa；repository 名稱尚未建立或核實可用
+- 專案：hansai-art/sat-ai-avatar-qa，已建立公開 repository
 - 本文件定義「做什麼、為什麼做、怎樣算完成」；Spec 定義資料格式、程式與驗收方法。
 
-> 1.2 部署更新：依「簡單、快速、免費，避開 GitHub Pages 流量限制」的要求，主方案改為 GitHub 管理內容、Cloudflare Pages 發布。以下 GitHub Pages 部署段落保留作備用；本更新優先。採純靜態網站，不啟用付費後端。Hans 已確認 Cloudflare 完成串接；接手環境需核對實際存取能力，GitHub 專案與部署狀態仍待確認。尚無已驗證的公開網址。具體設定見交付專案 docs/CLOUDFLARE.md；完整接手任務見 docs/CODEX-HANDOFF.md。
+> 2026-09-18 部署更新：已建立公開 repository [hansai-art/sat-ai-avatar-qa](https://github.com/hansai-art/sat-ai-avatar-qa)，Cloudflare Pages 已發布 [demo 示範站](https://sat-ai-avatar-qa.pages.dev)。main 透過 Git integration 自動發布；GitHub Actions 獨立執行品質檢查，Cloudflare 不等待其結果。GitHub Pages 停用。正式內容與課綱審核仍待 Hans 提供與確認；實測證據見 [ACCEPTANCE.md](ACCEPTANCE.md)。
 
 ## 1. 產品決策
 
@@ -135,7 +135,7 @@ P0 是第一版必須完成；本表為 PRD 與 Spec 的共同需求編號。
 | FR-11 | P0 | 複製問題連結、相關問題及返回搜尋 | 返回時保留查詢條件；複製失敗有替代方式 |
 | FR-12 | P0 | 空資料、查無結果、搜尋故障、404 的明確畫面 | 故障不能顯示成「沒有答案」 |
 | FR-13 | P0 | 手機／平板／桌面與基本無障礙 | 表單有標籤、鍵盤可操作、焦點清楚 |
-| FR-14 | P0 | GitHub Actions 檢查與 GitHub Pages 部署 | 圖片、搜尋索引及內部連結包含正確子路徑 |
+| FR-14 | P0 | GitHub Actions 檢查與 Cloudflare Pages 部署 | 圖片、搜尋索引及內部連結包含正確根路徑 |
 | FR-15 | P0 | 公開前檢查個資、密鑰、未審核與示範內容 | 原始群組匯出檔不進公開 repository |
 | FR-16 | P0 | 備份、回復、封存與替代問題連結 | 可從 Git 歷史重新發布既有安全版本 |
 | FR-17 | P0 | 清楚區分演示版與正式內容 | 正式建置不得混入虛構示範題 |
@@ -192,7 +192,7 @@ P0 是第一版必須完成；本表為 PRD 與 Spec 的共同需求編號。
 3. 缺少答案、來源不明或相互矛盾者標記待處理，不補寫成確定答案。
 4. Hans／編輯者確認文字、版本與公開範圍，處理圖片個資。
 5. 產生合規 Markdown，經 PR 或 GitHub 編輯流程通過檢查後合併。
-6. Actions 建置並部署；確認正式網址可用才回報已發布。
+6. Cloudflare 自動建置部署，Actions 獨立檢查；確認公開網址與版本可用才回報已發布。
 
 ### 9.2 修訂與過期
 
@@ -252,7 +252,7 @@ V1 透過 GitHub 網頁編輯器或 AI 開發工具修改檔案。交接文件�
 | M1 資料與骨架 | 分類設定、問答格式、固定網址、示範模式 | 合成題可正確瀏覽；不宣稱已有真實問答庫 |
 | M2 查找功能 | 搜尋、交叉篩選、章節、小節、媒體與分享 | 核心自動驗收通過 |
 | M3 真實內容 | 經核可來源整理的首批問答 | 去重、去識別化、來源與審核完成 |
-| M4 GitHub 發布 | repository、Actions、Pages、README | 公開閱讀已確認；仍需部署與正式網址驗證完成 |
+| M4 GitHub 發布 | repository、Actions、Pages、README | demo 公開閱讀、GitHub CI 與 Cloudflare 發布已驗證，證據見 ACCEPTANCE.md |
 | M5 使用驗收 | 學員試用、必要修正、維護交接 | 記錄成功率與未解事項，不以假資料替代 |
 
 本次已進入網站架構實作，真實内容由 Hans 後續提供。實際已執行的檢查與未完成工作記錄在交付專案的 docs/ACCEPTANCE.md；文件或程式完成不代表正式內容已上線。
@@ -274,8 +274,8 @@ V1 透過 GitHub 網頁編輯器或 AI 開發工具修改檔案。交接文件�
 | D-01 | 公開閱讀 | Hans 已確認公開閱讀；不含登入與購課驗證 | 已確認，不再重複詢問 |
 | D-02 | 正式課綱 | 第 1～9 章與通用分類；已依指定 Skill 的教材快照建立 45 個小節標題，保持 confirmed=false | 真實內容分類前核對最新版 |
 | D-03 | 內容提供 | Hans 提供首批問答、圖片與影片；指定「林思翰知識衛星課程回答」Skill 供回答結構與課綱參考，不自動匯入其全部教材 | 收到內容後整理與審核 |
-| D-04 | repository 名稱 | 建議 sat-ai-avatar-qa | 建立 GitHub 時核對 |
-| D-05 | 網址 | 先使用 GitHub Pages 提供的專案網址 | GitHub 建立後核實；目前不提供虛構上線連結 |
+| D-04 | repository 名稱 | hansai-art/sat-ai-avatar-qa | 已核實建立 public |
+| D-05 | 網址 | https://sat-ai-avatar-qa.pages.dev | Cloudflare 實際回傳，demo 已公開 |
 | D-06 | 編輯責任 | Hans 為核可者，其他編輯者依實際指定 | 授予 repository 寫入權限前 |
 | D-07 | 外部提問入口 | 使用課程留言入口 https://sat.cool/course/201/comment；不另建提問後端 | 上線時驗證入口 |
 

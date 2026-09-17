@@ -1,6 +1,6 @@
 # Codex 接手任務：將課程問答庫發布成免費公開互動網站
 
-這是一份可直接交給 Codex 執行的任務書。請閱讀後直接完成工作，不要只回覆規劃或把完整操作教學交回給我。
+此為原始交接任務與後續維護背景。2026-09-18 已完成 GitHub 管理及 Cloudflare demo 發布；最新網址、部署 commit、CI 與公開驗收結果見 [ACCEPTANCE.md](ACCEPTANCE.md)。後續接手應先讀該紀錄，不必重建專案。
 
 ## 1. 這次必須完成的成果
 
@@ -27,8 +27,8 @@
 - **Cloudflare：我已確認完成串接。** 不要沿用舊文件的「尚未連接」判斷或直接要求重新安裝。
 - 接手後先確認你所在的 Codex 環境能否看見 Cloudflare 連線、實際帳號及 Pages 操作能力。換一個執行環境不代表原本連線會自動帶過去。
 - GitHub 帳號先前已核對為 `hansai-art`，本次仍應從實際連線確認。
-- 建議 repository 名稱為 `sat-ai-avatar-qa`。**尚未確認已建立，不能宣稱這個網址或專案已存在。**
-- 先前執行環境的 GitHub 連線能操作既有 repository，但沒有建立 repository 的功能；這是先前環境的限制，請重新檢查你的實際能力。
+- 已核實建立公開 repository：`hansai-art/sat-ai-avatar-qa`。
+- 本輪本機 GitHub CLI 具備建立 repository、commit 與 push 能力；Cloudflare API 已建立 Pages 與 Git integration。
 - Cloudflare 與 GitHub 的帳號連線、Cloudflare 對該 repository 的 Git integration 是不同狀態。要核對後者是否完成，不能只看到外掛已連接就宣稱會自動部署。
 
 如本環境缺少必要操作能力，先完成所有不受影響的工作，再一次列出最小必要人工操作。指出「哪個環境／哪項操作無法使用」，不要要求我提供密碼或把 API token 貼進聊天、程式碼或 GitHub。
@@ -70,7 +70,7 @@
 
 目前曾通過的檢查：Astro check、13 項 Node 單元測試、根路徑與 GitHub 專案子路徑建置、部分真實瀏覽器互動。Cloudflare 建置指令曾在本機模擬環境成功，產物約 1.12MiB。
 
-尚未證實完成：整套 Playwright runner、遠端 GitHub Actions、Cloudflare 實際部署、公開網址驗收。請依你實際執行結果更新，不要把「已有測試檔」算成「測試通過」。
+本輪新增實證：完整 Playwright runner、遠端 GitHub Actions、Cloudflare 部署與公開網址驗收，詳見 ACCEPTANCE.md。正式內容、實體手機、Safari／Firefox、回復演練與容量測試仍未驗收。
 
 ## 6. 執行順序
 

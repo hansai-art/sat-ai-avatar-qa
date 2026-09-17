@@ -2,11 +2,11 @@
 
 公開閱讀的課程問答網站。程式採 Astro 靜態網站，內容是一題一檔的 Markdown，搜尋由 Pagefind 在瀏覽器執行。網站不需要會員帳號、資料庫或 AI API 金鑰。
 
-**目前交付網站架構。正式問答、圖片與影片由 Hans 提供。** tests/fixtures 中的 15 題皆明確標示為示範資料，另有 1 題合成草稿供排除測試。不是 15 題已確認的課程答案。目前沒有已建立或已發布的 GitHub 網址。
+**目前交付網站架構。正式問答、圖片與影片由 Hans 提供。** tests/fixtures 中的 15 題皆明確標示為示範資料，另有 1 題合成草稿供排除測試。不是 15 題已確認的課程答案。示範站已公開：[https://sat-ai-avatar-qa.pages.dev](https://sat-ai-avatar-qa.pages.dev)。程式與內容管理：[https://github.com/hansai-art/sat-ai-avatar-qa](https://github.com/hansai-art/sat-ai-avatar-qa)。
 
 ## Codex 接手
 
-直接依 [完整接手任務書](docs/CODEX-HANDOFF.md) 完成 GitHub 與 Cloudflare 公開部署。Hans 已確認 Cloudflare 完成串接；實際部署狀態仍須核對。
+直接依 [完整接手任務書](docs/CODEX-HANDOFF.md) 完成 GitHub 與 Cloudflare 公開部署。2026-09-18 已完成 GitHub 與 Cloudflare Pages Git integration，實際版本及驗收見 [驗收紀錄](docs/ACCEPTANCE.md)。
 
 ## 已包含的功能
 
@@ -16,11 +16,11 @@
 - 單題永久網址、Markdown 正文、圖片、程式碼、表格、影片外連、來源、相關問題及複製連結。
 - 更新與人工確認日期、待更新提醒、封存與替代題。
 - 桌面與手機版型；沒有 JavaScript 時仍可閱讀靜態列表與問題頁。
-- GitHub Actions 檢查與 Pages 部署工作流程，包含根路徑與專案子路徑測試。
+- GitHub Actions 品質檢查，包含根路徑與專案子路徑測試；Cloudflare Pages 自動發布 main。
 
 ## 本機開啟架構預覽
 
-使用 `.nvmrc` 的 Node 24.19.0。實作環境 npm 11.9.0，套件確切版本以 `package.json` 與 `package-lock.json` 為準。
+使用 `.nvmrc` 的 Node 24.19.0。本輪本機部署驗證使用 npm 11.17.0，套件確切版本以 `package.json` 與 `package-lock.json` 為準。
 
 ```sh
 npm ci
@@ -91,11 +91,11 @@ videos:
 
 ## 首選：GitHub 管理、Cloudflare 免費發布
 
-使用 [Cloudflare 部署設定](docs/CLOUDFLARE.md)，建置指令為 `npm run build:cloudflare`。公開網站流量由 Cloudflare 承擔，不占 GitHub Pages 配額。先發布明確標示的 demo，正式內容完成後再切換 production。這是已準備的設定，尚未在雲端建立或部署。
+使用 [Cloudflare 部署設定](docs/CLOUDFLARE.md)，建置指令為 `npm run build:cloudflare`。公開網站流量由 Cloudflare 承擔，不占 GitHub Pages 配額。先發布明確標示的 demo，正式內容完成後再切換 production。已建立 Pages 專案並連接本 repository。main 更新會觸發 Cloudflare 建置，通過型別、單元測試與產物檢查後發布。GitHub Actions 的瀏覽器檢查獨立執行，Cloudflare 不等待它完成。
 
 ## 備用：GitHub Pages 部署
 
-建議 repository 名稱 `sat-ai-avatar-qa`，尚未建立；所有正式網址以 GitHub 實際回傳為準。
+本專案不使用 GitHub Pages。備用工作流程 `deploy.yml` 已在 GitHub 停用，`PUBLISH_ENABLED` 未設定。以下是歷史備用操作，除非另行決定更換平台，不要執行。
 
 1. 在 GitHub 建立公開 repository，將此專案的內容放在根目錄。包含 `.github/`、`src/`、`scripts/`、`tests/`、`templates/`、`docs/`、`public/`、設定檔與 lockfile；不要提交 `node_modules/`、`dist/`、`.astro/` 或私人輸入。
 2. 在 Settings → Pages，把 Source 設為 **GitHub Actions**。
@@ -113,6 +113,16 @@ BASE_PATH=/sat-ai-avatar-qa/ npm run preview
 ```
 
 上例為 macOS／Linux 語法；Windows PowerShell 分別設定 `$env:BASE_PATH`、`$env:SITE_URL` 再執行指令。`example.com` 只作本機驗證，不是已部署網址。
+
+## 公開站驗證與更新
+
+修改後 commit／push 到 main，或在 GitHub 合併 PR，Cloudflare 會自動發布。日後導入正式內容時，必須先完成課綱與答案審核，再把 Cloudflare 的 `BUILD_MODE` 改為 `production`。目前新增到正式內容目錄的題目不會混入 demo。
+
+```sh
+VERIFY_URL=https://sat-ai-avatar-qa.pages.dev npm run test:e2e
+```
+
+上述測試使用全新未登入瀏覽器情境，可加入 `VERIFY_COMMIT=<預期完整 SHA>` 比對線上 `build-info.json`。需先依前文安裝依賴、Chromium 並產生本機 demo 產物。
 
 ## 常見維護
 
