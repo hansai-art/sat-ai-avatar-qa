@@ -1,5 +1,5 @@
 import {spawnSync} from 'node:child_process';
-import {readFileSync,rmSync} from 'node:fs';
+import {readFileSync,rmSync,mkdirSync,copyFileSync} from 'node:fs';
 import * as pagefind from 'pagefind';
 import path from 'node:path';
 
@@ -13,6 +13,12 @@ const astroPackage=JSON.parse(readFileSync('node_modules/astro/package.json','ut
 // Imported schema defaults must also refresh unchanged Markdown in Astro's content cache.
 const child=spawnSync(process.execPath,[path.join('node_modules/astro',astroPackage.bin.astro),'build','--force'],{stdio:'inherit',env:process.env});
 if(child.status!==0)process.exit(child.status || 1);
+// Serve OCR assets from this site; no third-party CDN or image-upload endpoint.
+mkdirSync('dist/ocr',{recursive:true});
+copyFileSync('node_modules/tesseract.js/dist/worker.min.js','dist/ocr/worker.min.js');
+copyFileSync('node_modules/tesseract.js-core/LICENSE','dist/ocr/LICENSE');
+for(const name of ['tesseract-core-lstm.wasm.js','tesseract-core-simd-lstm.wasm.js','tesseract-core-relaxedsimd-lstm.wasm.js'])copyFileSync('node_modules/tesseract.js-core/'+name,'dist/ocr/'+name);
+for(const lang of ['eng','chi_tra'])copyFileSync(`node_modules/@tesseract.js-data/${lang}/4.0.0_best_int/${lang}.traineddata.gz`,`dist/ocr/${lang}.traineddata.gz`);
 const info=JSON.parse(readFileSync('dist/build-info.json','utf8'));
 try {
   const {index,errors}=await pagefind.createIndex({includeCharacters:'_-',verbose:false});

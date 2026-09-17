@@ -1,0 +1,15 @@
+Screenshot text recognition uses these unmodified open-source assets:
+
+Tesseract.js 7.0.0 and Tesseract.js-core 7.0.0
+https://github.com/naptha/tesseract.js
+https://github.com/naptha/tesseract.js-core
+License: Apache-2.0. A copy is provided in /ocr/LICENSE.
+
+English and Traditional Chinese trained data
+Distributed by @tesseract.js-data/eng 1.0.0 and @tesseract.js-data/chi_tra 1.0.0.
+Source: https://github.com/naptha/tessdata (4.0.0_best_int)
+The trained-data repository is licensed under Apache-2.0.
+Package wrapper metadata declares MIT; wrapper code is not distributed by this site.
+
+Images and extracted text are processed in the browser. This site has no
+image-upload endpoint or remote OCR API.

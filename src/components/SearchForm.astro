@@ -1,4 +1,5 @@
 ---
+import ScreenshotSearch from './ScreenshotSearch.astro';
 import {href,taxonomy} from '../lib/content';
 interface Props {filters?:Record<string,string>;full?:boolean;dynamic?:boolean;root?:string;}
 const {filters={},full=false,dynamic=false,root='/questions/'}=Astro.props;
@@ -6,6 +7,7 @@ const {filters={},full=false,dynamic=false,root='/questions/'}=Astro.props;
 <form action={href(root)} method="get" class="search-form" id={dynamic?'search-form':undefined} role="search">
   <label class="sr-only" for="question-search">搜尋問題</label>
   <div class="search-bar"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg><input id="question-search" name="q" type="search" placeholder="輸入問題、工具名稱或錯誤訊息…" autocomplete="off" maxlength="400"/><button class="primary-button" type="submit">搜尋</button></div>
+  {dynamic&&<ScreenshotSearch/>}
   {full?<><div class="primary-filter">
     <label><span id="chapter-label">課程章節</span><select name="chapter" aria-labelledby="chapter-label"><option value="">全部章節</option>{taxonomy.chapters.map(c=><option value={c.id} selected={filters.chapter===c.id}>{c.title}</option>)}</select></label>
     {dynamic&&<button class="text-button" type="button" id="clear-filters" hidden>清除篩選</button>}

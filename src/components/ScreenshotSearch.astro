@@ -1,0 +1,80 @@
+<details id="screenshot-search" class="screenshot-search">
+  <summary>用截圖找問題</summary>
+  <div class="screenshot-body">
+    <p class="muted">辨識繁中與英文文字，圖片只在你的瀏覽器處理，不會上傳。首次使用需下載辨識資料。</p>
+    <label for="screenshot-file">選擇截圖（PNG、JPEG、WebP，最多 10 MB）</label>
+    <input id="screenshot-file" type="file" disabled accept="image/png,image/jpeg,image/webp"/>
+    <img id="screenshot-preview" alt="選擇的截圖預覽" hidden/>
+    <p id="screenshot-status" role="status" aria-live="polite"></p>
+    <div id="screenshot-result" hidden>
+      <label for="screenshot-text">辨識文字：只保留工具名稱或錯誤碼，再搜尋</label>
+      <textarea id="screenshot-text" rows="4" maxlength="6000" spellcheck="false"></textarea>
+      <p class="muted">辨識可能有誤，請先確認文字。搜尋最多 200 字。</p>
+      <button id="screenshot-use" type="button" class="primary-button">用這些文字搜尋</button>
+    </div>
+    <button id="screenshot-clear" type="button" class="outline-button" hidden>取消並清除截圖</button>
+  </div>
+</details>
+<script>
+  const panel=document.querySelector<HTMLDetailsElement>('#screenshot-search');
+  if(panel){
+  const fileInput=document.querySelector<HTMLInputElement>('#screenshot-file')!;
+  const preview=document.querySelector<HTMLImageElement>('#screenshot-preview')!;
+  const status=document.querySelector<HTMLElement>('#screenshot-status')!;
+  const result=document.querySelector<HTMLElement>('#screenshot-result')!;
+  const text=document.querySelector<HTMLTextAreaElement>('#screenshot-text')!;
+  const clear=document.querySelector<HTMLButtonElement>('#screenshot-clear')!;
+  const form=panel.closest('form')!;
+  fileInput.disabled=false;
+  let worker:Worker|undefined,timeout:ReturnType<typeof setTimeout>|undefined,previewUrl='',generation=0;
+  function stop(){worker?.terminate();worker=undefined;clearTimeout(timeout);fileInput.disabled=false;}
+  function reset(clearFile=true){
+    generation++;stop();if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl='';
+    preview.removeAttribute('src');preview.hidden=true;if(clearFile)fileInput.value='';text.value='';result.hidden=true;clear.hidden=true;status.textContent='';
+  }
+  function fail(message:string){generation++;stop();fileInput.value='';status.textContent=message;clear.hidden=false;}
+  clear.addEventListener('click',()=>{reset();status.textContent='已清除截圖與辨識文字。';fileInput.focus();});
+  panel.addEventListener('toggle',()=>{if(!panel.open)reset();});
+  window.addEventListener('pagehide',()=>reset());
+  fileInput.addEventListener('change',async()=>{
+    const file=fileInput.files?.[0];reset(false);if(!file)return;
+    const ticket=generation;
+    if(!['image/png','image/jpeg','image/webp'].includes(file.type)){fail('請選擇 PNG、JPEG 或 WebP 圖片。');return;}
+    if(file.size>10*1024*1024){fail('圖片超過 10 MB，請先裁切到問題所在的區域。');return;}
+    fileInput.disabled=true;clear.hidden=false;status.textContent='正在讀取截圖…';
+    try {
+      const header=new Uint8Array(await file.slice(0,12).arrayBuffer());
+      const matches=file.type==='image/png'?header.slice(0,8).join(',')==='137,80,78,71,13,10,26,10':file.type==='image/jpeg'?header[0]===255&&header[1]===216&&header[2]===255:String.fromCharCode(...header.slice(0,4))==='RIFF'&&String.fromCharCode(...header.slice(8,12))==='WEBP';
+      if(ticket!==generation)return;
+      if(!matches){fail('檔案內容不是支援的圖片，請重新匯出 PNG、JPEG 或 WebP。');return;}
+      const bitmap=await createImageBitmap(file);const pixels=bitmap.width*bitmap.height;bitmap.close();
+      if(ticket!==generation)return;
+      if(pixels>8_000_000){fail('圖片尺寸太大，請裁切到錯誤訊息附近再試。');return;}
+      const buffer=await file.arrayBuffer();if(ticket!==generation)return;
+      previewUrl=URL.createObjectURL(file);preview.src=previewUrl;preview.hidden=false;
+      // A dedicated worker lets cancellation stop both initialization and recognition.
+      worker=new Worker(new URL('../scripts/ocr-worker.ts',import.meta.url),{type:'module'});
+      worker.onmessage=({data})=>{
+        if(ticket!==generation)return;
+        if(data.type==='progress')status.textContent=data.text;
+        else if(data.type==='result'){
+          stop();text.value=data.text.trim().slice(0,6000);result.hidden=!text.value;
+          status.textContent=text.value?(data.text.length>6000?'文字較多，先顯示前 6,000 字；建議裁切到問題區域再辨識。':'辨識完成，請確認並精簡下方文字。'):'沒有辨識到文字，請裁切到文字區域或直接輸入問題。';
+          if(text.value)text.focus();
+        }else fail('辨識失敗，請重新選擇圖片，或直接輸入錯誤訊息搜尋。');
+      };
+      worker.onerror=()=>{if(ticket===generation)fail('辨識工具無法載入，請稍後重試，或直接輸入問題。');};
+      const assets=new URL(import.meta.env.BASE_URL+'ocr/',location.origin).href;
+      worker.postMessage({buffer,assets},[buffer]);
+      timeout=setTimeout(()=>fail('辨識時間較長，已停止處理。請裁切到文字區域後重試。'),90_000);
+    }catch{if(ticket===generation)fail('無法讀取這張圖片，請重新選擇 PNG、JPEG 或 WebP。');}
+  });
+  document.querySelector('#screenshot-use')!.addEventListener('click',()=>{
+    const query=text.value.trim().replace(/\s+/g,' ');
+    if(!query||[...query].length>200){status.textContent='請留下 1～200 字的工具名稱、錯誤碼或問題重點。';text.focus();return;}
+    (form.elements.namedItem('q') as HTMLInputElement).value=query;
+    panel.open=false;form.requestSubmit();
+    document.querySelector('#result-count')?.scrollIntoView({block:'start'});
+  });
+  }
+</script>
