@@ -123,6 +123,7 @@ test('手機首屏可看見第一題，複製按鈕靠近標題',async({page})=>
  await page.goto('./');const first=page.locator('#static-results .question-card').first();
  expect(await first.evaluate(el=>el.getBoundingClientRect().top)).toBeLessThan(600);
  await first.locator('h2 a').click();
+ await expect(page.locator('#copy-link')).toBeVisible();
  const gap=await page.evaluate(()=>document.querySelector('#copy-link')!.getBoundingClientRect().top-document.querySelector('.answer h1')!.getBoundingClientRect().bottom);
  expect(gap).toBeLessThan(150);
 });

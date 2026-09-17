@@ -1,6 +1,6 @@
 # 驗收紀錄
 
-## 2026-09-18 搜尋優先改版（本機驗收）
+## 2026-09-18 搜尋優先改版（公開驗收）
 
 - 首頁與全部問題頁完整列出 15 題示範題，含 1 題明確標示的延伸問題版型；沒有真實提問者或正式答案。
 - 第一章無小節入口，舊 `lesson=ch01-03` 網址轉為整章查詢，返回 3 題。
@@ -9,10 +9,22 @@
 - 複製按鈕位於標題附近；來源區分官方、講師、課程、社群與補充資料。
 - 本機：Astro 0 errors／warnings／hints，14 個單元測試通過，32 個桌面／手機瀏覽器案例通過（26.0 秒）。
 - 360×800 首頁第一題起點約 510px，整頁寬度 360px；1440px 桌面整頁寬度 1440px。已實際檢查桌面與手機首頁、搜尋截圖。
-- 純靜態產物：47 HTML、90 檔案、15 題索引、約 1.14 MiB；未新增套件、API、資料庫或 Functions。
+- 最終純靜態產物：47 HTML、88 檔案、15 題索引、約 1.15 MiB；未新增套件、API、資料庫或 Functions。
 - 首次建置因舊 Astro 內容快取未重新套用 schema 預設值而失敗，改以 `astro build --force` 後通過。
 - 正式問題清單、提問者、原網址與答案來源仍待 Hans 提供。截圖文字辨識本輪未實作。
-- 第一輪公開新版驗收：31/32 通過，手機快速返回時查詢遺失。已從 trace 確認外部 module 載入競態，補上可重現失敗的測例，修正後重新驗收。以下為前一版本的部署證據。
+- 第一輪公開新版驗收：31/32 通過，手機快速返回時查詢遺失。從 trace 確認外部 module 載入競態，先加入可重現失敗的測例，再將返回連結改為頁面解析時還原。本機 6 項相關回歸通過。版位測例另補等待按鈕出現後才量測，避免測試先於 DOM 載入。
+- 最終建置：Astro 0 errors／warnings／hints，13 項單元測試通過；返回網址驗證由單元 helper 測試移到真實瀏覽器，拒絕外站及非搜尋路徑。
+- **公開站未登入驗收：34/34 通過（27.9 秒）**，全新 Chromium context，desktop 與 360×800 viewport；包含搜尋、分頁、篩選、命中片段、學員優先、第一章合併、快速返回、複製、圖片、影片外連、無 JavaScript、安全與 404。
+- 功能版本：`ce37badcc605e64425528453dafeeae4cce641a2`。
+- Cloudflare deployment：`014d5321-8711-4caa-8484-248187da30a8`，2026-09-18 01:55:19 Asia/Taipei 成功；`github:push` 觸發，`uses_functions=false`，公開 `/build-info.json` commit 相符。
+- GitHub CI：[Website checks #35255569350](https://github.com/hansai-art/sat-ai-avatar-qa/actions/runs/35255569350)，根路徑與子路徑兩個 job 均 success。
+- 後續驗收文件與測試等待條件更新不改網站功能；最新 main 與公開 build-info.json 可再次核對。以下保留改版前的部署證據。
+
+```sh
+VERIFY_URL=https://sat-ai-avatar-qa.pages.dev \
+VERIFY_COMMIT=ce37badcc605e64425528453dafeeae4cce641a2 \
+npm run test:e2e -- --workers=2 --reporter=line
+```
 
 
 ## 2026-09-18 公開 demo 部署驗收
