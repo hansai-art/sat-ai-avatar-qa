@@ -9,7 +9,7 @@ const totalPages=Math.max(1,Math.ceil(questions.length/12));
 ---
 <div class="page-heading"><p class="eyebrow">COURSE Q&A</p><h1>{title}</h1>{description&&<p class="lead">{description}</p>}</div>
 <SearchForm filters={filters} full dynamic={dynamic}/>
-<div class="results-toolbar"><p id={dynamic?'result-count':undefined} aria-live="polite">共 {questions.length} 個問題</p>{dynamic&&<label class="sort-control">排序<select name="sort" form="search-form"><option value="relevance">關聯程度</option><option value="updated">最近更新</option></select></label>}</div>
+<div class="results-toolbar"><p id={dynamic?'result-count':undefined} aria-live="polite">共 {questions.length} 個問題</p>{dynamic&&<label class="sort-control"><span id="sort-label">排序</span><select aria-labelledby="sort-label" name="sort" form="search-form"><option value="relevance">關聯程度</option><option value="updated">最近更新</option></select></label>}</div>
 {dynamic&&<p id="search-notice" class="notice" hidden></p>}
 <div id={dynamic?'static-results':undefined}>
   {questions.length?<div class="question-list">{questions.slice((page-1)*12,page*12).map(q=><QuestionCard question={q}/>)}</div>:<div class="empty-state"><span class="empty-symbol" aria-hidden="true">Q</span><h2>這裡還沒有整理好的問答</h2><p>之後新增內容，就會出現在這個分類。</p><a href={href('/questions/')}>查看全部問題</a></div>}
