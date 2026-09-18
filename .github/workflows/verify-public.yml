@@ -1,0 +1,41 @@
+name: Public site acceptance
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [".github/workflows/verify-public.yml"]
+permissions:
+  contents: read
+jobs:
+  public:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SITE_URL: https://sathans.pages.dev
+      BUILD_MODE: demo
+      VERIFY_URL: https://sathans.pages.dev
+      VERIFY_COMMIT: ${{ github.sha }}
+      ASTRO_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build:cloudflare
+      - run: npx playwright install --with-deps chromium
+      - name: Wait for this commit on the public site
+        run: |
+          node --input-type=module <<'JS'
+          for (let attempt = 0; attempt < 40; attempt++) {
+            try {
+              const response = await fetch(process.env.VERIFY_URL + '/build-info.json', {signal: AbortSignal.timeout(10000)});
+              const info = await response.json();
+              if (response.ok && info.commit === process.env.VERIFY_COMMIT) process.exit(0);
+            } catch {}
+            await new Promise(resolve => setTimeout(resolve, 15000));
+          }
+          throw new Error('Expected commit was not published within the verification window');
+          JS
+      - run: npm run test:e2e -- --workers=2 --reporter=line
