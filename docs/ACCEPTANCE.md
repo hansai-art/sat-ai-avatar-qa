@@ -1,5 +1,17 @@
 # 驗收紀錄
 
+## 2026-09-18 網址遷移收尾與帳號操作驗收
+
+- 新站 API 回讀：deployment `ecb15ce0-9d65-4111-95ee-acb340d18059`，deploy/success，2026-09-18 09:25:26 Asia/Taipei，`github:push`，commit `60299bdfdf735c79beb2a67edbb76446664244ac`；公開 build-info.json 與 GitHub main 同步，uses_functions=false。
+- 已核對下方 GitHub Actions #35292676707 的實際 log：40 passed (19.9s)，測試版本仍為 c44cbd9。後續至 60299bd 僅修改文件，沒有改網站功能，因此本輪不重複完整 40 項測試。
+- 只修改舊 Pages：build command=exit 0，destination directory=deploy/legacy-redirect，root 空白；PATCH 後 GET 已回讀一致。轉址 deployment `47c0516c-eb23-46f2-9210-75a8e363064b` 於 2026-09-18 10:10:51 Asia/Taipei 成功，ad_hoc、commit=60299bd、uses_functions=false。
+- 公開 HTTP 實測 6 組：首頁、/chapters/ch01/、/questions/qa-900001/、/?q=429、/questions/qa-900001/?q=429、中文搜尋愛馬仕加 chapter=ch01。皆回傳 301 至 https://sathans.pages.dev 的相同路徑與 query，追蹤後皆 200，無轉址迴圈。
+- 全新未登入 Chromium 360×800：從舊站 ?q=429 進入後，停留新站、保留搜尋字串、命中 1 題；canonical 為新網址，無橫向溢出。舊第一章網址轉到新站後共 3 題，沒有「本章小節」。
+- 轉址驗證後關閉舊站 production_deployments_enabled，新站仍為 true；兩站 preview_deployment_setting 均為 none。再次 GET 兩個專案確認，新站建置仍為 npm run build:cloudflare 與 dist。
+- GitHub repository homepage 已修改並讀回 https://sathans.pages.dev。沒有建立新 repository、刪除舊站、加入付費方案、API 或資料庫。
+- 原始目標尚未全部完成：正式題資料夾仍空白，缺學員實際問題、可公開姓名及原討論網址。來源補充與基於真實資料的延伸問題仍待這批輸入，不能把示範 UI 通過當成正式內容已完成。
+- 下方保留雲端交接當時的「帳號操作待完成」紀錄；目前狀態以上方結果為準。
+
 ## 2026-09-18 sathans 新公開網址驗收
 
 - 新站：https://sathans.pages.dev/，已上線，維持 demo 與 15 題合成示範；正式題資料夾未新增內容。

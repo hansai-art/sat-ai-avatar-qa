@@ -4,17 +4,17 @@
 
 ## 2026-09-18 指定網址遷移
 
-帳號：Hans@groupg.org's Account（`73e4fbfb5c70c02d085384521c48592d`）。以下專案設定由 Session 5 交接提供，本雲端尚無 Cloudflare Pages 操作能力可重新 GET。
+帳號：Hans@groupg.org's Account（`73e4fbfb5c70c02d085384521c48592d`）。2026-09-18 本機 Codex 已重新 GET 兩個專案，完成舊站轉址及 GitHub homepage 更新；API、公開 HTTP 與手機瀏覽器證據見 ACCEPTANCE.md。
 
 | 用途 | Pages 名稱 | 專案 ID | 狀態 |
 |---|---|---|---|
 | 新目標 | sathans | 2ffb3e76-00d5-4ff9-8f2c-fa319b2953e8 | 新網址已公開上線；版本與驗收見 ACCEPTANCE.md |
-| 舊站 | sat-ai-avatar-qa | c5b1a0c2-bf29-44ba-b17c-662ea2c3689b | 切換前維持既有網站，不刪除 |
+| 舊站 | sat-ai-avatar-qa | c5b1a0c2-bf29-44ba-b17c-662ea2c3689b | 保留為 301 轉址，路徑及 query 保留，自動部署已停用 |
 
 - 指定新網址：https://sathans.pages.dev
 - 舊站：https://sat-ai-avatar-qa.pages.dev
 - 原 repository：https://github.com/hansai-art/sat-ai-avatar-qa
-- 新舊皆連同一 repository 的 main；新站的 production／preview SITE_URL 已由交接設定為新網址。不要再建立另一個專案。
+- 新舊皆連同一 repository；只有新站 main 更新會自動發布，舊站保留已部署的轉址。新站 production／preview SITE_URL 使用新網址。不要再建立另一個專案。
 - 歷史部署與驗收證據：[ACCEPTANCE.md](ACCEPTANCE.md)，不改寫當時網址。
 - 無 Functions 或資料庫，不新增付費方案。
 
@@ -32,15 +32,15 @@
 | Build output directory | dist |
 | NODE_VERSION | 24.19.0（亦已在 .nvmrc） |
 | BUILD_MODE | demo；內容驗收後才改 production |
-| SITE_URL | https://sathans.pages.dev（新專案；舊站在轉址前仍用原值） |
+| SITE_URL | https://sathans.pages.dev（新站；舊站只供應獨立轉址產物） |
 
 `build:cloudflare` 依序執行 Astro check、Node 單元測試、網站建置及 Pagefind 索引，任何失敗會阻止發布。base 固定 `/`，避免沿用 GitHub 專案子路徑。正式模式仍要求課綱確認及真實發布內容。
 
-Git integration 已連接 repository ID `1374704009`，`production_deployments_enabled=true`、`preview_deployment_setting=none`，只有 main 更新自動發布。GitHub Pages 的 `deploy.yml` 已停用，`PUBLISH_ENABLED` 未設定。
+新站 Git integration 已連接 repository ID `1374704009`，`production_deployments_enabled=true`、`preview_deployment_setting=none`，只有 main 更新自動發布。舊站 production_deployments_enabled=false、preview_deployment_setting=none，不重複建置。GitHub Pages 的 `deploy.yml` 已停用，`PUBLISH_ENABLED` 未設定。
 
 Cloudflare 的建置指令會阻擋型別、單元測試、內容與產物錯誤；GitHub Actions 另跑桌面／手機瀏覽器測試，兩者獨立，並未設定等待 GitHub CI 的部署閘門。
 
-先前本機 Codex 具備 Cloudflare API 能力；本雲端目前只有 GitHub 寫入能力。必須依接手環境重新核對可用操作，不要求提供明文 token。
+本次雲端 GPT 已實際寫入 GitHub 並觸發新站發布，本機 Codex 補完 Cloudflare 設定及 GitHub metadata。日常內容更新只需提交至 main；更改網域或部署設定才需要相應帳號操作能力。權限仍依接手環境核對，不要求提供明文 token。
 
 更新：提交至 main 後，在 Cloudflare 部署紀錄核對 `github:push` 及 commit；公開 `/build-info.json` 的 `commit` 應一致。回復：對問題 commit 執行 `git revert` 並 push，由相同流程重建；本輪未實際演練回復。
 
@@ -59,7 +59,9 @@ Cloudflare 的建置指令會阻擋型別、單元測試、內容與產物錯誤
 - [GitHub 自動部署](https://developers.cloudflare.com/pages/get-started/git-integration/)
 - [CF_PAGES_URL 等建置環境變數](https://developers.cloudflare.com/pages/configuration/build-configuration/)
 
-## 新站驗收後，才啟用舊站轉址
+## 舊站轉址設定與回復
+
+以下切換已於 2026-09-18 完成，保留步驟供查核，無需重新執行。舊轉址 deployment 為 `47c0516c-eb23-46f2-9210-75a8e363064b`，6 組路徑／query 實測皆為 301 至新站且最終 200，無迴圈。若需修改轉址，先更新獨立產物，再以舊專案部署 API 手動發布；其自動建置保持關閉。
 
 獨立轉址產物放在 `deploy/legacy-redirect/`，不在 public/ 或新站 dist 內。新站繼續使用 `npm run build:cloudflare` 與 dist。
 
@@ -73,7 +75,7 @@ Cloudflare 的建置指令會阻擋型別、單元測試、內容與產物錯誤
 6. 舊轉址發布確認後，才關閉**舊專案** `production_deployments_enabled`，新站維持 main 自動發布。
 7. 將 GitHub repository homepage 設為 https://sathans.pages.dev，更新實際驗收結果。
 
-獨立轉址目錄已準備不等於線上生效。本雲端未修改任何 Pages 設定；新站成功前舊站保持不動。
+若新站故障而需要恢復舊站，可重新設定舊專案 build command=npm run build:cloudflare、destination directory=dist，使用原 SITE_URL，手動發布並驗證；本輪未演練此回復流程。不要刪除舊專案或將轉址產物設定套用到新站。
 
 官方轉址規則：[Cloudflare Pages redirects](https://developers.cloudflare.com/pages/configuration/redirects/)。
 

@@ -1,12 +1,12 @@
 # Codex 接手任務：將課程問答庫發布成免費公開互動網站
 
-## 2026-09-18 Session 5 後續：新網址優先
+## 2026-09-18 最新狀態：網址遷移完成，等待正式內容
 
-沿用 GitHub 最新 main，不重建 repository、不使用舊 ZIP。目標為 https://sathans.pages.dev，不是問答來源。sathans Pages 專案已建立（2ffb3e76-00d5-4ff9-8f2c-fa319b2953e8）；交接時 latest_deployment=null；本輪 push 後新網址已可公開存取，build-info.json 已讀回本輪提交 02ece3b5fe38ac82e87009b5cc4963e112534648。原 sat-ai-avatar-qa 專案保持服務，新站驗收成功前不得改成轉址。
+沿用 GitHub 最新 main，不重建 repository、不使用舊 ZIP。公開網址為 https://sathans.pages.dev，不是問答來源。新站 Pages ID 為 2ffb3e76-00d5-4ff9-8f2c-fa319b2953e8，main 更新自動發布。舊 sat-ai-avatar-qa 專案保留為 301 轉址，路徑及 query 保留，已停用舊站自動建置。GitHub homepage 已更新到新網址。
 
-新站公開驗收已完成：`c44cbd97d0601f88817ba956b8a6beb80f3adadf`，40/40 通過（19.9 秒）；證據見 ACCEPTANCE.md。剩餘任務只有核對 Pages 部署事件、啟用並驗證舊站轉址、關閉舊站自動部署及更新 GitHub homepage。真實內容仍未提供。
+新站公開驗收已完成：`c44cbd97d0601f88817ba956b8a6beb80f3adadf`，40/40 通過（19.9 秒）；本機另核對 Cloudflare github:push、6 組 HTTP 轉址及匿名 360px 手機搜尋／第一章。證據見 ACCEPTANCE.md。日常內容維護不需要反覆修改 Cloudflare 設定。
 
-本雲端已確認 GitHub 可寫入，但未提供 Cloudflare Pages 操作工具或安全注入憑證，因此尚不能重新 GET 專案、切換舊站設定或核實部署事件。本輪已 push 更新並核對新站公開版本；不能因此宣稱已完成 Cloudflare API 驗證。後續切換步驟與獨立轉址產物見 CLOUDFLARE.md。
+剩餘主任務：Hans 尚未提供正式問題、提問者與原討論網址；收到後依章節整理、補官方來源、以真實已問題衍生並後排延伸問題，保留姓名和來源，不得捏造。現有 UI 與資料欄位已支援，但正式內容仍未完成。維持 BUILD_MODE=demo，課綱未核對前不將 confirmed 批次改 true。部署設定見 CLOUDFLARE.md。
 
 
 2026-09-18 最新範圍：首頁改為搜尋與完整問題列表，第一章不分小節。已問問題優先、延伸問題排後；正式題需要可公開的提問者與原討論網址。公開站暫維持 demo，真實清單尚待 Hans 提供。此段取代下文舊首頁編排，部署權限沿用既有授權，不需重新安裝或逐步確認。 搜尋優先改版已公開發布，34 項未登入瀏覽器驗收通過，版本與來源見 [ACCEPTANCE.md](ACCEPTANCE.md)。 截圖文字辨識也已公開發布，保持本機處理與手動確認；最新 40 項公開驗收通過，見同一紀錄。
