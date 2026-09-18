@@ -2,7 +2,7 @@
 
 公開閱讀的課程問答網站。程式採 Astro 靜態網站，內容是一題一檔的 Markdown，搜尋由 Pagefind 在瀏覽器執行。網站不需要會員帳號、資料庫或 AI API 金鑰。
 
-**目前交付網站架構。正式問答、圖片與影片由 Hans 提供。** tests/fixtures 中的 15 題皆明確標示為示範資料，另有 1 題合成草稿供排除測試。不是 15 題已確認的課程答案。示範站已公開：[https://sat-ai-avatar-qa.pages.dev](https://sat-ai-avatar-qa.pages.dev)。程式與內容管理：[https://github.com/hansai-art/sat-ai-avatar-qa](https://github.com/hansai-art/sat-ai-avatar-qa)。
+**目前交付網站架構。正式問答、圖片與影片由 Hans 提供。** tests/fixtures 中的 15 題皆明確標示為示範資料，另有 1 題合成草稿供排除測試。不是 15 題已確認的課程答案。指定新網址：[https://sathans.pages.dev](https://sathans.pages.dev)（首次部署待驗收）；舊示範站 [https://sat-ai-avatar-qa.pages.dev](https://sat-ai-avatar-qa.pages.dev) 在切換完成前維持服務。程式與內容管理：[https://github.com/hansai-art/sat-ai-avatar-qa](https://github.com/hansai-art/sat-ai-avatar-qa)。
 
 ## Codex 接手
 
@@ -121,7 +121,7 @@ BASE_PATH=/sat-ai-avatar-qa/ npm run preview
 修改後 commit／push 到 main，或在 GitHub 合併 PR，Cloudflare 會自動發布。日後導入正式內容時，必須先完成課綱與答案審核，再把 Cloudflare 的 `BUILD_MODE` 改為 `production`。目前新增到正式內容目錄的題目不會混入 demo。
 
 ```sh
-VERIFY_URL=https://sat-ai-avatar-qa.pages.dev npm run test:e2e
+VERIFY_URL=https://sathans.pages.dev npm run test:e2e
 ```
 
 上述測試使用全新未登入瀏覽器情境，可加入 `VERIFY_COMMIT=<預期完整 SHA>` 比對線上 `build-info.json`。需先依前文安裝依賴、Chromium 並產生本機 demo 產物。

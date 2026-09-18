@@ -25,7 +25,7 @@
 5. 15 題示範資料與 1 題合成草稿只用於驗證架構。影片網址是標示清楚的格式示例，沒有宣稱它是課程影片。
 6. `taxonomy.json` 中 45 個小節標題取自指定的「林思翰知識衛星課程回答」Skill 教材快照（2026-09）；沒有複製付費正文。章名暫採第 1～9 章，所有真實章節與小節的 `confirmed` 保持 false，等 Hans 核對最新課綱。
 7. 影片以 HTTPS 外連呈現，避免嵌入登入限定的課程播放器。圖片由 Astro 處理，正文必須附替代文字。
-8. Cloudflare Pages 使用 `BUILD_MODE=demo`、`BASE_PATH=/`、固定 `SITE_URL=https://sat-ai-avatar-qa.pages.dev`。GitHub Pages 已停用。
+8. Cloudflare Pages 使用 `BUILD_MODE=demo`、`BASE_PATH=/`、新站固定 `SITE_URL=https://sathans.pages.dev`（首次發布待驗收）。GitHub Pages 已停用。
 9. 本輪必要修正：篩選／排序加入精確的可及名稱；Playwright 使用前景 preview、支援 `VERIFY_URL` 與 `VERIFY_COMMIT`；建置資訊包含來源 commit。修正 XSS 測例將「HTML 字串不可執行」誤當「一定零結果」的假設，保留並強化不可執行的斷言。
 
 ## 正式上線前還需要

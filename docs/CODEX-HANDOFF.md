@@ -1,5 +1,12 @@
 # Codex 接手任務：將課程問答庫發布成免費公開互動網站
 
+## 2026-09-18 Session 5 後續：新網址優先
+
+沿用 GitHub 最新 main，不重建 repository、不使用舊 ZIP。目標為 https://sathans.pages.dev，不是問答來源。sathans Pages 專案已建立（2ffb3e76-00d5-4ff9-8f2c-fa319b2953e8）；交接時 latest_deployment=null，尚未上線。原 sat-ai-avatar-qa 專案保持服務，新站驗收成功前不得改成轉址。
+
+本雲端已確認 GitHub 可寫入，但未提供 Cloudflare Pages 操作工具或安全注入憑證，因此尚不能重新 GET 專案、切換舊站設定或核實部署事件。可先 push 更新觸發既有 Git integration，核對新站公開結果；不能因此宣稱已完成 Cloudflare API 驗證。後續切換步驟與獨立轉址產物見 CLOUDFLARE.md。
+
+
 2026-09-18 最新範圍：首頁改為搜尋與完整問題列表，第一章不分小節。已問問題優先、延伸問題排後；正式題需要可公開的提問者與原討論網址。公開站暫維持 demo，真實清單尚待 Hans 提供。此段取代下文舊首頁編排，部署權限沿用既有授權，不需重新安裝或逐步確認。 搜尋優先改版已公開發布，34 項未登入瀏覽器驗收通過，版本與來源見 [ACCEPTANCE.md](ACCEPTANCE.md)。 截圖文字辨識也已公開發布，保持本機處理與手動確認；最新 40 項公開驗收通過，見同一紀錄。
 
 此為原始交接任務與後續維護背景。2026-09-18 已完成 GitHub 管理及 Cloudflare demo 發布；最新網址、部署 commit、CI 與公開驗收結果見 [ACCEPTANCE.md](ACCEPTANCE.md)。後續接手應先讀該紀錄，不必重建專案。

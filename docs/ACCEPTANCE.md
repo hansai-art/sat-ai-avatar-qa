@@ -1,5 +1,15 @@
 # 驗收紀錄
 
+## 2026-09-18 新網址遷移：發布前檢查
+
+- 以遠端 main `4f4c7b1831f857a78891f0f0d77c9efe67a391eb` 為基礎，未重建網站或匯入舊 ZIP。
+- 指定目標 https://sathans.pages.dev；交接時新 Pages 已建立、尚無 deployment。發布前本雲端 curl 觀測新站 HTTP 522；這不是發布成功。
+- Node 24.19.0，以新 SITE_URL 執行 build:cloudflare 通過：Astro 0 errors／warnings／hints、13 項單元測試、47 HTML、97 檔案、15 題索引、16.85MiB。
+- 獨立舊站轉址產物已準備於 deploy/legacy-redirect，未放入 public 或新站 dist；尚未在 Cloudflare 啟用。
+- 本雲端已核對 GitHub admin／push 能力；未提供 Cloudflare Pages 操作工具或安全注入憑證，尚不能 GET 兩專案或變更舊站設定。先提交網址文件，由既有 Git integration 觸發新站，公開驗收另記。
+- 以下歷史公開驗收網址與結果完整保留，不冒充本輪新站已通過 40 項驗收。
+
+
 ## 2026-09-18 截圖搜尋（公開驗收）
 
 - 新增「用截圖找問題」：選擇 PNG／JPEG／WebP，在瀏覽器辨識繁中與英文，確認並精簡文字後才搜尋。圖片與辨識文字不加入知識庫，不傳送到辨識 API。

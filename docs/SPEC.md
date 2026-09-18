@@ -1,5 +1,7 @@
 # 知識衛星 AI 分身課程問答庫｜技術 Spec
 
+> 2026-09-18 網址遷移：Hans 指定 https://sathans.pages.dev；已建立的 sathans Pages 專案沿用原 repository。新網址尚待公開部署驗收，舊站持續服務。這是網站網址，不是問答來源。以下先前部署敘述屬歷史背景；最新狀態見 CLOUDFLARE.md 與 ACCEPTANCE.md。
+
 - 文件版本：1.3
 - 狀態：實作基準；網站架構已完成首版實作，實際驗證結果另列於交付專案 docs/ACCEPTANCE.md，不將全部規劃測例視為已通過
 - 日期：2026-09-17
@@ -265,7 +267,7 @@ BUILD_MODE 只允許 demo 或 production，預設 production。
 
 Astro config：
 - output=static。
-- site 為經核實的 `https://sat-ai-avatar-qa.pages.dev`。
+- 新站 site 設為 `https://sathans.pages.dev`（Pages 子網域已由交接確認，發布仍待驗收）。
 - Cloudflare base 固定 `/`；專案子路徑只保留作可攜性測試。
 - trailingSlash=always。
 
@@ -553,7 +555,7 @@ check.yml 在 PR 與 main push 執行 npm ci、Astro check、13 項單元測試�
 
 ### 11.3 Cloudflare main 自動發布
 
-Cloudflare Git integration 監聽 main，preview 分支自動部署設為 none。從 GitHub clone 對應 commit，使用 Node 24.19.0，執行 npm run build:cloudflare，輸出 dist。SITE_URL=https://sat-ai-avatar-qa.pages.dev，base 固定 /。
+Cloudflare Git integration 監聽 main，preview 分支自動部署設為 none。從 GitHub clone 對應 commit，使用 Node 24.19.0，執行 npm run build:cloudflare，輸出 dist。SITE_URL=https://sathans.pages.dev，base 固定 /。
 
 build:cloudflare 依序檢查型別、單元測試、內容、Pagefind 索引與靜態產物，任何失敗即中止。Cloudflare 成功後發布同一份產物；GitHub Actions 的瀏覽器矩陣獨立執行，Cloudflare 不等待它。沒有新增付費方案、Functions 或資料庫。
 
