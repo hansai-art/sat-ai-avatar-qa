@@ -2,7 +2,7 @@
 
 公開閱讀的課程問答網站。程式採 Astro 靜態網站，內容是一題一檔的 Markdown，搜尋由 Pagefind 在瀏覽器執行。網站不需要會員帳號、資料庫或 AI API 金鑰。
 
-**目前交付網站架構。正式問答、圖片與影片由 Hans 提供。** tests/fixtures 中的 15 題皆明確標示為示範資料，另有 1 題合成草稿供排除測試。不是 15 題已確認的課程答案。指定新網址：[https://sathans.pages.dev](https://sathans.pages.dev)（首次部署待驗收）；舊示範站 [https://sat-ai-avatar-qa.pages.dev](https://sat-ai-avatar-qa.pages.dev) 在切換完成前維持服務。程式與內容管理：[https://github.com/hansai-art/sat-ai-avatar-qa](https://github.com/hansai-art/sat-ai-avatar-qa)。
+**目前交付網站架構。正式問答、圖片與影片由 Hans 提供。** tests/fixtures 中的 15 題皆明確標示為示範資料，另有 1 題合成草稿供排除測試。不是 15 題已確認的課程答案。指定新網址：[https://sathans.pages.dev](https://sathans.pages.dev)（已上線示範站；遷移驗收見下方紀錄）；舊示範站 [https://sat-ai-avatar-qa.pages.dev](https://sat-ai-avatar-qa.pages.dev) 在切換完成前維持服務。程式與內容管理：[https://github.com/hansai-art/sat-ai-avatar-qa](https://github.com/hansai-art/sat-ai-avatar-qa)。
 
 ## Codex 接手
 

@@ -8,7 +8,7 @@
 
 | 用途 | Pages 名稱 | 專案 ID | 狀態 |
 |---|---|---|---|
-| 新目標 | sathans | 2ffb3e76-00d5-4ff9-8f2c-fa319b2953e8 | 子網域 sathans.pages.dev 已建立；首次部署待驗收 |
+| 新目標 | sathans | 2ffb3e76-00d5-4ff9-8f2c-fa319b2953e8 | 新網址已公開上線；版本與驗收見 ACCEPTANCE.md |
 | 舊站 | sat-ai-avatar-qa | c5b1a0c2-bf29-44ba-b17c-662ea2c3689b | 切換前維持既有網站，不刪除 |
 
 - 指定新網址：https://sathans.pages.dev
@@ -66,7 +66,7 @@ Cloudflare 的建置指令會阻擋型別、單元測試、內容與產物錯誤
 具備 Cloudflare Pages 權限的執行者應：
 
 1. 重新 GET 兩專案，確認新站最新部署成功且與 GitHub main commit 一致；記錄 `github:push` 事件。
-2. 對新公開網址執行既有 40 個桌面／手機案例，另檢查 canonical、OCR 資產與複製網址。
+2. 新站 c44cbd97d0601f88817ba956b8a6beb80f3adadf 已通過全部 40 項公開驗收（含 canonical、OCR 與複製網址），證據見 ACCEPTANCE.md。接手先核對部署狀態；若網站功能另有變更，再跑必要回歸。
 3. **只修改舊專案 sat-ai-avatar-qa**：build command=`exit 0`，destination directory=`deploy/legacy-redirect`，root 空白。不要將此設定套到 sathans。
 4. 觸發舊專案部署，確認首頁、`/chapters/ch01/`、`/questions/qa-900001/` 及 `/?q=429`、`/questions/qa-900001/?q=429` 回傳 301，Location 指向新站且保留路徑及 query，追蹤後無迴圈。
 5. `_redirects` 的 query 是否如預期保留必須實測；不把規則檔存在當成轉址已成功。若不符預期，先保留／恢復舊站原建置設定，不交付丟失查詢的轉址。
@@ -76,3 +76,5 @@ Cloudflare 的建置指令會阻擋型別、單元測試、內容與產物錯誤
 獨立轉址目錄已準備不等於線上生效。本雲端未修改任何 Pages 設定；新站成功前舊站保持不動。
 
 官方轉址規則：[Cloudflare Pages redirects](https://developers.cloudflare.com/pages/configuration/redirects/)。
+
+公開驗收可在 GitHub Actions 手動執行 Public site acceptance；其 VERIFY_COMMIT 取所選分支提交，等待新站發布相同版本後才測試，不依賴 Cloudflare token。

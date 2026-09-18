@@ -267,7 +267,7 @@ BUILD_MODE 只允許 demo 或 production，預設 production。
 
 Astro config：
 - output=static。
-- 新站 site 設為 `https://sathans.pages.dev`（Pages 子網域已由交接確認，發布仍待驗收）。
+- 新站 site 設為 `https://sathans.pages.dev`（新網址已公開上線，遷移驗收見 ACCEPTANCE.md）。
 - Cloudflare base 固定 `/`；專案子路徑只保留作可攜性測試。
 - trailingSlash=always。
 

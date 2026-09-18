@@ -1,5 +1,19 @@
 # 驗收紀錄
 
+## 2026-09-18 sathans 新公開網址驗收
+
+- 新站：https://sathans.pages.dev/，已上線，維持 demo 與 15 題合成示範；正式題資料夾未新增內容。
+- 公開驗收版本：`c44cbd97d0601f88817ba956b8a6beb80f3adadf`。
+- [Public site acceptance #35292676707](https://github.com/hansai-art/sat-ai-avatar-qa/actions/runs/35292676707)：**40/40 通過，19.9 秒**，無重試失敗項目。執行既有測試，VERIFY_URL 指向新公開站、VERIFY_COMMIT 指向該提交；先等公開 build-info.json 同步版本，並在測試中再次核對。
+- 包含桌面與 360×800 手機、canonical、搜尋命中與交叉篩選／URL 還原、第一章合併、圖片載入與原圖、影片外連、剪貼簿實值、6 個 OCR 案例及 OCR 資產、無 JavaScript 閱讀、草稿排除、404。
+- Astro check、13 項單元測試及 build:cloudflare 在相同工作流程通過。
+- 本雲端 Chromium 安裝受 CDN 逾時／502 阻擋，改由 GitHub Actions 的乾淨 Chromium context 對新公開網址驗收，並非以本機 preview 或舊站測試代替。新增 verify-public.yml 只在手動執行或此 workflow 檔案更新時觸發，避免每次內容更新重複跑公開驗收。
+- 另以未登入互動瀏覽器確認首頁、429 命中片段、複製新網址及第一章 3 題整合頁。curl 曾於發布前得到 522，發布後已成功讀回 build-info.json 的 `02ece3b5fe38ac82e87009b5cc4963e112534648`，之後 Actions 驗證上述 c44cbd9 版本。
+- main 更新後公開版本已同步，實際證明 GitHub 更新會發布新站；Cloudflare API 的 deployment ID／`github:push` 欄位仍未讀回，不能宣稱已完成 API 層核對。
+- 舊站仍正常服務，未啟用轉址、未關閉自動部署、未刪除。轉址產物在 deploy/legacy-redirect；尚待具備 Pages 操作能力的環境按 CLOUDFLARE.md 設定並驗證路徑及 query。
+- GitHub repository homepage 尚未更新：本環境工具可寫程式但沒有 repository metadata 更新操作。這不影響新站公開閱讀。
+- 以下歷史驗收保留原網址；此後若只有文件更新，勿把新 commit 冒稱為本次 40 項驗收版本。
+
 ## 2026-09-18 新網址遷移：發布前檢查
 
 - 以遠端 main `4f4c7b1831f857a78891f0f0d77c9efe67a391eb` 為基礎，未重建網站或匯入舊 ZIP。

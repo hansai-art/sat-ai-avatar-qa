@@ -279,7 +279,7 @@ V1 透過 GitHub 網頁編輯器或 AI 開發工具修改檔案。交接文件�
 | D-02 | 正式課綱 | 第 1～9 章與通用分類；已依指定 Skill 的教材快照建立 45 個小節標題，保持 confirmed=false | 真實內容分類前核對最新版 |
 | D-03 | 內容提供 | Hans 提供首批問答、圖片與影片；指定「林思翰知識衛星課程回答」Skill 供回答結構與課綱參考，不自動匯入其全部教材 | 收到內容後整理與審核 |
 | D-04 | repository 名稱 | hansai-art/sat-ai-avatar-qa | 已核實建立 public |
-| D-05 | 目標網址 | https://sathans.pages.dev | 新 Pages 專案已建立；首次發布待驗收，舊站維持服務 |
+| D-05 | 目標網址 | https://sathans.pages.dev | 新網址已公開上線；舊站維持服務，轉址待操作 |
 | D-06 | 編輯責任 | Hans 為核可者，其他編輯者依實際指定 | 授予 repository 寫入權限前 |
 | D-07 | 外部提問入口 | 使用課程留言入口 https://sat.cool/course/201/comment；不另建提問後端 | 上線時驗證入口 |
 
