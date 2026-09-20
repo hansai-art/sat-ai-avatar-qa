@@ -47,7 +47,22 @@ BUILD_MODE=production npx playwright test --workers=2 --reporter=line
 
 ## 公開站驗收
 
-發布與公開站證據在 GitHub 推送及 Cloudflare 完成後補記於本節。
+正式功能版本：`811310d31db3712d1751bd0bb9ccb6bb915b1ea7`。
+
+- Cloudflare Pages production deployment：`9d5a5ec0-64cc-4a9f-8fde-1e97a8b5d81e`，2026-09-20 07:27:36 UTC 成功。
+- 觸發來源為 `github:push`，分支 `main`，commit 與上述版本完全一致。未用手動上傳取代 GitHub 自動部署。
+- `https://sathans.pages.dev/build-info.json` 實際回傳 `mode=production`、上述 commit、22 個 `qa-000001` 至 `qa-000022`。
+- [GitHub Website checks](https://github.com/hansai-art/sat-ai-avatar-qa/actions/runs/35496895734)：正式、示範、子路徑三組工作全部成功。
+- [GitHub Public site acceptance](https://github.com/hansai-art/sat-ai-avatar-qa/actions/runs/35496895605)：未登入瀏覽器測試正式網址，42 PASS、20 SKIP，21.7 秒。
+- 首頁 canonical 為 `https://sathans.pages.dev/`，robots 為 `index, follow`，沒有示範提示。
+- 公開站 390 × 844 實測第一題標題 y=456.97、第二題 y=572.14、第二題底部 y=626.52。頁寬與 scrollWidth 都是 390。進階篩選與 OCR 展開後同樣無溢出，未捕獲 JavaScript pageerror。
+- `https://sathans.pages.dev/questions/qa-900003/` 實測 301 至 `/questions/qa-000001/`。
+- 舊站 `/chapters/ch01/?q=BotFather` 實測 301 至新站相同路徑，保留查詢字串。
+- GitHub 儲存庫為 PUBLIC，homepageUrl 指向 `https://sathans.pages.dev`。
+
+公開站實際截圖：[手機首頁](acceptance/mobile-390.png)、[原地展開答案](acceptance/mobile-answer.png)。
+
+本機連公開站的第一輪為 40 PASS、2 FAIL、20 SKIP，失敗皆為桌機首次下載英文 OCR 模型超過測試的 60 秒期限。Trace 顯示英文模型請求尚未完成；相同公開站的手機測試及 GitHub Linux 桌機與手機測試通過。後續直接 GET 英文模型回傳 HTTP 200、2,952,873 bytes、約 0.26 秒。以新瀏覽器 context、單一 worker 重跑桌機 OCR 的 3 個測試，3 PASS、5.7 秒。保留首次下載受網路狀況影響的限制，沒有放寬 60 秒斷言或略過失敗案例。
 
 ## 證據限制
 
