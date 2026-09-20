@@ -1,5 +1,12 @@
 # Codex 接手任務：將課程問答庫發布成免費公開互動網站
 
+## 2026-09-20 最新接續：手機 FAQ 與正式內容
+
+Hans 已提供 44 筆 FAQ 紀錄及課堂 HTML，本輪整理 22 題正式 FAQ；課綱已對照現行文件，補入第 0 章。BUILD_MODE 切換 production，沿用同一個 GitHub / sathans Pages 專案。首頁常見優先、課程排序、用途篩選、原地短答與返回位置已實作。原始檔留在專案外，對照見 content-source-audit.json。尚未解決的追問及部分子問題有列入待整理，不冒充已解答。
+
+以下 2026-09-18「等待正式內容」段落是歷史紀錄，不再是目前阻塞。最新驗收另見 MOBILE-FAQ-ACCEPTANCE.md。
+
+
 ## 2026-09-18 最新狀態：網址遷移完成，等待正式內容
 
 沿用 GitHub 最新 main，不重建 repository、不使用舊 ZIP。公開網址為 https://sathans.pages.dev，不是問答來源。新站 Pages ID 為 2ffb3e76-00d5-4ff9-8f2c-fa319b2953e8，main 更新自動發布。舊 sat-ai-avatar-qa 專案保留為 301 轉址，路徑及 query 保留，已停用舊站自動建置。GitHub homepage 已更新到新網址。

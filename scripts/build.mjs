@@ -1,5 +1,5 @@
 import {spawnSync} from 'node:child_process';
-import {readFileSync,rmSync,mkdirSync,copyFileSync} from 'node:fs';
+import {readFileSync,writeFileSync,rmSync,mkdirSync,copyFileSync} from 'node:fs';
 import * as pagefind from 'pagefind';
 import path from 'node:path';
 
@@ -20,6 +20,12 @@ copyFileSync('node_modules/tesseract.js-core/LICENSE','dist/ocr/LICENSE');
 for(const name of ['tesseract-core-lstm.wasm.js','tesseract-core-simd-lstm.wasm.js','tesseract-core-relaxedsimd-lstm.wasm.js'])copyFileSync('node_modules/tesseract.js-core/'+name,'dist/ocr/'+name);
 for(const lang of ['eng','chi_tra'])copyFileSync(`node_modules/@tesseract.js-data/${lang}/4.0.0_best_int/${lang}.traineddata.gz`,`dist/ocr/${lang}.traineddata.gz`);
 const info=JSON.parse(readFileSync('dist/build-info.json','utf8'));
+if(mode==='production') {
+  // Preserve previously shared demo links without mixing fixtures into real FAQs.
+  const replacements=[4,19,1,2,3,1,16,15,16,22,3,6,7,18,15];
+  writeFileSync('dist/_redirects',replacements.map((target,i)=>`/questions/qa-${900001+i}/ /questions/qa-${String(target).padStart(6,'0')}/ 301`).join('\n')+'\n');
+}
+
 try {
   const {index,errors}=await pagefind.createIndex({includeCharacters:'_-',verbose:false});
   if(errors?.length||!index)throw new Error(JSON.stringify(errors));
@@ -32,8 +38,15 @@ try {
     if(result.errors?.length||!result.file)throw new Error(`${id} 索引失敗：${JSON.stringify(result.errors)}`);
     indexedCount++;
   }
-  const result=await index.writeFiles({outputPath:'dist/pagefind'});
+  // Materialize assets before closing the native service. Buffered native file
+  // writes can otherwise be interrupted, leaving an empty pagefind.js on macOS.
+  const result=await index.getFiles();
   if(result.errors?.length)throw new Error(result.errors.join('\n'));
+  for(const file of result.files){
+    const target=path.join('dist/pagefind',file.path);
+    mkdirSync(path.dirname(target),{recursive:true});
+    writeFileSync(target,file.content);
+  }
   console.log(`Pagefind: ${indexedCount} 題；模式 ${mode}`);
 } finally {await pagefind.close();}
 const validate=spawnSync(process.execPath,['scripts/validate-output.mjs'],{stdio:'inherit',env:process.env});

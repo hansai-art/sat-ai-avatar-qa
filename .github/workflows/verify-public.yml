@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 15
     env:
       SITE_URL: https://sathans.pages.dev
-      BUILD_MODE: demo
+      BUILD_MODE: production
       VERIFY_URL: https://sathans.pages.dev
       VERIFY_COMMIT: ${{ github.sha }}
       ASTRO_TELEMETRY_DISABLED: "1"

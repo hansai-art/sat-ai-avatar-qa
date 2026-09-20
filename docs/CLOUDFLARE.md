@@ -1,5 +1,8 @@
 # 免費公開部署設定
 
+> 2026-09-20：sathans 正式站使用 BUILD_MODE=production，SITE_URL=https://sathans.pages.dev。已接 GitHub main 自動部署，新增問題不必再調整 Cloudflare。下方 demo 步驟為初次架構預覽用途。
+
+
 部署目標：GitHub 管理程式與問答，Cloudflare Pages 提供公開網站。使用免費 pages.dev 網址、純靜態輸出，不啟用 Workers Functions、D1、R2、AI API 或付費方案。
 
 ## 2026-09-18 指定網址遷移
@@ -31,7 +34,7 @@
 | Build command | npm run build:cloudflare |
 | Build output directory | dist |
 | NODE_VERSION | 24.19.0（亦已在 .nvmrc） |
-| BUILD_MODE | demo；內容驗收後才改 production |
+| BUILD_MODE | production（2026-09-20 正式 FAQ） |
 | SITE_URL | https://sathans.pages.dev（新站；舊站只供應獨立轉址產物） |
 
 `build:cloudflare` 依序執行 Astro check、Node 單元測試、網站建置及 Pagefind 索引，任何失敗會阻止發布。base 固定 `/`，避免沿用 GitHub 專案子路徑。正式模式仍要求課綱確認及真實發布內容。

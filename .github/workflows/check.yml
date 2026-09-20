@@ -10,9 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        base: ["/", "/sat-ai-avatar-qa/"]
+        include:
+          - {base: "/", mode: demo}
+          - {base: "/sat-ai-avatar-qa/", mode: demo}
+          - {base: "/", mode: production}
     env:
       BASE_PATH: ${{ matrix.base }}
+      BUILD_MODE: ${{ matrix.mode }}
       SITE_URL: https://example.com
       ASTRO_TELEMETRY_DISABLED: "1"
     steps:
@@ -24,6 +28,6 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run test:unit
-      - run: npm run build:demo
+      - run: node scripts/build.mjs "$BUILD_MODE"
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e

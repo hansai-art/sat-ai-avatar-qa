@@ -1,0 +1,460 @@
+{
+  "date": "2026-09-20",
+  "scope": "使用者提供的 44 筆 FAQ 紀錄及 HTML 本頁 10 個去重主討論；不代表平台所有頁面。",
+  "ranking": "編輯優先序，先解決新手跟課障礙；不顯示或推估人氣。",
+  "followupsPending": [
+    "CLASS-03：自己的 bot 的 /help 與影片不同，未確認最後解決。",
+    "CLASS-09：LINE 補課尚未在提供資料中確認已上架。",
+    "Q040 等多意圖留言僅整理已映射部分，其餘保留待整理。"
+  ],
+  "records": [
+    {
+      "recordId": "Q001",
+      "date": "2026-08-03",
+      "sha256": "f8c19ee1af7ac24901b5cdf58bf897199f15050da51943baa4ca45bc7f8bfe1d",
+      "status": "非獨立問題／支持或結案留言",
+      "questions": []
+    },
+    {
+      "recordId": "Q002",
+      "date": "2026-08-04",
+      "sha256": "89b984ded8cc74ee068acfd998ce4393dfa2339a97618a73dc4d8a52f5844cd3",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000014"
+      ]
+    },
+    {
+      "recordId": "Q003",
+      "date": "2026-08-05",
+      "sha256": "2acfa08d1880c8088daff9837adb28f1ece1dbbb938ba916d8e793408e8c5fa6",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000003"
+      ]
+    },
+    {
+      "recordId": "Q004",
+      "date": "2026-08-05",
+      "sha256": "aa96d093507feb30c4f8e2e41800d40384efa0d06b2372ccadfbdb1590a02b29",
+      "status": "待後續整理；未冒充已回答 FAQ",
+      "questions": []
+    },
+    {
+      "recordId": "Q005",
+      "date": "2026-08-06",
+      "sha256": "3635644eb19a4ed2c30e33c035679d376038a90a845b5bb11ad15c96101ee43c",
+      "status": "待後續整理；未冒充已回答 FAQ",
+      "questions": []
+    },
+    {
+      "recordId": "Q006",
+      "date": "2026-08-06",
+      "sha256": "010092cca73049e9fdab9960350f5538d9ca5a48c88893cb64fbf2135d404ff8",
+      "status": "非獨立問題／支持或結案留言",
+      "questions": []
+    },
+    {
+      "recordId": "Q007",
+      "date": "2026-08-07",
+      "sha256": "4bc72a472c3b2470e04ca4c3cb9c68cc2ab648f6076b785a4b927bea2465b57d",
+      "status": "非獨立問題／支持或結案留言",
+      "questions": []
+    },
+    {
+      "recordId": "Q008",
+      "date": "2026-08-08",
+      "sha256": "ea518c991fd8f601783b88d21ad3ec4f7562ef62022e3281de379d9854d3a334",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000017"
+      ]
+    },
+    {
+      "recordId": "Q009",
+      "date": "2026-08-08",
+      "sha256": "fc3fdcb00720758b8bbf978d633085d8ab060107002485b45e7db79f939d2c58",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000017"
+      ]
+    },
+    {
+      "recordId": "Q010",
+      "date": "2026-08-08",
+      "sha256": "6a302749f18412b053f77588fe2cadde92cb9af9a6330dc675ca68f586b5a892",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000017"
+      ]
+    },
+    {
+      "recordId": "Q011",
+      "date": "2026-08-08",
+      "sha256": "6f7c10267bee07217217e6263a30afad54632f1d771e6750c56bad894206ca31",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000017"
+      ]
+    },
+    {
+      "recordId": "Q012",
+      "date": "2026-08-09",
+      "sha256": "dc9af90eade6f305d7ffb4c17965505bcea453c68e91f89798780e3e85f82fa2",
+      "status": "待後續整理；未冒充已回答 FAQ",
+      "questions": []
+    },
+    {
+      "recordId": "Q013",
+      "date": "2026-08-10",
+      "sha256": "96cc63a28b9f1cabd00d3aca6d6cb81ce62302a168bc496210f457ba19b9c18a",
+      "status": "非獨立問題／支持或結案留言",
+      "questions": []
+    },
+    {
+      "recordId": "Q014",
+      "date": "2026-08-12",
+      "sha256": "117dfd996d6846fd504b8ecf1f30789b9c8e0e76f387b56a60b73a7813079e65",
+      "status": "非獨立問題／支持或結案留言",
+      "questions": []
+    },
+    {
+      "recordId": "Q015",
+      "date": "2026-08-13",
+      "sha256": "0ba2044cc2bbe7cc2cde1fcb75c7a7194c030d9ad56262f5d5489bdfde525ae1",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000022"
+      ]
+    },
+    {
+      "recordId": "Q016",
+      "date": "2026-08-13",
+      "sha256": "ead92eebec14da4de8f7052a57c5eb922c99b32552fae3241b217f8abb4ecdc9",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000015"
+      ]
+    },
+    {
+      "recordId": "Q017",
+      "date": "2026-08-13",
+      "sha256": "e19e8c741a8e6d1b14583362cc01114addeb133a30c6291aedd33499f2aefd17",
+      "status": "待後續整理；未冒充已回答 FAQ",
+      "questions": []
+    },
+    {
+      "recordId": "Q018",
+      "date": "2026-08-14",
+      "sha256": "57287860fb85d71e19a52490e2835fe51d7a569c8ee6a81b8bab6228d8e7a9b1",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000003"
+      ]
+    },
+    {
+      "recordId": "Q019",
+      "date": "2026-08-16",
+      "sha256": "276b7e4033d952fa1a2fb6573b18d0b3927c33a255ca92a8f03eb6c5cace9c39",
+      "status": "待後續整理；未冒充已回答 FAQ",
+      "questions": []
+    },
+    {
+      "recordId": "Q020",
+      "date": "2026-08-18",
+      "sha256": "6db6a8fbf99577c7836a20c20fed163c362434c74fe0f446b509be96e1088e1e",
+      "status": "待後續整理；未冒充已回答 FAQ",
+      "questions": []
+    },
+    {
+      "recordId": "Q021",
+      "date": "2026-08-19",
+      "sha256": "8a71bab7574e514bd90ada5a575bafd2c45b6ee3ad17cc24d84d08c8d70021a1",
+      "status": "非獨立問題／支持或結案留言",
+      "questions": []
+    },
+    {
+      "recordId": "Q022",
+      "date": "2026-08-19",
+      "sha256": "9a4aa9e60fd237605420b6966aeeaab626ec243e4d5e83f75f9b2292298719eb",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000011"
+      ]
+    },
+    {
+      "recordId": "Q023",
+      "date": "2026-08-20",
+      "sha256": "2ae126ca7e5b5094c5c5f64ed190ded6f4ee52ee0269e542ad8f5bcda3b9cb9e",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000004"
+      ]
+    },
+    {
+      "recordId": "Q024",
+      "date": "2026-08-22",
+      "sha256": "b126bd0fa533a2f4fdae7ee3d47132e500cac40cbee58177a9227c6bf5ee5ad0",
+      "status": "待後續整理；未冒充已回答 FAQ",
+      "questions": []
+    },
+    {
+      "recordId": "Q025",
+      "date": "2026-08-23",
+      "sha256": "fce5e77830a379604d4dde77647e5e4f3a38b6f43b190e04c539cb8d9afdecbb",
+      "status": "待後續整理；未冒充已回答 FAQ",
+      "questions": []
+    },
+    {
+      "recordId": "Q026",
+      "date": "2026-08-23",
+      "sha256": "39d154d6bf1659566faab4f8197ef329cfbf93fffcd35f34bb24de78cbe7680b",
+      "status": "待後續整理；未冒充已回答 FAQ",
+      "questions": []
+    },
+    {
+      "recordId": "Q027",
+      "date": "2026-08-25",
+      "sha256": "d63684d39f57e609c8cd26f0f210036096c4df3f5a6c121d6c3e19b8b5811bf0",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000004"
+      ]
+    },
+    {
+      "recordId": "Q028",
+      "date": "2026-08-27",
+      "sha256": "52cd06a8d0abd57c851730bd223e84e4448fc087ba7172900ac0a4b78dd43acd",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000012",
+        "qa-000018"
+      ]
+    },
+    {
+      "recordId": "Q029",
+      "date": "2026-08-27",
+      "sha256": "0a270e48096c3fac517b4e235ef3a68d43fe71eac48a47850c3da3d214e16d32",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000016"
+      ]
+    },
+    {
+      "recordId": "Q030",
+      "date": "2026-08-28",
+      "sha256": "30319233b2cd4c148fb3e6abed975084b2ca55e05015e8f456021941d82b1803",
+      "status": "待後續整理；未冒充已回答 FAQ",
+      "questions": []
+    },
+    {
+      "recordId": "Q031",
+      "date": "2026-08-28",
+      "sha256": "040b4cdac7456a855efd1791d5c444aa76532846290b91e02644a59bf109aa61",
+      "status": "待後續整理；未冒充已回答 FAQ",
+      "questions": []
+    },
+    {
+      "recordId": "Q032",
+      "date": "2026-08-30",
+      "sha256": "7d8992e5e7a46b04f53e86ae2d004ea91f1bb57ce5dccffe8091f3806a4baa5b",
+      "status": "待後續整理；未冒充已回答 FAQ",
+      "questions": []
+    },
+    {
+      "recordId": "Q033",
+      "date": "2026-08-30",
+      "sha256": "b3e1ce5ed0b50a4f0691415b73f1361c4abfe4c082e4c40f7cdd54ee51572874",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000011"
+      ]
+    },
+    {
+      "recordId": "Q034",
+      "date": "2026-08-30",
+      "sha256": "b7feca83a3c17c6baec3253fcaa8e8846391d415ba7e11c20425981f6e17e988",
+      "status": "非獨立問題／支持或結案留言",
+      "questions": []
+    },
+    {
+      "recordId": "Q035",
+      "date": "2026-08-31",
+      "sha256": "66d6eca8e74a7e6b2248e1810d31063bfd178ee33abaa9e09d184ac7d59611ca",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000005"
+      ]
+    },
+    {
+      "recordId": "Q036",
+      "date": "2026-09-01",
+      "sha256": "b6b5a56f5807245df91b01251e4e773f9e7877d6624b22307a0a15c761719524",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000003"
+      ]
+    },
+    {
+      "recordId": "Q037",
+      "date": "2026-09-01",
+      "sha256": "cd36e5f245fe78abc78ef4de24d37689d73d93ff530098325a0d1ca7ea23a28d",
+      "status": "待後續整理；未冒充已回答 FAQ",
+      "questions": []
+    },
+    {
+      "recordId": "Q038",
+      "date": "2026-09-06",
+      "sha256": "ec278fe1738e12a7df179de4ea8299a206488dcb18703d14dab107859b67c602",
+      "status": "待後續整理；未冒充已回答 FAQ",
+      "questions": []
+    },
+    {
+      "recordId": "Q039",
+      "date": "2026-09-09",
+      "sha256": "5e778ef44670afd80cb7561ca86e41d83b934e726c1d1b89cbb925517cfd5fbe",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000004",
+        "qa-000006"
+      ]
+    },
+    {
+      "recordId": "Q040",
+      "date": "2026-09-10",
+      "sha256": "732e0f1064cf63ba847ff7fadb3eabf65c2b7b4a572523322ce8e1b04c53311e",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000006",
+        "qa-000011",
+        "qa-000014",
+        "qa-000015",
+        "qa-000019",
+        "qa-000020"
+      ]
+    },
+    {
+      "recordId": "Q041",
+      "date": "2026-09-10",
+      "sha256": "21befd90464ca8b305b301a59b4de7d589699cbabc5dfb69a955921707afa751",
+      "status": "待後續整理；未冒充已回答 FAQ",
+      "questions": []
+    },
+    {
+      "recordId": "Q042",
+      "date": "2026-09-10",
+      "sha256": "0de3cbcc59d9357b1441efc1f83499111f400821d6467f530a7c5939ae53c43f",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000017"
+      ]
+    },
+    {
+      "recordId": "Q043",
+      "date": "2026-09-10",
+      "sha256": "2b82e0dacec36e9872df68c85faa6670e7d83416b32fcd4a42234ca22dd3f3f1",
+      "status": "非獨立問題／支持或結案留言",
+      "questions": []
+    },
+    {
+      "recordId": "Q044",
+      "date": "2026-09-17",
+      "sha256": "970c162813abf0de24d569dfde381d2c34ec9f3c71f3313bc51174c47188c975",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000013"
+      ]
+    },
+    {
+      "recordId": "CLASS-01",
+      "date": "2026-09-19",
+      "sha256": "3696a9658c1bff974fdc48d49ca0d5394127a6b98be1ca9f6585341334f5f164",
+      "status": "非獨立問題／支持或結案留言",
+      "questions": []
+    },
+    {
+      "recordId": "CLASS-02",
+      "date": "2026-09-17",
+      "sha256": "9fbd7044c21e6d37b26ccb0e315921fa89dc84e34e6c50b4dfeb2632ae6fe400",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000003"
+      ]
+    },
+    {
+      "recordId": "CLASS-03",
+      "date": "2026-09-17",
+      "sha256": "5d86128a0c0b29609628636468e5ea8d90b86b4fba4ca18b934ed0906a08f3e8",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000001"
+      ]
+    },
+    {
+      "recordId": "CLASS-04",
+      "date": "2026-09-17",
+      "sha256": "4c21789bf1ae4a8864011ee14ddf820a5b5d7dc235168a4b6d7822dc9e3b41f9",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000002",
+        "qa-000003"
+      ]
+    },
+    {
+      "recordId": "CLASS-05",
+      "date": "2026-09-16",
+      "sha256": "8220725177afa929d3048c92a43fa4148c205fe0a1b48633a2ea0fa2eb71a240",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000002"
+      ]
+    },
+    {
+      "recordId": "CLASS-06",
+      "date": "2026-09-15",
+      "sha256": "ab2dd9268c45446aa50a7caf748fea86ddce9cc06cf4c5c07276d971a1484a58",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000009"
+      ]
+    },
+    {
+      "recordId": "CLASS-07",
+      "date": "2026-09-15",
+      "sha256": "01e666099aab13323548239847747ed39cda27b9cf5dfa3457b585d2ba6b18f8",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000010"
+      ]
+    },
+    {
+      "recordId": "CLASS-08",
+      "date": "2026-09-15",
+      "sha256": "b3d50b5c2e0720f87135423ddcd52a7d59cef5e5705daab3456fa303cd94a4a0",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000008"
+      ]
+    },
+    {
+      "recordId": "CLASS-09",
+      "date": "2026-09-13",
+      "sha256": "73fd764fab21bd2eeea87e3473bd79d126501fa0a75b0b2ce8fe2e4596017870",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000005",
+        "qa-000006",
+        "qa-000021"
+      ]
+    },
+    {
+      "recordId": "CLASS-10",
+      "date": "2026-09-13",
+      "sha256": "fa16871c572fa7aa99cd6aad0d47734b09aafc99b226f4fc01c771ffe487af1d",
+      "status": "已整理（僅列出的子問題）",
+      "questions": [
+        "qa-000007"
+      ]
+    }
+  ]
+}

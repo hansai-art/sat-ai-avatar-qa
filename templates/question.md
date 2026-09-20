@@ -1,5 +1,9 @@
 ---
 title: "請填寫具體問題標題"
+intent: operation # operation / concept / resources
+faqOrder: 99999
+firstStep: "填入學生可先做的第一步"
+sourceRefs: [] # 正式已問題需 recordId、part、askedAt
 summary: "請先用一到兩句話，直接說明判斷與最重要的處理方式。"
 chapterRefs: ["general"]
 lessonRefs: []

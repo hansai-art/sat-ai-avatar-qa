@@ -1,4 +1,5 @@
 ---
+import '../styles/zh-tw-typography.css';
 import '../styles/global.css';
 import {taxonomy,href,buildMode} from '../lib/content';
 interface Props {title:string;description?:string;noindex?:boolean;searchFirst?:boolean;}
@@ -7,7 +8,7 @@ const canonical=!noindex&&Astro.site?.protocol==='https:' ? new URL(Astro.url.pa
 const current=Astro.url.pathname;
 ---
 <!doctype html>
-<html lang="zh-TW" data-pagefind-ignore={noindex?'all':undefined}>
+<html lang="zh-Hant-TW" data-pagefind-ignore={noindex?'all':undefined}>
   <head>
     <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}｜AI 分身課程問答庫</title><meta name="description" content={description}/>
@@ -17,7 +18,7 @@ const current=Astro.url.pathname;
     <meta name="theme-color" content="#184ae8"/>
     <link rel="icon" type="image/svg+xml" href={href('/favicon.svg')}/>
   </head>
-  <body>
+  <body class="zh-ui">
     <a class="skip-link" href="#main">跳到主要內容</a>
     {buildMode==='demo'&&<div class="demo-banner"><strong>架構預覽</strong><span>以下為示範資料，非正式課程答案</span></div>}
     <header class="site-header">

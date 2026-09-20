@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+const info=JSON.parse(fs.readFileSync('dist/build-info.json','utf8'));
 import {test,expect} from '@playwright/test';
 const fixture='tests/fixtures/assets/ocr-error.png';
 
@@ -15,10 +17,10 @@ test('截圖在瀏覽器辨識繁中與英文，確認文字後才搜尋',async(
  expect(new URL(page.url()).searchParams.has('q')).toBe(false);
  expect(requests.filter(r=>/^https?:/.test(r.url)).every(r=>new URL(r.url).origin===new URL(baseURL!).origin&&r.method==='GET')).toBe(true);
  expect(requests.some(r=>r.url.includes('/ocr/'))).toBe(true);
- await page.locator('#screenshot-text').fill('429');
+ await page.locator('#screenshot-text').fill(info.mode==='demo'?'429':'BotFather');
  await page.getByRole('button',{name:'用這些文字搜尋'}).click();
  await expect(page.locator('#result-count')).toHaveText('找到 1 個問題');
- await expect(page.getByLabel('搜尋問題',{exact:true})).toHaveValue('429');
+ await expect(page.getByLabel('搜尋問題',{exact:true})).toHaveValue(info.mode==='demo'?'429':'BotFather');
  await expect(page.locator('#screenshot-preview')).not.toHaveAttribute('src');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });

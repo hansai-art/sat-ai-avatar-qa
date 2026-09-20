@@ -1,0 +1,130 @@
+/* Huashu Design · zh-Hant-TW typography layer
+   Apply one profile class to a container: .zh-prose, .zh-ui, or .zh-slide.
+   Brand projects may override every --zh-font-* token from brand-spec.md. */
+
+:root {
+  --zh-font-latin-sans: var(--brand-font-sans, "Avenir Next", "Segoe UI", sans-serif);
+  --zh-font-latin-serif: var(--brand-font-serif, "Source Serif 4", Georgia, serif);
+  --zh-font-sans: var(--brand-font-zh-sans,
+    "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", "微軟正黑體", sans-serif);
+  --zh-font-serif: var(--brand-font-zh-serif,
+    "Noto Serif TC", "Source Han Serif TC", "Songti TC", serif);
+  --zh-font-mono: var(--brand-font-mono,
+    "SFMono-Regular", "JetBrains Mono", Consolas, monospace);
+
+  --zh-prose-size: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  --zh-prose-leading: 1.8;
+  --zh-prose-tracking: 0.015em;
+  --zh-prose-measure: 36em;
+
+  --zh-ui-size: 1rem;
+  --zh-ui-leading: 1.55;
+  --zh-ui-tracking: 0;
+
+  --zh-slide-body-size: 28px;
+  --zh-slide-body-leading: 1.65;
+  --zh-slide-heading-leading: 1.22;
+}
+
+:where(:lang(zh-Hant-TW), :lang(zh-TW)) {
+  font-family: var(--zh-font-latin-sans), var(--zh-font-sans);
+  line-break: strict;
+  word-break: normal;
+  overflow-wrap: break-word;
+  text-autospace: normal;
+  text-spacing-trim: normal;
+}
+
+.zh-prose {
+  --zh-profile-body-wrap: pretty;
+  --zh-profile-measure: var(--zh-prose-measure);
+  --zh-profile-heading-leading: 1.3;
+  --zh-profile-heading-wrap: balance;
+  --zh-profile-heading-tracking: 0;
+  --zh-profile-quote-font: var(--zh-font-latin-serif), var(--zh-font-serif);
+  --zh-profile-caption-size: 1em;
+  --zh-profile-caption-leading: var(--zh-prose-leading);
+  font-family: var(--zh-font-latin-sans), var(--zh-font-sans);
+  font-size: var(--zh-prose-size);
+  line-height: var(--zh-prose-leading);
+  letter-spacing: var(--zh-prose-tracking);
+}
+
+.zh-ui {
+  --zh-profile-body-wrap: wrap;
+  --zh-profile-measure: none;
+  --zh-profile-heading-leading: normal;
+  --zh-profile-heading-wrap: wrap;
+  --zh-profile-heading-tracking: normal;
+  --zh-profile-quote-font: var(--zh-font-latin-sans), var(--zh-font-sans);
+  --zh-profile-caption-size: max(13px, 0.8125rem);
+  --zh-profile-caption-leading: 1.5;
+  font-family: var(--zh-font-latin-sans), var(--zh-font-sans);
+  font-size: var(--zh-ui-size);
+  line-height: var(--zh-ui-leading);
+  letter-spacing: var(--zh-ui-tracking);
+}
+
+.zh-slide {
+  --zh-profile-body-wrap: pretty;
+  --zh-profile-measure: none;
+  --zh-profile-heading-leading: var(--zh-slide-heading-leading);
+  --zh-profile-heading-wrap: balance;
+  --zh-profile-heading-tracking: 0;
+  --zh-profile-quote-font: var(--zh-font-latin-sans), var(--zh-font-sans);
+  --zh-profile-caption-size: max(18px, 0.64em);
+  --zh-profile-caption-leading: 1.45;
+  font-family: var(--zh-font-latin-sans), var(--zh-font-sans);
+  font-size: var(--zh-slide-body-size);
+  line-height: var(--zh-slide-body-leading);
+  letter-spacing: 0;
+}
+
+:where(.zh-prose, .zh-ui, .zh-slide) :where(p, ul, ol, li, dd, blockquote) {
+  max-inline-size: var(--zh-profile-measure);
+  text-wrap: var(--zh-profile-body-wrap);
+}
+
+:where(.zh-prose, .zh-ui, .zh-slide) :where(h1, h2, h3, h4, h5, h6) {
+  line-height: var(--zh-profile-heading-leading);
+  letter-spacing: var(--zh-profile-heading-tracking);
+  text-wrap: var(--zh-profile-heading-wrap);
+}
+
+:where(.zh-prose, .zh-ui, .zh-slide) blockquote {
+  font-family: var(--zh-profile-quote-font);
+}
+
+.zh-serif {
+  font-family: var(--zh-font-latin-serif), var(--zh-font-serif);
+}
+
+:where(.zh-prose, .zh-ui, .zh-slide) :where(button, input, select, textarea) {
+  font: inherit;
+}
+
+:where(.zh-prose, .zh-ui, .zh-slide) :where(.caption, .label, .source, small) {
+  font-size: var(--zh-profile-caption-size);
+  line-height: var(--zh-profile-caption-leading);
+}
+
+.zh-code,
+.zh-code :where(code, pre),
+:where(:lang(zh-Hant-TW), :lang(zh-TW)) :where(code, pre) {
+  font-family: var(--zh-font-mono);
+  letter-spacing: 0;
+  text-autospace: no-autospace;
+  text-spacing-trim: space-all;
+}
+
+.zh-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 新屬性只做漸進增強。基本間距不能依賴這一段才成立。 */
+@supports (text-box-trim: trim-both) {
+  .zh-latin-display {
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
+  }
+}

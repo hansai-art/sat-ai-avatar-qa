@@ -35,6 +35,7 @@ for(const file of files){
 const questionDirs=fs.readdirSync('dist/questions',{withFileTypes:true}).filter(e=>e.isDirectory()&&e.name.startsWith('qa-')).map(e=>e.name).sort();
 if(JSON.stringify(questionDirs)!==JSON.stringify([...info.searchableIds,...info.archivedIds].sort()))errors.push('問答頁與發布清單不一致');
 if(!fs.existsSync('dist/pagefind/pagefind.js'))errors.push('缺少 Pagefind 索引');
+else if(fs.statSync('dist/pagefind/pagefind.js').size<1000)errors.push('Pagefind 主程式為空或不完整');
 if(total>500*1024*1024)errors.push('產物超過 500MiB');
 if(total>250*1024*1024)console.warn('產物超過 250MiB，建議檢查圖片');
 if(errors.length)throw new Error([...new Set(errors)].join('\n'));

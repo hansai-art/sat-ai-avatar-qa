@@ -16,6 +16,10 @@ export const questionSchema = z.object({
   answerStatus: z.enum(['unverified','verified','needs-update']).default('unverified'),
   contentOrigin: z.enum(['real','demo']).default('real'),
   questionOrigin: z.enum(['asked','anticipated']).default('asked'),
+  intent: z.enum(['operation','concept','resources']).default('operation'),
+  faqOrder: z.number().int().min(1).max(99999).default(99999),
+  firstStep: text(1,300).optional(),
+  sourceRefs: z.array(z.object({recordId:text(1,80),part:text(1,120),askedAt:date}).strict()).default([]),
   askedBy: z.array(z.object({name:text(1,80),sourceUrl:https}).strict()).max(20).default([]),
   createdAt: date, updatedAt: date, verifiedAt: date.nullable().default(null),
   reviewedBy: nullableText, reviewNote: nullableText, appliesTo: nullableText,
@@ -50,6 +54,7 @@ export function validateQuestions(entries, taxonomy, mode, today=todayTaipei()) 
   }
   for(const q of entries) {
     const d=q.data, id=q.id;
+    if(new Set(d.sourceRefs.map(r=>r.recordId+'|'+r.part)).size!==d.sourceRefs.length) fail(id,'來源對照不可重複計入同一子問題');
     if(!/^qa-\d{6}$/.test(id)) fail(id,'檔名需為 qa-六位數字.md');
     for(const [field,key] of [['chapterRefs','chapters'],['toolRefs','tools']]) {
       if(d[field].includes('general') && d[field].length>1) fail(id,`${field} 的 general 不可混用`);
@@ -58,12 +63,13 @@ export function validateQuestions(entries, taxonomy, mode, today=todayTaipei()) 
     if(!taxonomy.types.some(t=>t.id===d.type)) fail(id,'未知問題類型');
     if(d.lessonRefs.some(l=>!lessons.has(l) || !d.chapterRefs.includes(lessons.get(l)))) fail(id,'小節不存在或不屬於所選章節');
     if(d.reviewedBy && !taxonomy.contributors.some(c=>c.id===d.reviewedBy)) fail(id,'未知審核者');
-    for(const day of [d.createdAt,d.updatedAt,d.verifiedAt,...d.sources.map(s=>s.checkedAt)].filter(Boolean)) if(day>today) fail(id,'日期不可在未來');
+    for(const day of [d.createdAt,d.updatedAt,d.verifiedAt,...d.sources.map(s=>s.checkedAt),...d.sourceRefs.map(s=>s.askedAt)].filter(Boolean)) if(day>today) fail(id,'日期不可在未來');
     if(d.createdAt>d.updatedAt || d.verifiedAt && (d.verifiedAt<d.createdAt || d.verifiedAt>d.updatedAt)) fail(id,'日期順序不正確');
     if(d.publication==='published') {
       if(d.answerStatus==='unverified' || !d.reviewedBy || !d.verifiedAt || !d.sources.length) fail(id,'已發布問答需要審核者、確認日與來源');
       if(!q.body?.trim() || q.body.trim()===d.summary) fail(id,'已發布問答需完整正文');
       if(d.contentOrigin==='real' && d.questionOrigin==='asked' && !d.askedBy.length) fail(id,'學員已問的正式問題需提供可公開的提問者名稱與原討論網址');
+      if(d.contentOrigin==='real' && d.questionOrigin==='asked' && (!d.firstStep || !d.sourceRefs.length)) fail(id,'正式 FAQ 需要第一步與來源對照');
     }
     if(d.questionOrigin==='anticipated' && d.askedBy.length) fail(id,'延伸問題不可標記為學員提問');
     if(Buffer.byteLength(q.body || '')>200*1024) fail(id,'正文超過 200KiB');
@@ -80,4 +86,4 @@ export function validateQuestions(entries, taxonomy, mode, today=todayTaipei()) 
   return entries;
 }
 export function visibleQuestions(entries,mode) { return entries.filter(q=>q.data.contentOrigin===(mode==='demo'?'demo':'real') && q.data.publication!=='draft'); }
-export function publishedQuestions(entries) { return entries.filter(q=>q.data.publication==='published').sort((a,b)=>Number(a.data.questionOrigin==='anticipated')-Number(b.data.questionOrigin==='anticipated')||b.data.updatedAt.localeCompare(a.data.updatedAt)||a.id.localeCompare(b.id)); }
+export function publishedQuestions(entries) { return entries.filter(q=>q.data.publication==='published').sort((a,b)=>Number(a.data.questionOrigin==='anticipated')-Number(b.data.questionOrigin==='anticipated')||(a.data.faqOrder??99999)-(b.data.faqOrder??99999)||b.data.updatedAt.localeCompare(a.data.updatedAt)||a.id.localeCompare(b.id)); }

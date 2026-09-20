@@ -1,355 +1,392 @@
 {
   "chapters": [
     {
+      "id": "ch00",
+      "order": 0,
+      "title": "第 0 章",
+      "confirmed": true,
+      "courseUrl": "https://sat.cool/course/201",
+      "lessons": [
+        {
+          "id": "ch00-01",
+          "order": 1,
+          "title": "課程定位與 AI 導入三大痛點",
+          "confirmed": true
+        },
+        {
+          "id": "ch00-02",
+          "order": 2,
+          "title": "五層學習地圖＆編排工程 Harness Engineering",
+          "confirmed": true
+        },
+        {
+          "id": "ch00-03",
+          "order": 3,
+          "title": "AI 課程回本三場景：時間、收入、資產",
+          "confirmed": true
+        }
+      ],
+      "description": "先導：先知道自己為什麼學 AI"
+    },
+    {
       "id": "ch01",
       "order": 1,
       "title": "第 1 章",
-      "confirmed": false,
+      "confirmed": true,
       "courseUrl": "https://sat.cool/course/201",
       "lessons": [
         {
           "id": "ch01-01",
           "order": 1,
-          "title": "Hermes Agent 完整成果流程 Demo",
-          "confirmed": false
+          "title": "Hermes Agent 完整流程 Demo 展示",
+          "confirmed": true
         },
         {
           "id": "ch01-02",
           "order": 2,
           "title": "先看地圖：HERMES 完整框架",
-          "confirmed": false
+          "confirmed": true
         },
         {
           "id": "ch01-03",
           "order": 3,
-          "title": "Hermes Agent 下載安裝（MAC）",
-          "confirmed": false
+          "title": "Hermes Agent 下載安裝",
+          "confirmed": true
         },
         {
           "id": "ch01-04",
           "order": 4,
-          "title": "Hermes Agent 安裝終端機 CLI 與 TUI（MAC）",
-          "confirmed": false
+          "title": "Hermes Agent 終端機 CLI 與 TUI 安裝教學",
+          "confirmed": true
         },
         {
           "id": "ch01-05",
           "order": 5,
-          "title": "手機操控&語音輸入&介面翻譯（Telegram 安卓替代方案）",
-          "confirmed": false
+          "title": "手機操控、語音輸入與介面翻譯",
+          "confirmed": true
         },
         {
           "id": "ch01-06",
           "order": 6,
-          "title": "將你的記憶匯入AI分身人格",
-          "confirmed": false
+          "title": "將你的記憶匯入 AI 分身人格",
+          "confirmed": true
         },
         {
           "id": "ch01-07",
           "order": 7,
-          "title": "如何切換模型？讓AI分身給你判斷建議",
-          "confirmed": false
+          "title": "如何切換模型？讓 AI 分身給你判斷建議",
+          "confirmed": true
         },
         {
           "id": "ch01-08",
           "order": 8,
-          "title": "讓AI自己規劃任務？SMART 五原則",
-          "confirmed": false
+          "title": "讓 AI 自己規劃任務？SMART 五原則",
+          "confirmed": true
         },
         {
           "id": "ch01-09",
           "order": 9,
           "title": "搬家可攜帶的 LLM Wiki 知識庫架構",
-          "confirmed": false
+          "confirmed": true
         }
-      ]
+      ],
+      "description": "安裝你的 AI 分身"
     },
     {
       "id": "ch02",
       "order": 2,
       "title": "第 2 章",
-      "confirmed": false,
+      "confirmed": true,
       "courseUrl": "https://sat.cool/course/201",
       "lessons": [
         {
           "id": "ch02-01",
           "order": 1,
-          "title": "Obsidian黑曜石知識庫安裝入門",
-          "confirmed": false
+          "title": "Obsidian 黑曜石知識庫安裝入門",
+          "confirmed": true
         },
         {
           "id": "ch02-02",
           "order": 2,
-          "title": "AI分身的離線知識庫建立",
-          "confirmed": false
+          "title": "AI 分身的離線知識庫建立",
+          "confirmed": true
         },
         {
           "id": "ch02-03",
           "order": 3,
-          "title": "年度目標時間管理！把時間買回來的DRIP四象限",
-          "confirmed": false
+          "title": "年度目標時間管理：把時間買回來的 DRIP 四象限",
+          "confirmed": true
         },
         {
           "id": "ch02-04",
           "order": 4,
           "title": "什麼是 Skill 技能？把顧問型 Agent 變成可重複使用的工作流",
-          "confirmed": false
+          "confirmed": true
         },
         {
           "id": "ch02-05",
           "order": 5,
-          "title": "AI寫的文案不像你？訓練個人與品牌專屬Skill",
-          "confirmed": false
+          "title": "AI 寫的文案不像你？訓練個人與品牌專屬 Skill",
+          "confirmed": true
         },
         {
           "id": "ch02-06",
           "order": 6,
-          "title": "如何蒸餾個人或團隊的創意思考框架？拆解SOP與判斷規則",
-          "confirmed": false
+          "title": "如何蒸餾個人或團隊的創意思考框架？",
+          "confirmed": true
         },
         {
           "id": "ch02-07",
           "order": 7,
           "title": "將品牌視覺設計也拆解成可重複使用的 Skill 技能",
-          "confirmed": false
+          "confirmed": true
         }
-      ]
+      ],
+      "description": "公司大腦：知識庫與 Skill"
     },
     {
       "id": "ch03",
       "order": 3,
       "title": "第 3 章",
-      "confirmed": false,
+      "confirmed": true,
       "courseUrl": "https://sat.cool/course/201",
       "lessons": [
         {
           "id": "ch03-01",
           "order": 1,
-          "title": "什麼是MCP？一次搞懂 MCP、API、Skill 差別",
-          "confirmed": false
+          "title": "什麼是 MCP？一次搞懂 MCP、API、Skill 差別",
+          "confirmed": true
         },
         {
           "id": "ch03-02",
           "order": 2,
-          "title": "MCP實戰操作！台灣政府公開資料 MCP Hub",
-          "confirmed": false
+          "title": "MCP 實戰操作：台灣政府公開資料 MCP Hub",
+          "confirmed": true
         },
         {
           "id": "ch03-03",
           "order": 3,
-          "title": "全自動寫文章上架網站 WordPress！自動 SEO 優化",
-          "confirmed": false
+          "title": "全自動寫文章上架網站 WordPress：自動 SEO 優化",
+          "confirmed": true
         },
         {
           "id": "ch03-04",
           "order": 4,
-          "title": "Hermes 串接 OpenAI Image OAuth 訂閱生圖功能？免用 API",
-          "confirmed": false
+          "title": "Hermes 串接 OpenAI Image OAuth 訂閱生圖功能：免用 API",
+          "confirmed": true
         },
         {
           "id": "ch03-05",
           "order": 5,
           "title": "Hermes 為什麼越用越慢？減肥及加速",
-          "confirmed": false
+          "confirmed": true
         }
-      ]
+      ],
+      "description": "編排工程：讓工具真的接起來"
     },
     {
       "id": "ch04",
       "order": 4,
       "title": "第 4 章",
-      "confirmed": false,
+      "confirmed": true,
       "courseUrl": "https://sat.cool/course/201",
       "lessons": [
         {
           "id": "ch04-01",
           "order": 1,
           "title": "從雜訊留言中找出能賣錢的痛點與商業需求",
-          "confirmed": false
+          "confirmed": true
         },
         {
           "id": "ch04-02",
           "order": 2,
-          "title": "用AI把雜訊留言變成 VOC + JTBD + 四步需求地圖",
-          "confirmed": false
+          "title": "用 AI 把雜訊留言變成 VOC、JTBD 與四步需求地圖",
+          "confirmed": true
         },
         {
           "id": "ch04-03",
           "order": 3,
-          "title": "付費證據判讀：從真實金額委託反推你能變現的 AI 服務",
-          "confirmed": false
+          "title": "從付費證據反推可賣的服務與產品",
+          "confirmed": true
         },
         {
           "id": "ch04-04",
           "order": 4,
           "title": "用 POC 避開四個致命錯誤：先拆需求，再叫 AI 執行",
-          "confirmed": false
+          "confirmed": true
         },
         {
           "id": "ch04-05",
           "order": 5,
           "title": "用 AI 分身寄陌生開發信：用客製化創意提高回信率",
-          "confirmed": false
+          "confirmed": true
         },
         {
           "id": "ch04-06",
           "order": 6,
           "title": "自動寫信串接 Gmail：Google Cloud 控制台授權流程示範",
-          "confirmed": false
+          "confirmed": true
         }
-      ]
+      ],
+      "description": "找出人們願意付錢的地方"
     },
     {
       "id": "ch05",
       "order": 5,
       "title": "第 5 章",
-      "confirmed": false,
+      "confirmed": true,
       "courseUrl": "https://sat.cool/course/201",
       "lessons": [
         {
           "id": "ch05-01",
           "order": 1,
           "title": "選定值得你投入的 AI 主戰場：導入四條件＋AI 授權矩陣",
-          "confirmed": false
+          "confirmed": true
         },
         {
           "id": "ch05-02",
           "order": 2,
-          "title": "什麼時候 Hermes 不夠用？Build Buy Skip 決策三問",
-          "confirmed": false
+          "title": "什麼時候 Hermes 不夠用？Build、Buy、Skip 決策三問",
+          "confirmed": true
         },
         {
           "id": "ch05-03",
           "order": 3,
           "title": "行銷情報雷達全自動化：n8n、Skill、MCP 精選連結",
-          "confirmed": false
+          "confirmed": true
         }
-      ]
+      ],
+      "description": "選定值得你投入的 AI 主戰場"
     },
     {
       "id": "ch06",
       "order": 6,
       "title": "第 6 章",
-      "confirmed": false,
+      "confirmed": true,
       "courseUrl": "https://sat.cool/course/201",
       "lessons": [
         {
           "id": "ch06-01",
           "order": 1,
-          "title": "自動監控政府標案：從電子採購網找案到 Go No-Go 三道閘門",
-          "confirmed": false
+          "title": "自動監控政府標案：從電子採購網找案到 Go／No-Go 三道閘門",
+          "confirmed": true
         },
         {
           "id": "ch06-02",
           "order": 2,
-          "title": "標案知識庫四區架構與提案武器庫：團隊資歷、專案卡片等",
-          "confirmed": false
+          "title": "標案知識庫四區架構與提案武器庫",
+          "confirmed": true
         },
         {
           "id": "ch06-03",
           "order": 3,
           "title": "AI 提案產出與驗收：從標書拆解到交出去的完整流程",
-          "confirmed": false
+          "confirmed": true
         },
         {
           "id": "ch06-04",
           "order": 4,
-          "title": "從錯誤中不斷學習進化？模擬、復盤、留規則",
-          "confirmed": false
+          "title": "模擬、復盤、驗收、留規則：從錯誤中不斷學習進化",
+          "confirmed": true
         }
-      ]
+      ],
+      "description": "政府標案完整實戰"
     },
     {
       "id": "ch07",
       "order": 7,
       "title": "第 7 章",
-      "confirmed": false,
+      "confirmed": true,
       "courseUrl": "https://sat.cool/course/201",
       "lessons": [
         {
           "id": "ch07-01",
           "order": 1,
           "title": "讓客戶自己找上門？內容飛輪與 KLT 信任漏斗",
-          "confirmed": false
+          "confirmed": true
         },
         {
           "id": "ch07-02",
           "order": 2,
-          "title": "AI 量產內容必須要有品牌信任：品牌診斷表與 AI 審稿規則",
-          "confirmed": false
+          "title": "AI 量產內容前先過品牌關：品牌診斷表與 AI 審稿規則",
+          "confirmed": true
         },
         {
           "id": "ch07-03",
           "order": 3,
           "title": "內容高效生產線：Podcast、短影音、長文、社群短文一魚多吃",
-          "confirmed": false
+          "confirmed": true
         },
         {
           "id": "ch07-04",
           "order": 4,
           "title": "客戶從信任到成交？KLT 信任漏斗",
-          "confirmed": false
+          "confirmed": true
         }
-      ]
+      ],
+      "description": "讓客戶自己找上門：被動接案系統"
     },
     {
       "id": "ch08",
       "order": 8,
       "title": "第 8 章",
-      "confirmed": false,
+      "confirmed": true,
       "courseUrl": "https://sat.cool/course/201",
       "lessons": [
         {
           "id": "ch08-01",
           "order": 1,
           "title": "公司資料哪些能餵 AI？資料分級與模型選擇矩陣",
-          "confirmed": false
+          "confirmed": true
         },
         {
           "id": "ch08-02",
           "order": 2,
           "title": "資安問題想要完全離線？雲端地端混合架構與 AI 分身的未來",
-          "confirmed": false
+          "confirmed": true
         },
         {
           "id": "ch08-03",
           "order": 3,
-          "title": "學習國外公司導入 AI：AI Champion 領航員、SEED種子導入四標準",
-          "confirmed": false
+          "title": "學習國外公司導入 AI：AI Champion 領航員、SEED 種子導入四標準",
+          "confirmed": true
         },
         {
           "id": "ch08-04",
           "order": 4,
           "title": "AI 版權與商用合法性：素材來源、模型授權、判決案例",
-          "confirmed": false
+          "confirmed": true
         }
-      ]
+      ],
+      "description": "把 AI 帶進公司：治理、風險與導入節奏"
     },
     {
       "id": "ch09",
       "order": 9,
       "title": "第 9 章",
-      "confirmed": false,
+      "confirmed": true,
       "courseUrl": "https://sat.cool/course/201",
       "lessons": [
         {
           "id": "ch09-01",
           "order": 1,
           "title": "課後行動指南：反待辦清單、先建評測、生產力 J 曲線",
-          "confirmed": false
+          "confirmed": true
         },
         {
           "id": "ch09-02",
           "order": 2,
           "title": "老闆行動指南：投入成本、ROI 檢驗、什麼先不要做",
-          "confirmed": false
+          "confirmed": true
         },
         {
           "id": "ch09-03",
           "order": 3,
           "title": "超級懶人包：延伸資源連結＋全課 Skill 資源打包下載",
-          "confirmed": false
+          "confirmed": true
         }
-      ]
+      ],
+      "description": "90 天行動路線圖"
     },
     {
       "id": "general",
@@ -411,6 +448,14 @@
       "id": "general",
       "name": "通用問題",
       "aliases": []
+    },
+    {
+      "id": "wordpress",
+      "name": "WordPress",
+      "aliases": [
+        "WP",
+        "Rank Math"
+      ]
     }
   ],
   "types": [
@@ -447,6 +492,10 @@
     {
       "id": "demo",
       "name": "版型示範"
+    },
+    {
+      "id": "editorial",
+      "name": "AI 編輯核對，依 Hans 原回覆整理"
     }
   ]
 }

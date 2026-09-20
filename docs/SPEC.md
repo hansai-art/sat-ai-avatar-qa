@@ -684,3 +684,16 @@ Node 內建測試負責狀態解析、路徑、日期、分類引用、替代循
 13. [Pagefind JavaScript 排序](https://pagefind.app/docs/js-api-sorting/)：自訂排序會取代相關性。
 
 實作時若版本 API 與文件不同，以鎖定版本的官方文件為準，修改 Spec 並留下理由；不能以方便為由省略公開資料、索引與路徑的驗收。
+
+## 2026-09-20：手機 FAQ 介面與內容欄位
+
+- `intent`: `operation | concept | resources`，公開用途篩選；`type` 保留原細分類與路由。
+- `faqOrder`: 正整數，越小越前；預設 99999，不代表人氣。學員已問仍先於延伸題。
+- `firstStep`: 簡短可執行動作；正式已問題必填。
+- `sourceRefs`: `{recordId, part, askedAt}` 陣列，正式已問題必填，同一來源的同一子問題不可重複。`askedBy` 去重保留真實出處。
+- `reviewedBy: editorial` 代表 AI 依來源編輯核對，不等於 Hans 人工重新審核或學生環境實測。
+- URL 新增 `intent` 及 `sort=course`。預設常見順序，舊 `sort=updated` 相容；有關鍵字時按關聯，清空後恢復選定順序。
+- 課程模式按課綱／小節排序；選章時以該章的小節排序跨章題。第一章聚合，不拆小節。
+- 原地展開短答與第一步，完整解法維持一題一頁。返回可恢復 URL、頁碼、展開題與捲動位置。
+- 不執行 JavaScript 仍提供完整列表與原生 details；搜尋失敗提供重試與章節入口。
+- `docs/content-source-audit.json` 只保留來源指紋、編號與處理狀態；原始輸入不進 repo 或公開產物。

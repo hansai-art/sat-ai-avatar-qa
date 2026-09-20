@@ -1,5 +1,6 @@
 ---
 import {render} from 'astro:content';
+import {faqKey,courseKey} from '../../lib/faq.mjs';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import QuestionCard from '../../components/QuestionCard.astro';
 import {getQuestions,taxonomy,href,label,relatedQuestions,buildMode,type Question} from '../../lib/content';
@@ -32,24 +33,26 @@ const platforms:Record<string,string>={windows:'Windows',macos:'macOS',linux:'Li
   <div class="article-shell"><article class="answer" data-pagefind-body={indexed?true:undefined}>
     <p class="eyebrow">{q.id.toUpperCase()} <span aria-hidden="true">/</span> {label('types',d.type)}</p>
     <h1 data-pagefind-meta="title" data-pagefind-weight="5">{d.title}</h1>
-    <div class="question-provenance" data-pagefind-ignore><span class:list={['origin-badge',{anticipated:d.questionOrigin==='anticipated'}]}>{buildMode==='demo'?'示範 · ':''}{d.questionOrigin==='anticipated'?'延伸問題':'學員已問'}</span>{d.askedBy.length>0&&<p class="asker">提問：{d.askedBy.map((person,index)=><>{index>0?'、':''}<a href={person.sourceUrl} target="_blank" rel="noopener noreferrer">{person.name} · 原討論 ↗</a></>)}</p>}{d.questionOrigin==='anticipated'&&<p class="muted">由既有問題延伸整理，尚未收到學員提問。</p>}</div>
   <div class="article-actions" data-pagefind-ignore><button type="button" class="outline-button" id="copy-link">複製這題連結</button><span id="copy-status" role="status"></span><input id="copy-fallback" readonly aria-label="可手動複製的問題網址" hidden/></div>
     {d.publication==='archived'&&<aside class="notice warning" data-pagefind-ignore><strong>這題已封存</strong><p>{d.reviewNote}</p>{d.supersededBy&&<a href={href(`/questions/${d.supersededBy}/`)}>閱讀更新後的答案 →</a>}</aside>}
     {d.answerStatus==='needs-update'&&<aside class="notice warning"><strong>這份答案待更新</strong><p>{d.reviewNote}</p></aside>}
     <div class="short-answer"><span class="short-answer-label">{buildMode==='demo'?'簡答版型示範':'先看答案'}</span><p data-pagefind-meta="summary" data-pagefind-weight="3">{d.summary}</p></div>
-    <div class="article-tags tag-list">
+    {(d.appliesTo||d.platforms.length>0)&&<p class="applies-to"><strong>適用情況</strong> {[d.appliesTo,...d.platforms.map(p=>platforms[p])].filter(Boolean).join(' · ')}</p>}
+    <div class="prose zh-prose"><Content/></div>
+    {d.errorMessages.length>0&&<section class="error-text"><h2>錯誤訊息原文</h2>{d.errorMessages.map(error=><pre data-pagefind-weight="3"><code>{error}</code></pre>)}</section>}
+    {d.videos.length>0&&<section class="video-section"><h2>影片補充</h2>{d.videos.map(v=><a class="video-card" href={v.url} target="_blank" rel="noopener noreferrer"><span class="play-icon" aria-hidden="true">▶</span><div><h3>{v.title}</h3><p>{v.description}</p>{v.timestampLabel&&<small>{v.timestampLabel}</small>}</div><span aria-hidden="true">↗</span></a>)}</section>}
+    <section class="sources"><h2>對應課程與來源</h2>    <div class="article-tags tag-list">
       {d.chapterRefs.map(id=><a class="tag" href={href(`/chapters/${id}/`)} data-pagefind-filter={`chapter:${id}`}>{label('chapters',id)}</a>)}
       {d.toolRefs.map(id=><a class="tag tool-tag" href={href(`/tools/${id}/`)} data-pagefind-filter={`tool:${id}`}>{label('tools',id)}</a>)}
       <a class="tag" href={href(`/types/${d.type}/`)} data-pagefind-filter={`type:${d.type}`}>{label('types',d.type)}</a>
       {lessons.map(l=><span class="tag" data-pagefind-filter={`lesson:${l.id}`}>{l.title}</span>)}
     </div>
-    <div class="article-dates" data-pagefind-ignore><span>內容更新 <time datetime={d.updatedAt}>{d.updatedAt}</time></span><span>{buildMode==='demo'?'示範日期':'人工確認'} {d.verifiedAt||'未確認'}</span>{d.reviewedBy&&<span>{taxonomy.contributors.find(c=>c.id===d.reviewedBy)?.name}</span>}</div>
-    {(d.appliesTo||d.platforms.length>0)&&<p class="applies-to"><strong>適用情況</strong> {[d.appliesTo,...d.platforms.map(p=>platforms[p])].filter(Boolean).join(' · ')}</p>}
-    <div class="prose"><Content/></div>
-    {d.errorMessages.length>0&&<section class="error-text"><h2>錯誤訊息原文</h2>{d.errorMessages.map(error=><pre data-pagefind-weight="3"><code>{error}</code></pre>)}</section>}
-    {d.videos.length>0&&<section class="video-section"><h2>影片補充</h2>{d.videos.map(v=><a class="video-card" href={v.url} target="_blank" rel="noopener noreferrer"><span class="play-icon" aria-hidden="true">▶</span><div><h3>{v.title}</h3><p>{v.description}</p>{v.timestampLabel&&<small>{v.timestampLabel}</small>}</div><span aria-hidden="true">↗</span></a>)}</section>}
-    <section class="sources"><h2>參考資料與相關討論</h2><ul>{sources.map(s=><li><span class="source-kind">{sourceLabels[s.kind]}</span>{s.url?<a href={s.url} target="_blank" rel="noopener noreferrer">{s.title} ↗</a>:<span>{s.title}</span>}{s.checkedAt&&<span class="muted"> · 核對於 {s.checkedAt}</span>}{s.note&&<p>{s.note}</p>}</li>)}</ul></section>
+    <div class="article-dates" data-pagefind-ignore><span>內容更新 <time datetime={d.updatedAt}>{d.updatedAt}</time></span><span>{buildMode==='demo'?'示範日期':'編輯核對'} {d.verifiedAt||'未確認'}</span>{d.reviewedBy&&<span>{taxonomy.contributors.find(c=>c.id===d.reviewedBy)?.name}</span>}</div>
+    <div class="question-provenance" data-pagefind-ignore><span class:list={['origin-badge',{anticipated:d.questionOrigin==='anticipated'}]}>{buildMode==='demo'?'示範 · ':''}{d.questionOrigin==='anticipated'?'延伸問題':'學員已問'}</span>{d.askedBy.length>0&&<p class="asker">提問：{d.askedBy.map((person,index)=><>{index>0?'、':''}<a href={person.sourceUrl} target="_blank" rel="noopener noreferrer">{person.name} · 原討論 ↗</a></>)}</p>}{d.questionOrigin==='anticipated'&&<p class="muted">由既有問題延伸整理，尚未收到學員提問。</p>}</div>
+{d.reviewNote&&<p class="muted">{d.reviewNote}</p>}{d.sourceRefs.length>0&&<details class="source-records"><summary>查看原始提問對照</summary><ul>{d.sourceRefs.map(ref=><li>{ref.recordId} · {ref.askedAt} · {ref.part}</li>)}</ul></details>}<ul>{sources.map(s=><li><span class="source-kind">{sourceLabels[s.kind]}</span>{s.url?<a href={s.url} target="_blank" rel="noopener noreferrer">{s.title} ↗</a>:<span>{s.title}</span>}{s.checkedAt&&<span class="muted"> · 核對於 {s.checkedAt}</span>}{s.note&&<p>{s.note}</p>}</li>)}</ul></section>
     {(d.keywords.length>0||aliases.length>0)&&<details class="search-terms"><summary>相關搜尋用語</summary><p data-pagefind-weight="2">{[...new Set([...d.keywords,...aliases])].join('、')}</p></details>}
+    <span hidden data-pagefind-filter={`intent:${d.intent}`} data-pagefind-meta={`intent:${d.intent}`}></span><span hidden data-pagefind-sort={`faq:${faqKey(q)}`}></span><span hidden data-pagefind-sort={`course:${courseKey(q,taxonomy)}`}></span><span hidden data-pagefind-meta={`firstStep:${d.firstStep||''}`}></span>
+    {taxonomy.chapters.map(c=><span hidden data-pagefind-sort={`course-${c.id}:${courseKey(q,taxonomy,c.id)}`}></span>)}
     <span hidden data-pagefind-filter={`origin:${d.questionOrigin}`} data-pagefind-meta={`questionOrigin:${d.questionOrigin}`}></span><span hidden data-pagefind-meta={`askedBy:${d.askedBy.map(p=>p.name).join('、')}`}></span><span hidden data-pagefind-meta={`contentOrigin:${d.contentOrigin}`}></span>
     <span hidden data-pagefind-meta={`qaId:${q.id}`}></span><span hidden data-pagefind-meta={`updatedAt:${d.updatedAt}`} data-pagefind-sort={`updated:${d.updatedAt}`}></span><span hidden data-pagefind-meta={`answerStatus:${d.answerStatus}`}></span><span hidden data-pagefind-meta={`chapters:${d.chapterRefs.join(',')}`}></span><span hidden data-pagefind-meta={`tools:${d.toolRefs.join(',')}`}></span><span hidden data-pagefind-meta={`type:${d.type}`}></span>
   </article>
