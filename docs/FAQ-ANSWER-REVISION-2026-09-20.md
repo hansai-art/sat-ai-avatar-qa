@@ -47,7 +47,10 @@
 - 逐檔比較改版前版本：22 題的 ID、標題、章節、小節、分類、排序、原始來源對照、提問者、建立日期、相關題目與錯誤原文全部保留。
 - 22 個問題頁的繁體用字檢查通過。人工核對提示中的「文件」指官方文件、「項目」指清單項目、「優化」出自正式課綱名稱，保留其語意，未宣稱 strict 模式零提示。
 - 品牌語氣、筆記與 Skill、影片三題另在 390 px 手機檢查，正文 17 px，scrollWidth 均為 390，並檢視完整頁面截圖。
-- 公開站版本與驗收於 GitHub 推送後補記。
+- 內容發布版本：`cd9e72b1f25d618bf7c0971b6998078687f5d964`。Cloudflare 部署 `d1d2f3cb-2e5a-4106-8a11-d56ab8c7ba7d` 由 `github:push` 觸發，2026-09-20 09:48:48 UTC 成功，沿用 production 設定。
+- 公開站 `build-info.json` 回傳上述 commit、production、22 題。以未登入的 390 px 瀏覽器逐頁讀取，22 題短答全部與原始檔相同，全部沒有水平溢出，沒有 JavaScript pageerror。「品牌語氣」搜尋與原地第一步可正常閱讀。
+- [公開站驗收](https://github.com/hansai-art/sat-ai-avatar-qa/actions/runs/35503317092)：42 PASS、20 SKIP，24.5 秒。
+- [GitHub 品質檢查](https://github.com/hansai-art/sat-ai-avatar-qa/actions/runs/35503308964)：production、demo、demo 子路徑三組均通過。
 
 ## 保留的限制
 
