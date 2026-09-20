@@ -55,7 +55,7 @@ npm run test:e2e
 
 1. 搜尋已有答案，避免重複。原始留言與未處理截圖放在專案之外。
 2. 執行 `npm run new:question`，會建立下一個未用 ID 的草稿與圖片資料夾，不覆蓋既有檔案。
-3. 編輯 `src/content/questions/qa-xxxxxx.md`，參照 [資料規格](docs/SPEC.md)。檔名就是固定 ID，不因標題改動而更名。
+3. 編輯 `src/content/questions/qa-xxxxxx.md`，參照 [回答品質標準](docs/FAQ-ANSWER-STANDARD.md) 與 [資料規格](docs/SPEC.md)。檔名就是固定 ID，不因標題改動而更名。2026-09-20 的 22 題內容改寫見 [逐題紀錄](docs/FAQ-ANSWER-REVISION-2026-09-20.md)。
 4. 圖片放在 `src/assets/questions/qa-xxxxxx/`，再從 Markdown 使用相對路徑引用，例如 `../../assets/questions/qa-xxxxxx/screen.png`。圖片要有 alt，每張小於 2MiB，發布前完成去識別化。
 5. `videos` 填安全 HTTPS 網址、標題與說明；不支援影片上傳或 iframe。
 6. 學員已問設 `questionOrigin: asked`，填 `askedBy` 的可公開 `name` 與原討論 `sourceUrl`。推測問題設 `anticipated`、`askedBy: []`，需由實際問題延伸並另行核對答案。填寫 `intent`、`faqOrder`、`firstStep`、`sourceRefs`；核對來源後填實際 `reviewedBy` 與 `verifiedAt`（AI 編輯使用 `editorial`，不可冒充 Hans 人工重審），設定 `answerStatus: verified`、`publication: published`。`contentOrigin` 必須是 `real`。
