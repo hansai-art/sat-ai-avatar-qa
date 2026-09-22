@@ -22,6 +22,11 @@ export const questionSchema = z.object({
   nextLinks: z.array(z.object({title:text(1,100),url:https}).strict()).max(3).default([]),
   uiPath: z.array(text(1,80)).max(6).default([]),
   caution: text(1,300).optional(),
+  screenshots: z.array(z.object({
+    file:z.string().regex(/^[a-z0-9][a-z0-9-]*\.(png|jpe?g|webp|avif)$/i),
+    alt:text(1,160),caption:text(1,200),capturedAt:date,
+    version:text(1,80),sourceRecord:text(1,80)
+  }).strict()).max(6).default([]),
   editorialNotes: z.array(text(1,800)).default([]),
   sourceRefs: z.array(z.object({recordId:text(1,80),part:text(1,120),askedAt:date}).strict()).default([]),
   askedBy: z.array(z.object({name:text(1,80),sourceUrl:https}).strict()).max(20).default([]),
@@ -60,6 +65,11 @@ export function validateQuestions(entries, taxonomy, mode, today=todayTaipei()) 
     const d=q.data, id=q.id;
     if(d.contentOrigin==='real' && d.askedBy.some(person=>person.name!=='學員提問')) fail(id,'公開題庫只保留「學員提問」匿名標示，姓名留在私人來源紀錄');
     if(new Set(d.sourceRefs.map(r=>r.recordId+'|'+r.part)).size!==d.sourceRefs.length) fail(id,'來源對照不可重複計入同一子問題');
+    if(new Set(d.screenshots.map(s=>s.file)).size!==d.screenshots.length) fail(id,'截圖不可重複');
+    for(const shot of d.screenshots) {
+      if(!d.sourceRefs.some(ref=>ref.recordId===shot.sourceRecord)) fail(id,'截圖需對應此題的來源紀錄');
+      if(shot.capturedAt>today) fail(id,'截圖日期不可在未來');
+    }
     if(!/^qa-\d{6}$/.test(id)) fail(id,'檔名需為 qa-六位數字.md');
     for(const [field,key] of [['chapterRefs','chapters'],['toolRefs','tools']]) {
       if(d[field].includes('general') && d[field].length>1) fail(id,`${field} 的 general 不可混用`);

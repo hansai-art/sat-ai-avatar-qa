@@ -78,8 +78,8 @@ test('單題直接載入、圖片原尺寸與複製連結',async({page,context,b
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
  const img=page.locator('.prose img');await expect(img).toBeVisible();
  await expect.poll(()=>img.evaluate((el:HTMLImageElement)=>el.naturalWidth)).toBeGreaterThan(0);
- const popupPromise=page.waitForEvent('popup');await img.click();const popup=await popupPromise;
- await popup.waitForLoadState();expect(popup.url()).toContain('/_astro/');await popup.close();
+ await img.click();await expect(page.getByRole('dialog',{name:'操作圖片檢視器'})).toBeVisible();
+ await page.getByRole('button',{name:'關閉圖片',exact:true}).click();await expect(page.getByRole('dialog')).toHaveCount(0);
  await page.getByRole('button',{name:'複製連結'}).click();await expect(page.locator('#copy-status')).toHaveText('已複製連結');
  expect(await page.evaluate(()=>navigator.clipboard.readText())).toBe(baseURL+'questions/qa-900001/');
 });

@@ -1,0 +1,31 @@
+---
+import {getImage} from 'astro:assets';
+import type {ImageMetadata} from 'astro';
+import type {Question} from '../lib/content';
+import {statSync} from 'node:fs';
+interface Props {question:Question}
+const {question}=Astro.props;
+const assets=import.meta.glob<{default:ImageMetadata}>('../assets/questions/**/*.{png,jpg,jpeg,webp,avif}');
+const images=await Promise.all(question.data.screenshots.map(async shot=>{
+  const key=`../assets/questions/${question.id}/${shot.file}`;
+  const load=assets[key];
+  if(!load)throw new Error(`${question.id}: 找不到截圖 ${shot.file}`);
+  if(statSync(`src/assets/questions/${question.id}/${shot.file}`).size>2*1024*1024)throw new Error(`${question.id}: 截圖超過 2MiB`);
+  const {default:source}=await load();
+  const [preview,full]=await Promise.all([
+    getImage({src:source,width:Math.min(320,source.width),format:'webp',quality:80}),
+    getImage({src:source,format:'webp',quality:95})
+  ]);
+  return {...shot,preview,full,width:source.width,height:source.height};
+}));
+---
+{images.length>0&&<section class="question-images" id="operation-images" aria-label="操作畫面對照">
+  <h2>對照畫面</h2>
+  <div class="image-previews">{images.map(shot=><figure class="image-preview">
+    <a class="image-preview-link" href={shot.full.src} target="_blank" rel="noopener noreferrer" data-qa-image data-pswp-width={shot.width} data-pswp-height={shot.height} aria-label={`放大圖片：${shot.alt}`}>
+      <img src={shot.preview.src} width={shot.preview.attributes.width} height={shot.preview.attributes.height} alt={shot.alt} loading="lazy" decoding="async"/>
+      <span class="image-preview-copy"><strong>{shot.alt}</strong><span class="image-open-label">點圖放大 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5"/></svg></span></span>
+    </a>
+    <figcaption><span>{shot.caption}</span><span class="image-record">截圖 <time datetime={shot.capturedAt}>{shot.capturedAt}</time> · Hermes 版本：{shot.version}</span></figcaption>
+  </figure>)}</div>
+</section>}

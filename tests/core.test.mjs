@@ -37,6 +37,13 @@ test('schema 拒絕未知欄位、無效日期與不安全影片',()=>{
  assert.equal(isDate('2026-02-30'),false);
  assert.throws(()=>questionSchema.parse({...q.data,videos:[{title:'影片',description:'測試',url:'javascript:alert(1)'}]}));
 });
+test('截圖只接受此題本機檔名、有效來源與真實日期',()=>{
+ const shot={file:'model-menu.jpg',alt:'模型選單',caption:'選擇提供方',capturedAt:'2026-09-17',version:'未標示',sourceRecord:'TEST-01'};
+ assert.doesNotThrow(()=>validateQuestions([make({screenshots:[shot]})],confirmed(),'production','2026-09-17'));
+ for(const file of ['../secret.jpg','https://example.org/photo.jpg','photo.svg'])assert.throws(()=>make({screenshots:[{...shot,file}]}));
+ for(const change of [{capturedAt:'2026-09-18'},{sourceRecord:'unrelated'}])assert.throws(()=>validateQuestions([make({screenshots:[{...shot,...change}]})],confirmed(),'production','2026-09-17'));
+ assert.throws(()=>make({screenshots:[{...shot,alt:''}]}));
+});
 test('正式內容需人工確認與來源，不能只改 published',()=>{
  assert.doesNotThrow(()=>validateQuestions([make()],confirmed(),'production','2026-09-17'));
  for(const change of [{sources:[]},{reviewedBy:null},{answerStatus:'unverified'}])assert.throws(()=>validateQuestions([make(change)],confirmed(),'production','2026-09-17'));

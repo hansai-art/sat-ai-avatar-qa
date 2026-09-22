@@ -4,6 +4,8 @@ import {faqKey,courseKey} from '../../lib/faq.mjs';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import QuestionCard from '../../components/QuestionCard.astro';
 import InterfaceText from '../../components/InterfaceText.astro';
+import QuestionImages from '../../components/QuestionImages.astro';
+import ImageViewer from '../../components/ImageViewer.astro';
 import {getQuestions,taxonomy,href,label,relatedQuestions,buildMode,type Question} from '../../lib/content';
 export async function getStaticPaths(){return (await getQuestions()).map(q=>({params:{id:q.id},props:{question:q}}));}
 const q=Astro.props.question as Question,d=q.data;
@@ -11,7 +13,7 @@ const {Content,headings}=await render(q);
 const all=await getQuestions(),related=relatedQuestions(q,all);
 const lessons=taxonomy.chapters.flatMap(c=>c.lessons).filter(l=>d.lessonRefs.includes(l.id));
 const aliases=taxonomy.tools.filter(t=>d.toolRefs.includes(t.id)).flatMap(t=>t.aliases);
-const toc=[{slug:'conclusion',text:'先看結論'},...(d.firstStep?[{slug:'first-step',text:'先做這一步'}]:[]),...headings.filter(h=>h.depth===2),...(related.length?[{slug:'related-questions',text:'你可能也會遇到'}]:[])];
+const toc=[{slug:'conclusion',text:'先看結論'},...(d.firstStep?[{slug:'first-step',text:'先做這一步'}]:[]),...(d.screenshots.length?[{slug:'operation-images',text:'對照畫面'}]:[]),...headings.filter(h=>h.depth===2),...(related.length?[{slug:'related-questions',text:'你可能也會遇到'}]:[])];
 const indexed=d.publication==='published';
 const sourceLabels:Record<string,string>={official:'官方文件',instructor:'講師說明',course:'課程資料',community:'社群討論',other:'補充資料'};
 const sourceOrder=['official','instructor','course','community','other'];
@@ -40,6 +42,7 @@ const [conclusion,...explanation]=d.summary.split(/(?<=[。！？])/u);
       {d.firstStep&&<section class="first-step" id="first-step"><h2>先做這一步</h2>{d.firstStep.split(/(?<=[。！？])/u).filter(Boolean).map(step=><p><InterfaceText text={step}/></p>)}</section>}
       {(d.appliesTo||d.platforms.length>0)&&<p class="applies-to">適用情況：{[d.appliesTo,...d.platforms.map(p=>platforms[p])].filter(Boolean).join(' · ')}</p>}
       {d.caution&&<aside class="answer-caution"><strong>留意這件事</strong><p>{d.caution}</p></aside>}
+      <QuestionImages question={q}/>
       <div class="prose zh-prose"><Content/></div>
       {d.errorMessages.length>0&&<details class="error-text"><summary>對照錯誤訊息原文</summary>{d.errorMessages.map(error=><pre data-pagefind-weight="3"><code>{error}</code></pre>)}</details>}
       {d.videos.length>0&&<section class="video-section"><h2>影片補充</h2>{d.videos.map(v=><a class="video-card" href={v.url} target="_blank" rel="noopener noreferrer"><div><h3>{v.title}</h3><p>{v.description}</p>{v.timestampLabel&&<small>{v.timestampLabel}</small>}</div><span aria-hidden="true">↗</span></a>)}</section>}
@@ -64,6 +67,7 @@ const [conclusion,...explanation]=d.summary.split(/(?<=[。！？])/u);
     </article>
     <aside class="article-aside"><nav aria-label="文章目錄"><p class="nav-label">這一頁的內容</p>{toc.map(h=><a data-toc-link href={`#${h.slug}`}>{h.text}</a>)}</nav><a class="outline-button" href="https://sat.cool/classroom/201">回到課程 <span aria-hidden="true">↗</span></a></aside>
   </div>
+  <ImageViewer/>
 </BaseLayout>
 <script>
   document.querySelector('#copy-link')?.addEventListener('click',async()=>{
@@ -71,7 +75,6 @@ const [conclusion,...explanation]=d.summary.split(/(?<=[。！？])/u);
     try{await navigator.clipboard.writeText(url);status.textContent='已複製連結';}
     catch{const input=document.querySelector<HTMLInputElement>('#copy-fallback')!;input.hidden=false;input.value=url;input.focus();input.select();status.textContent='請手動複製下方網址';}
   });
-  for(const img of document.querySelectorAll<HTMLImageElement>('.prose img'))if(!img.closest('a')){const a=document.createElement('a');a.href=img.currentSrc||img.src;a.target='_blank';a.rel='noopener noreferrer';a.setAttribute('aria-label','開啟圖片：'+img.alt);img.before(a);a.append(img);}
   const links=[...document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]')];
   const sections=links.map(a=>document.getElementById(decodeURIComponent(a.hash.slice(1)))).filter(Boolean) as HTMLElement[];
   let scheduled=false;
