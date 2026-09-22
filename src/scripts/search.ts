@@ -89,10 +89,18 @@ async function run(mode:'push'|'replace'='replace') {
   try {
     const pagefind=await engine();if(ticket!==sequence)return;
     const options=queryOptions(state);
-    const [response,...facets]=await Promise.all([
-      pagefind.search(state.q||null,options),
-      ...['chapter','type','tool'].map(key=>pagefind.search(state.q||null,{filters:facetFilters(state,key)}))
+    const searchWithFacets=(query:string)=>Promise.all([
+      pagefind.search(query||null,options),
+      ...['chapter','type','tool'].map(key=>pagefind.search(query||null,{filters:facetFilters(state,key)}))
     ]);
+    let [response,...facets]=await searchWithFacets(state.q);
+    if(ticket!==sequence)return;
+    // Pagefind's index and browser segmenters disagree on 沒有 + 登入.
+    // Retry the equivalent 沒 spelling only when the original has no matches
+    // anywhere, preserving negation, the visible query and all facet counts.
+    if(state.q.includes('沒有')&&response.unfilteredResultCount===0){
+      [response,...facets]=await searchWithFacets(state.q.replaceAll('沒有','沒'));
+    }
     if(ticket!==sequence)return;
     syncFacetCounts(facets);
     const total=response.results.length,totalPages=Math.max(1,Math.ceil(total/PAGE_SIZE));

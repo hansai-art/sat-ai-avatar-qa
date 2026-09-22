@@ -444,8 +444,16 @@
       "name": "n8n",
       "aliases": []
     },
-    {"id": "notion", "name": "Notion", "aliases": []},
-    {"id": "heptabase", "name": "Heptabase", "aliases": []},
+    {
+      "id": "notion",
+      "name": "Notion",
+      "aliases": []
+    },
+    {
+      "id": "heptabase",
+      "name": "Heptabase",
+      "aliases": []
+    },
     {
       "id": "general",
       "name": "通用問題",
@@ -458,6 +466,24 @@
         "WP",
         "Rank Math"
       ]
+    },
+    {
+      "id": "google-drive",
+      "name": "Google Drive",
+      "aliases": [
+        "Google 雲端硬碟",
+        "Google 文件"
+      ]
+    },
+    {
+      "id": "onenote",
+      "name": "OneNote",
+      "aliases": []
+    },
+    {
+      "id": "line",
+      "name": "LINE",
+      "aliases": []
     }
   ],
   "types": [

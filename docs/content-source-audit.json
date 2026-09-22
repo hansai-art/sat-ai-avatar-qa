@@ -1,382 +1,1217 @@
 {
-  "date": "2026-09-20",
-  "scope": "使用者提供的 44 筆 FAQ 紀錄及 HTML 本頁 10 個去重主討論；不代表平台所有頁面。",
-  "ranking": "編輯優先序，先解決新手跟課障礙；不顯示或推估人氣。",
-  "followupsPending": [
-    "CLASS-03：自己的 bot 的 /help 與影片不同，未確認最後解決。",
-    "CLASS-09：LINE 補課尚未在提供資料中確認已上架。",
-    "Q040 等多意圖留言僅整理已映射部分，其餘保留待整理。"
+  "date": "2026-09-22",
+  "scope": "使用者提供資料夾內 Q001 至 Q066 的全部 66 筆問答紀錄，逐筆讀取正文與後續補充。另保留原版 CLASS 存檔映射，不代表平台未提供的其他頁面。",
+  "summary": {
+    "sourceRecords": 66,
+    "recordsWithQuestions": 61,
+    "nonQuestionRecords": 5,
+    "mappedSubquestions": 104,
+    "publishedQuestions": 62,
+    "addedQuestions": 40
+  },
+  "ranking": "先依阻礙新手跟課的程度安排前十題，其餘參考不同主留言提問者的重複需求。相同主提問者、追問、HTML 重複、支持與結案不灌高頻次。頁面不顯示熱門人數。",
+  "priorityQuestionIds": [
+    "qa-000001",
+    "qa-000054",
+    "qa-000051",
+    "qa-000055",
+    "qa-000002",
+    "qa-000053",
+    "qa-000003",
+    "qa-000050",
+    "qa-000004",
+    "qa-000056"
+  ],
+  "followupsPending": [],
+  "limitations": [
+    "Q048 尚無最後解決紀錄，已收錄 help 版本差異排查，不宣稱修復。",
+    "Q062 LINE 補充影片未有上架證據，已提供問題頁說明現況。",
+    "來源截圖僅用於核對錯誤，不直接公開含個資或配對碼的原圖。"
   ],
   "records": [
     {
       "recordId": "Q001",
       "date": "2026-08-03",
       "sha256": "f8c19ee1af7ac24901b5cdf58bf897199f15050da51943baa4ca45bc7f8bfe1d",
-      "status": "非獨立問題／支持或結案留言",
-      "questions": []
+      "status": "支持或稱讚，沒有獨立問題",
+      "questions": [],
+      "subquestions": []
     },
     {
       "recordId": "Q002",
       "date": "2026-08-04",
       "sha256": "89b984ded8cc74ee068acfd998ce4393dfa2339a97618a73dc4d8a52f5844cd3",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
         "qa-000014"
+      ],
+      "subquestions": [
+        {
+          "part": "希望有 n8n 的操作",
+          "questionId": "qa-000014"
+        }
       ]
     },
     {
       "recordId": "Q003",
       "date": "2026-08-05",
       "sha256": "2acfa08d1880c8088daff9837adb28f1ece1dbbb938ba916d8e793408e8c5fa6",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
         "qa-000003"
+      ],
+      "subquestions": [
+        {
+          "part": "需要購買哪些 AI 軟體",
+          "questionId": "qa-000003"
+        }
       ]
     },
     {
       "recordId": "Q004",
       "date": "2026-08-05",
       "sha256": "aa96d093507feb30c4f8e2e41800d40384efa0d06b2372ccadfbdb1590a02b29",
-      "status": "待後續整理；未冒充已回答 FAQ",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000023",
+        "qa-000006"
+      ],
+      "subquestions": [
+        {
+          "part": "新工具出現時課程是否更新",
+          "questionId": "qa-000023"
+        },
+        {
+          "part": "更換工具能否沿用架構",
+          "questionId": "qa-000006"
+        }
+      ]
     },
     {
       "recordId": "Q005",
       "date": "2026-08-06",
       "sha256": "3635644eb19a4ed2c30e33c035679d376038a90a845b5bb11ad15c96101ee43c",
-      "status": "待後續整理；未冒充已回答 FAQ",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000024",
+        "qa-000025"
+      ],
+      "subquestions": [
+        {
+          "part": "已有 Wiki Skill，如何做知識管理",
+          "questionId": "qa-000024"
+        },
+        {
+          "part": "工作流自動化的技能與實務",
+          "questionId": "qa-000025"
+        }
+      ]
     },
     {
       "recordId": "Q006",
       "date": "2026-08-06",
       "sha256": "010092cca73049e9fdab9960350f5538d9ca5a48c88893cb64fbf2135d404ff8",
-      "status": "非獨立問題／支持或結案留言",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000011"
+      ],
+      "subquestions": [
+        {
+          "part": "首次上 AI 課能否用在生活",
+          "questionId": "qa-000011"
+        }
+      ]
     },
     {
       "recordId": "Q007",
       "date": "2026-08-07",
       "sha256": "4bc72a472c3b2470e04ca4c3cb9c68cc2ab648f6076b785a4b927bea2465b57d",
-      "status": "非獨立問題／支持或結案留言",
-      "questions": []
+      "status": "支持或稱讚，沒有獨立問題",
+      "questions": [],
+      "subquestions": []
     },
     {
       "recordId": "Q008",
       "date": "2026-08-08",
       "sha256": "ea518c991fd8f601783b88d21ad3ec4f7562ef62022e3281de379d9854d3a334",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
-        "qa-000017"
+        "qa-000026",
+        "qa-000027",
+        "qa-000028"
+      ],
+      "subquestions": [
+        {
+          "part": "如何計算成本與 ROI",
+          "questionId": "qa-000026"
+        },
+        {
+          "part": "如何選工具與模型降低成本",
+          "questionId": "qa-000027"
+        },
+        {
+          "part": "上線後的監控維護與調整",
+          "questionId": "qa-000028"
+        }
       ]
     },
     {
       "recordId": "Q009",
       "date": "2026-08-08",
       "sha256": "fc3fdcb00720758b8bbf978d633085d8ab060107002485b45e7db79f939d2c58",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
-        "qa-000017"
+        "qa-000026",
+        "qa-000028"
+      ],
+      "subquestions": [
+        {
+          "part": "成本與投入產出比",
+          "questionId": "qa-000026"
+        },
+        {
+          "part": "持續監控與停損機制",
+          "questionId": "qa-000028"
+        }
       ]
     },
     {
       "recordId": "Q010",
       "date": "2026-08-08",
       "sha256": "6a302749f18412b053f77588fe2cadde92cb9af9a6330dc675ca68f586b5a892",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
-        "qa-000017"
+        "qa-000017",
+        "qa-000026",
+        "qa-000027",
+        "qa-000028"
+      ],
+      "subquestions": [
+        {
+          "part": "自動化是否消耗大量 Token",
+          "questionId": "qa-000017"
+        },
+        {
+          "part": "API 與維護成本和 ROI",
+          "questionId": "qa-000026"
+        },
+        {
+          "part": "模型選擇",
+          "questionId": "qa-000027"
+        },
+        {
+          "part": "持續監控與停損",
+          "questionId": "qa-000028"
+        }
       ]
     },
     {
       "recordId": "Q011",
       "date": "2026-08-08",
       "sha256": "6f7c10267bee07217217e6263a30afad54632f1d771e6750c56bad894206ca31",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
-        "qa-000017"
+        "qa-000026",
+        "qa-000027",
+        "qa-000028"
+      ],
+      "subquestions": [
+        {
+          "part": "工具 API Token 與人力 ROI",
+          "questionId": "qa-000026"
+        },
+        {
+          "part": "依需求選模型工具",
+          "questionId": "qa-000027"
+        },
+        {
+          "part": "上線後監控維護與因應改變",
+          "questionId": "qa-000028"
+        }
       ]
     },
     {
       "recordId": "Q012",
       "date": "2026-08-09",
       "sha256": "dc9af90eade6f305d7ffb4c17965505bcea453c68e91f89798780e3e85f82fa2",
-      "status": "待後續整理；未冒充已回答 FAQ",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000029"
+      ],
+      "subquestions": [
+        {
+          "part": "沙箱套件審查與憑證權限是否有教",
+          "questionId": "qa-000029"
+        }
+      ]
     },
     {
       "recordId": "Q013",
       "date": "2026-08-10",
       "sha256": "96cc63a28b9f1cabd00d3aca6d6cb81ce62302a168bc496210f457ba19b9c18a",
-      "status": "非獨立問題／支持或結案留言",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000031"
+      ],
+      "subquestions": [
+        {
+          "part": "希望有逐步操作和實際案例",
+          "questionId": "qa-000031"
+        }
+      ]
     },
     {
       "recordId": "Q014",
       "date": "2026-08-12",
       "sha256": "117dfd996d6846fd504b8ecf1f30789b9c8e0e76f387b56a60b73a7813079e65",
-      "status": "非獨立問題／支持或結案留言",
-      "questions": []
+      "status": "支持或稱讚，沒有獨立問題",
+      "questions": [],
+      "subquestions": []
     },
     {
       "recordId": "Q015",
       "date": "2026-08-13",
       "sha256": "0ba2044cc2bbe7cc2cde1fcb75c7a7194c030d9ad56262f5d5489bdfde525ae1",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
         "qa-000022"
+      ],
+      "subquestions": [
+        {
+          "part": "影片自動挑精華與配樂節拍",
+          "questionId": "qa-000022"
+        }
       ]
     },
     {
       "recordId": "Q016",
       "date": "2026-08-13",
       "sha256": "ead92eebec14da4de8f7052a57c5eb922c99b32552fae3241b217f8abb4ecdc9",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
         "qa-000015"
+      ],
+      "subquestions": [
+        {
+          "part": "範例檔案下載",
+          "questionId": "qa-000015"
+        }
       ]
     },
     {
       "recordId": "Q017",
       "date": "2026-08-13",
       "sha256": "e19e8c741a8e6d1b14583362cc01114addeb133a30c6291aedd33499f2aefd17",
-      "status": "待後續整理；未冒充已回答 FAQ",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000032"
+      ],
+      "subquestions": [
+        {
+          "part": "初學者能否先試看安裝",
+          "questionId": "qa-000032"
+        }
+      ]
     },
     {
       "recordId": "Q018",
       "date": "2026-08-14",
       "sha256": "57287860fb85d71e19a52490e2835fe51d7a569c8ee6a81b8bab6228d8e7a9b1",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
         "qa-000003"
+      ],
+      "subquestions": [
+        {
+          "part": "Hermes 是否另外付費及是否要訂所有 AI",
+          "questionId": "qa-000003"
+        }
       ]
     },
     {
       "recordId": "Q019",
       "date": "2026-08-16",
       "sha256": "276b7e4033d952fa1a2fb6573b18d0b3927c33a255ca92a8f03eb6c5cace9c39",
-      "status": "待後續整理；未冒充已回答 FAQ",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000027"
+      ],
+      "subquestions": [
+        {
+          "part": "不同廠商做法比較",
+          "questionId": "qa-000027"
+        }
+      ]
     },
     {
       "recordId": "Q020",
       "date": "2026-08-18",
       "sha256": "6db6a8fbf99577c7836a20c20fed163c362434c74fe0f446b509be96e1088e1e",
-      "status": "待後續整理；未冒充已回答 FAQ",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000033"
+      ],
+      "subquestions": [
+        {
+          "part": "多語言學習應用",
+          "questionId": "qa-000033"
+        }
+      ]
     },
     {
       "recordId": "Q021",
       "date": "2026-08-19",
       "sha256": "8a71bab7574e514bd90ada5a575bafd2c45b6ee3ad17cc24d84d08c8d70021a1",
-      "status": "非獨立問題／支持或結案留言",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000024"
+      ],
+      "subquestions": [
+        {
+          "part": "期待搭建個人資料庫的技巧",
+          "questionId": "qa-000024"
+        }
+      ]
     },
     {
       "recordId": "Q022",
       "date": "2026-08-19",
       "sha256": "9a4aa9e60fd237605420b6966aeeaab626ec243e4d5e83f75f9b2292298719eb",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
         "qa-000011"
+      ],
+      "subquestions": [
+        {
+          "part": "零基礎是否能理解",
+          "questionId": "qa-000011"
+        }
       ]
     },
     {
       "recordId": "Q023",
       "date": "2026-08-20",
       "sha256": "2ae126ca7e5b5094c5c5f64ed190ded6f4ee52ee0269e542ad8f5bcda3b9cb9e",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
         "qa-000004"
+      ],
+      "subquestions": [
+        {
+          "part": "舊電腦不能裝桌面版能否跟課",
+          "questionId": "qa-000004"
+        }
       ]
     },
     {
       "recordId": "Q024",
       "date": "2026-08-22",
       "sha256": "b126bd0fa533a2f4fdae7ee3d47132e500cac40cbee58177a9227c6bf5ee5ad0",
-      "status": "待後續整理；未冒充已回答 FAQ",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000031"
+      ],
+      "subquestions": [
+        {
+          "part": "實作方式與具體思維",
+          "questionId": "qa-000031"
+        }
+      ]
     },
     {
       "recordId": "Q025",
       "date": "2026-08-23",
       "sha256": "fce5e77830a379604d4dde77647e5e4f3a38b6f43b190e04c539cb8d9afdecbb",
-      "status": "待後續整理；未冒充已回答 FAQ",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000023",
+        "qa-000025"
+      ],
+      "subquestions": [
+        {
+          "part": "開課時是否跟上最新發展",
+          "questionId": "qa-000023"
+        },
+        {
+          "part": "如何建立專屬工作流和 Agent 團隊",
+          "questionId": "qa-000025"
+        }
+      ]
     },
     {
       "recordId": "Q026",
       "date": "2026-08-23",
       "sha256": "39d154d6bf1659566faab4f8197ef329cfbf93fffcd35f34bb24de78cbe7680b",
-      "status": "待後續整理；未冒充已回答 FAQ",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000034"
+      ],
+      "subquestions": [
+        {
+          "part": "分身能否做行銷",
+          "questionId": "qa-000034"
+        }
+      ]
     },
     {
       "recordId": "Q027",
       "date": "2026-08-25",
       "sha256": "d63684d39f57e609c8cd26f0f210036096c4df3f5a6c121d6c3e19b8b5811bf0",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
         "qa-000004"
+      ],
+      "subquestions": [
+        {
+          "part": "沒有蘋果設備能否操作",
+          "questionId": "qa-000004"
+        }
       ]
     },
     {
       "recordId": "Q028",
       "date": "2026-08-27",
       "sha256": "52cd06a8d0abd57c851730bd223e84e4448fc087ba7172900ac0a4b78dd43acd",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
         "qa-000012",
         "qa-000018"
+      ],
+      "subquestions": [
+        {
+          "part": "Notion 能否串接當知識庫",
+          "questionId": "qa-000012"
+        },
+        {
+          "part": "不會爬蟲如何確認資料沒有虛構",
+          "questionId": "qa-000018"
+        }
       ]
     },
     {
       "recordId": "Q029",
       "date": "2026-08-27",
       "sha256": "0a270e48096c3fac517b4e235ef3a68d43fe71eac48a47850c3da3d214e16d32",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
         "qa-000016"
+      ],
+      "subquestions": [
+        {
+          "part": "AI 分身能否建立 App",
+          "questionId": "qa-000016"
+        }
       ]
     },
     {
       "recordId": "Q030",
       "date": "2026-08-28",
       "sha256": "30319233b2cd4c148fb3e6abed975084b2ca55e05015e8f456021941d82b1803",
-      "status": "待後續整理；未冒充已回答 FAQ",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000035"
+      ],
+      "subquestions": [
+        {
+          "part": "直播通知與錯過後如何補看",
+          "questionId": "qa-000035"
+        }
+      ]
     },
     {
       "recordId": "Q031",
       "date": "2026-08-28",
       "sha256": "040b4cdac7456a855efd1791d5c444aa76532846290b91e02644a59bf109aa61",
-      "status": "待後續整理；未冒充已回答 FAQ",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000036"
+      ],
+      "subquestions": [
+        {
+          "part": "設備送審資料製作",
+          "questionId": "qa-000036"
+        }
+      ]
     },
     {
       "recordId": "Q032",
       "date": "2026-08-30",
       "sha256": "7d8992e5e7a46b04f53e86ae2d004ea91f1bb57ce5dccffe8091f3806a4baa5b",
-      "status": "待後續整理；未冒充已回答 FAQ",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000035"
+      ],
+      "subquestions": [
+        {
+          "part": "8 月 27 日錄影是否完整版",
+          "questionId": "qa-000035"
+        }
+      ]
     },
     {
       "recordId": "Q033",
       "date": "2026-08-30",
       "sha256": "b3e1ce5ed0b50a4f0691415b73f1361c4abfe4c082e4c40f7cdd54ee51572874",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
-        "qa-000011"
+        "qa-000011",
+        "qa-000037"
+      ],
+      "subquestions": [
+        {
+          "part": "無程式基礎能否操作",
+          "questionId": "qa-000011"
+        },
+        {
+          "part": "如何用 AI 記帳",
+          "questionId": "qa-000037"
+        }
       ]
     },
     {
       "recordId": "Q034",
       "date": "2026-08-30",
       "sha256": "b7feca83a3c17c6baec3253fcaa8e8846391d415ba7e11c20425981f6e17e988",
-      "status": "非獨立問題／支持或結案留言",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000006"
+      ],
+      "subquestions": [
+        {
+          "part": "如何保留不易過時的工作方法",
+          "questionId": "qa-000006"
+        }
+      ]
     },
     {
       "recordId": "Q035",
       "date": "2026-08-31",
       "sha256": "66d6eca8e74a7e6b2248e1810d31063bfd178ee33abaa9e09d184ac7d59611ca",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
+        "qa-000038",
+        "qa-000039",
         "qa-000005"
+      ],
+      "subquestions": [
+        {
+          "part": "課堂用哪個基礎模型及本機雲端選擇",
+          "questionId": "qa-000038"
+        },
+        {
+          "part": "單一 Hermes 能否分工給其他模型",
+          "questionId": "qa-000039"
+        },
+        {
+          "part": "是否需要專用電腦全天運行或雲端環境",
+          "questionId": "qa-000005"
+        }
       ]
     },
     {
       "recordId": "Q036",
       "date": "2026-09-01",
       "sha256": "b6b5a56f5807245df91b01251e4e773f9e7877d6624b22307a0a15c761719524",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
-        "qa-000003"
+        "qa-000003",
+        "qa-000040"
+      ],
+      "subquestions": [
+        {
+          "part": "Gemini 與額外工具費用",
+          "questionId": "qa-000003"
+        },
+        {
+          "part": "副業切入點與案源開發",
+          "questionId": "qa-000040"
+        }
       ]
     },
     {
       "recordId": "Q037",
       "date": "2026-09-01",
       "sha256": "cd36e5f245fe78abc78ef4de24d37689d73d93ff530098325a0d1ca7ea23a28d",
-      "status": "待後續整理；未冒充已回答 FAQ",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000030"
+      ],
+      "subquestions": [
+        {
+          "part": "課程中的公司資料資安資訊",
+          "questionId": "qa-000030"
+        }
+      ]
     },
     {
       "recordId": "Q038",
       "date": "2026-09-06",
       "sha256": "ec278fe1738e12a7df179de4ea8299a206488dcb18703d14dab107859b67c602",
-      "status": "待後續整理；未冒充已回答 FAQ",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000041"
+      ],
+      "subquestions": [
+        {
+          "part": "烘焙品牌整合行銷與經營管理",
+          "questionId": "qa-000041"
+        }
+      ]
     },
     {
       "recordId": "Q039",
       "date": "2026-09-09",
       "sha256": "5e778ef44670afd80cb7561ca86e41d83b934e726c1d1b89cbb925517cfd5fbe",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
+        "qa-000006",
         "qa-000004",
-        "qa-000006"
+        "qa-000042",
+        "qa-000043",
+        "qa-000025"
+      ],
+      "subquestions": [
+        {
+          "part": "未來換 Agent 如何套用",
+          "questionId": "qa-000006"
+        },
+        {
+          "part": "Windows 教學",
+          "questionId": "qa-000004"
+        },
+        {
+          "part": "行業家庭是否有必備 Agent",
+          "questionId": "qa-000042"
+        },
+        {
+          "part": "如何串接既有軟體",
+          "questionId": "qa-000043"
+        },
+        {
+          "part": "公司需求如何客製化",
+          "questionId": "qa-000025"
+        }
       ]
     },
     {
       "recordId": "Q040",
       "date": "2026-09-10",
       "sha256": "732e0f1064cf63ba847ff7fadb3eabf65c2b7b4a572523322ce8e1b04c53311e",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
-        "qa-000006",
-        "qa-000011",
-        "qa-000014",
-        "qa-000015",
         "qa-000019",
-        "qa-000020"
+        "qa-000044",
+        "qa-000045",
+        "qa-000006",
+        "qa-000020",
+        "qa-000015",
+        "qa-000047",
+        "qa-000046",
+        "qa-000023",
+        "qa-000035",
+        "qa-000062"
+      ],
+      "subquestions": [
+        {
+          "part": "1 舊課程筆記轉 Knowledge 或 Skill",
+          "questionId": "qa-000019"
+        },
+        {
+          "part": "2 從零建立自己的 Skill",
+          "questionId": "qa-000044"
+        },
+        {
+          "part": "3 根據舊課內容排錯",
+          "questionId": "qa-000045"
+        },
+        {
+          "part": "4 知識規則移轉 Dify n8n Claude Code",
+          "questionId": "qa-000006"
+        },
+        {
+          "part": "5 每天一小時需要多久完成",
+          "questionId": "qa-000020"
+        },
+        {
+          "part": "6 現成 Pro-Kit Skill 模板與資源數量",
+          "questionId": "qa-000015"
+        },
+        {
+          "part": "7 知識管理課程書籍萃取和排錯資源",
+          "questionId": "qa-000047"
+        },
+        {
+          "part": "8 修改資源成自己的系統",
+          "questionId": "qa-000046"
+        },
+        {
+          "part": "9 課程資源更新期限",
+          "questionId": "qa-000023"
+        },
+        {
+          "part": "10 現成資源節省哪些時間",
+          "questionId": "qa-000047"
+        },
+        {
+          "part": "11a 直播錯過是否有回放",
+          "questionId": "qa-000035"
+        },
+        {
+          "part": "11b 是否有社群討論",
+          "questionId": "qa-000062"
+        }
       ]
     },
     {
       "recordId": "Q041",
       "date": "2026-09-10",
       "sha256": "21befd90464ca8b305b301a59b4de7d589699cbabc5dfb69a955921707afa751",
-      "status": "待後續整理；未冒充已回答 FAQ",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000048"
+      ],
+      "subquestions": [
+        {
+          "part": "企業人力資源應用",
+          "questionId": "qa-000048"
+        }
+      ]
     },
     {
       "recordId": "Q042",
       "date": "2026-09-10",
       "sha256": "0de3cbcc59d9357b1441efc1f83499111f400821d6467f530a7c5939ae53c43f",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
         "qa-000017"
+      ],
+      "subquestions": [
+        {
+          "part": "如何控制 Token 與本機顯卡運算",
+          "questionId": "qa-000017"
+        }
       ]
     },
     {
       "recordId": "Q043",
       "date": "2026-09-10",
       "sha256": "2b82e0dacec36e9872df68c85faa6670e7d83416b32fcd4a42234ca22dd3f3f1",
-      "status": "非獨立問題／支持或結案留言",
-      "questions": []
+      "status": "已全部對應",
+      "questions": [
+        "qa-000023",
+        "qa-000015"
+      ],
+      "subquestions": [
+        {
+          "part": "新工具應用與不過時的技巧",
+          "questionId": "qa-000023"
+        },
+        {
+          "part": "有哪些教材資源",
+          "questionId": "qa-000015"
+        }
+      ]
     },
     {
       "recordId": "Q044",
       "date": "2026-09-17",
       "sha256": "970c162813abf0de24d569dfde381d2c34ec9f3c71f3313bc51174c47188c975",
-      "status": "已整理（僅列出的子問題）",
+      "status": "已全部對應",
       "questions": [
         "qa-000013"
+      ],
+      "subquestions": [
+        {
+          "part": "Heptabase 是否適用與需要搬家",
+          "questionId": "qa-000013"
+        }
       ]
     },
+    {
+      "recordId": "Q045",
+      "date": "2026-09-15",
+      "sha256": "9c8c87d89e13a4c1d19148fd4294822972f967ebc1435d552861ebbf30426dfb",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000009"
+      ],
+      "subquestions": [
+        {
+          "part": "SEO 外掛概念",
+          "questionId": "qa-000009"
+        }
+      ]
+    },
+    {
+      "recordId": "Q046",
+      "date": "2026-09-16",
+      "sha256": "62669190731b00e5ad7ab73fa41a9fec56e5ccb95689be68e272aa177da62a5c",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000002"
+      ],
+      "subquestions": [
+        {
+          "part": "Gemini API 網址錯誤怎麼修",
+          "questionId": "qa-000002"
+        }
+      ]
+    },
+    {
+      "recordId": "Q047",
+      "date": "2026-09-17",
+      "sha256": "149c19b0cb6b68aad4a8c25c39be3d98263353feee73d05b336109e890eae198",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000002",
+        "qa-000059",
+        "qa-000051",
+        "qa-000003"
+      ],
+      "subquestions": [
+        {
+          "part": "模型錯誤缺少 http protocol",
+          "questionId": "qa-000002"
+        },
+        {
+          "part": "Gemini 聊天訂閱與 API 差異",
+          "questionId": "qa-000059"
+        },
+        {
+          "part": "後續 改用 ChatGPT Codex 如何設定",
+          "questionId": "qa-000051"
+        },
+        {
+          "part": "後續 能否從低成本開始",
+          "questionId": "qa-000003"
+        }
+      ]
+    },
+    {
+      "recordId": "Q048",
+      "date": "2026-09-17",
+      "sha256": "20f3a28e0de35d8e5a9decda08dbe3b60371f0a4d4f681ab1e5b4aa4b6bfe72e",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000060",
+        "qa-000001",
+        "qa-000056",
+        "qa-000061"
+      ],
+      "subquestions": [
+        {
+          "part": "BotFather 的 name 與 username",
+          "questionId": "qa-000060"
+        },
+        {
+          "part": "help 回覆 BotFather",
+          "questionId": "qa-000001"
+        },
+        {
+          "part": "設定允許的使用者 ID",
+          "questionId": "qa-000056"
+        },
+        {
+          "part": "後續 自己的 bot help 與影片不同",
+          "questionId": "qa-000061"
+        }
+      ]
+    },
+    {
+      "recordId": "Q049",
+      "date": "2026-09-17",
+      "sha256": "a05d870e739a0f466540e8747250eb2b6f08b5686913ab07b07dff0ec6c1da00",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000003",
+        "qa-000051"
+      ],
+      "subquestions": [
+        {
+          "part": "改用 ChatGPT Codex 費用選擇",
+          "questionId": "qa-000003"
+        },
+        {
+          "part": "訂閱後如何在 Hermes 授權",
+          "questionId": "qa-000051"
+        }
+      ]
+    },
+    {
+      "recordId": "Q050",
+      "date": "2026-09-19",
+      "sha256": "2539d31dfefba91fdf926b505761a8ecbeb575970106fbebc4b1fed04a3dc62b",
+      "status": "解決回報，沒有新增問題",
+      "questions": [],
+      "subquestions": []
+    },
+    {
+      "recordId": "Q051",
+      "date": "2026-09-20",
+      "sha256": "5c97fb6de7b194e51cedd32c86040e5faa961a1e650acc51ba7958366300a2f1",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000049"
+      ],
+      "subquestions": [
+        {
+          "part": "Google Drive OneNote 與開源條件",
+          "questionId": "qa-000049"
+        }
+      ]
+    },
+    {
+      "recordId": "Q052",
+      "date": "2026-09-21",
+      "sha256": "803f57e300fd216480cb89ed522b867ade216c2fcc687e4e7e5a2e0c23f9bc0c",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000050"
+      ],
+      "subquestions": [
+        {
+          "part": "安裝沒進度重裝無效及等待後成功",
+          "questionId": "qa-000050"
+        }
+      ]
+    },
+    {
+      "recordId": "Q053",
+      "date": "2026-09-21",
+      "sha256": "c376eaf4e5ea113353aefc0c7ca861da56ab40ba93d0e8b52db5f11a04e04364",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000051"
+      ],
+      "subquestions": [
+        {
+          "part": "沒有登入授權畫面且誤在聊天輸入 hermes model",
+          "questionId": "qa-000051"
+        }
+      ]
+    },
+    {
+      "recordId": "Q054",
+      "date": "2026-09-22",
+      "sha256": "ea33981e4e9a1fb1f44ef1a40cf56893547a306d5f89e1b8f9f0675cca086197",
+      "status": "支持或稱讚，沒有獨立問題",
+      "questions": [],
+      "subquestions": []
+    },
+    {
+      "recordId": "Q055",
+      "date": "2026-09-12",
+      "sha256": "72fcae0c25913d87723a18a4fc263a3d9dddd9be3416850ec4f02603278b0ca3",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000055",
+        "qa-000001"
+      ],
+      "subquestions": [
+        {
+          "part": "卡在影片配對批准步驟",
+          "questionId": "qa-000055"
+        },
+        {
+          "part": "後續 學生說明應在自己的 bot 輸入 help",
+          "questionId": "qa-000001"
+        }
+      ]
+    },
+    {
+      "recordId": "Q056",
+      "date": "2026-09-12",
+      "sha256": "f1eb2f2622fe40b0fddb7dc562a98063809adc7fb81667021bb6f4ea28820104",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000053"
+      ],
+      "subquestions": [
+        {
+          "part": "Telegram 回傳模型限流錯誤",
+          "questionId": "qa-000053"
+        }
+      ]
+    },
+    {
+      "recordId": "Q057",
+      "date": "2026-09-13",
+      "sha256": "07aff886cbd866eec1d885ccf64849a927f3a2f4cb3eb5c8fff355d559d1d872",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000054"
+      ],
+      "subquestions": [
+        {
+          "part": "手機傳訊息完全無回應",
+          "questionId": "qa-000054"
+        }
+      ]
+    },
+    {
+      "recordId": "Q058",
+      "date": "2026-09-13",
+      "sha256": "bb0fb220163b42345b4f9f1eb4976d0f17dc622838132444a50294b2d2c9df31",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000053"
+      ],
+      "subquestions": [
+        {
+          "part": "Hermes HTTP 429 使用額度上限",
+          "questionId": "qa-000053"
+        }
+      ]
+    },
+    {
+      "recordId": "Q059",
+      "date": "2026-09-13",
+      "sha256": "204e7b495f3fd85cd1507d601ad1268102d3a5e253fadfefcc2ba0005d894bb5",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000053"
+      ],
+      "subquestions": [
+        {
+          "part": "以為當機但畫面為 HTTP 429",
+          "questionId": "qa-000053"
+        }
+      ]
+    },
+    {
+      "recordId": "Q060",
+      "date": "2026-09-13",
+      "sha256": "d1a0b6b851125d5364348283ba14a568534f9632877160e5eac0e45d5c9e2711",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000052"
+      ],
+      "subquestions": [
+        {
+          "part": "模型選單未見 OpenAI",
+          "questionId": "qa-000052"
+        }
+      ]
+    },
+    {
+      "recordId": "Q061",
+      "date": "2026-09-13",
+      "sha256": "dabd03fe10e79a07d0ffe4d238fbb4874af8b7f3de195ca2c71e2d973c940c24",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000007"
+      ],
+      "subquestions": [
+        {
+          "part": "Harness 與 Hermes 是否相同",
+          "questionId": "qa-000007"
+        }
+      ]
+    },
+    {
+      "recordId": "Q062",
+      "date": "2026-09-13",
+      "sha256": "4dcfe29590cdcfe480a26d7229e8666c21d89636b000404bc878d4635ffedfee",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000005",
+        "qa-000006",
+        "qa-000021",
+        "qa-000057"
+      ],
+      "subquestions": [
+        {
+          "part": "1 電腦是否要一直開",
+          "questionId": "qa-000005"
+        },
+        {
+          "part": "2 兩地電腦安裝訓練與資料同步",
+          "questionId": "qa-000006"
+        },
+        {
+          "part": "3 同環境多個 Telegram",
+          "questionId": "qa-000021"
+        },
+        {
+          "part": "4 LINE 教學補充",
+          "questionId": "qa-000057"
+        }
+      ]
+    },
+    {
+      "recordId": "Q063",
+      "date": "2026-09-15",
+      "sha256": "679a7dbc6701448105f5918641cdd7404b7e064660edb82e0543aa72dca9e6e7",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000008"
+      ],
+      "subquestions": [
+        {
+          "part": "沒有文章如何建立口吻",
+          "questionId": "qa-000008"
+        }
+      ]
+    },
+    {
+      "recordId": "Q064",
+      "date": "2026-09-15",
+      "sha256": "a9dac17a5278518aacb9d7f4fb7973294fb1e218e7bf2fe5bc19bd09fe3f3cbf",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000010"
+      ],
+      "subquestions": [
+        {
+          "part": "講師使用哪個 SEO 外掛",
+          "questionId": "qa-000010"
+        }
+      ]
+    },
+    {
+      "recordId": "Q065",
+      "date": "2026-09-12",
+      "sha256": "291f5b3f540506475edb6a499f3a0c0681288ed0f1d86d7742c6af3f931c0cba",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000056"
+      ],
+      "subquestions": [
+        {
+          "part": "Telegram 卡在使用者授權設定",
+          "questionId": "qa-000056"
+        }
+      ]
+    },
+    {
+      "recordId": "Q066",
+      "date": "2026-09-21",
+      "sha256": "d036c3e37de571d9ad1e966342f0d321780e3ed202c18e969834e468d421cbcc",
+      "status": "已全部對應",
+      "questions": [
+        "qa-000058"
+      ],
+      "subquestions": [
+        {
+          "part": "從零建立能比對需求與避免遺漏的知識庫",
+          "questionId": "qa-000058"
+        }
+      ]
+    }
+  ],
+  "legacyRecords": [
     {
       "recordId": "CLASS-01",
       "date": "2026-09-19",
       "sha256": "3696a9658c1bff974fdc48d49ca0d5394127a6b98be1ca9f6585341334f5f164",
-      "status": "非獨立問題／支持或結案留言",
+      "status": "舊課堂存檔對照，不另計提問頻次",
       "questions": []
     },
     {
       "recordId": "CLASS-02",
       "date": "2026-09-17",
       "sha256": "9fbd7044c21e6d37b26ccb0e315921fa89dc84e34e6c50b4dfeb2632ae6fe400",
-      "status": "已整理（僅列出的子問題）",
+      "status": "舊課堂存檔對照，不另計提問頻次",
       "questions": [
         "qa-000003"
       ]
@@ -385,76 +1220,84 @@
       "recordId": "CLASS-03",
       "date": "2026-09-17",
       "sha256": "5d86128a0c0b29609628636468e5ea8d90b86b4fba4ca18b934ed0906a08f3e8",
-      "status": "已整理（僅列出的子問題）",
+      "status": "舊課堂存檔對照，不另計提問頻次",
       "questions": [
         "qa-000001"
-      ]
+      ],
+      "canonicalRecord": "Q048"
     },
     {
       "recordId": "CLASS-04",
       "date": "2026-09-17",
       "sha256": "4c21789bf1ae4a8864011ee14ddf820a5b5d7dc235168a4b6d7822dc9e3b41f9",
-      "status": "已整理（僅列出的子問題）",
+      "status": "舊課堂存檔對照，不另計提問頻次",
       "questions": [
         "qa-000002",
         "qa-000003"
-      ]
+      ],
+      "canonicalRecord": "Q047"
     },
     {
       "recordId": "CLASS-05",
       "date": "2026-09-16",
       "sha256": "8220725177afa929d3048c92a43fa4148c205fe0a1b48633a2ea0fa2eb71a240",
-      "status": "已整理（僅列出的子問題）",
+      "status": "舊課堂存檔對照，不另計提問頻次",
       "questions": [
         "qa-000002"
-      ]
+      ],
+      "canonicalRecord": "Q046"
     },
     {
       "recordId": "CLASS-06",
       "date": "2026-09-15",
       "sha256": "ab2dd9268c45446aa50a7caf748fea86ddce9cc06cf4c5c07276d971a1484a58",
-      "status": "已整理（僅列出的子問題）",
+      "status": "舊課堂存檔對照，不另計提問頻次",
       "questions": [
         "qa-000009"
-      ]
+      ],
+      "canonicalRecord": "Q045"
     },
     {
       "recordId": "CLASS-07",
       "date": "2026-09-15",
       "sha256": "01e666099aab13323548239847747ed39cda27b9cf5dfa3457b585d2ba6b18f8",
-      "status": "已整理（僅列出的子問題）",
+      "status": "舊課堂存檔對照，不另計提問頻次",
       "questions": [
         "qa-000010"
-      ]
+      ],
+      "canonicalRecord": "Q064"
     },
     {
       "recordId": "CLASS-08",
       "date": "2026-09-15",
       "sha256": "b3d50b5c2e0720f87135423ddcd52a7d59cef5e5705daab3456fa303cd94a4a0",
-      "status": "已整理（僅列出的子問題）",
+      "status": "舊課堂存檔對照，不另計提問頻次",
       "questions": [
         "qa-000008"
-      ]
+      ],
+      "canonicalRecord": "Q063"
     },
     {
       "recordId": "CLASS-09",
       "date": "2026-09-13",
       "sha256": "73fd764fab21bd2eeea87e3473bd79d126501fa0a75b0b2ce8fe2e4596017870",
-      "status": "已整理（僅列出的子問題）",
+      "status": "舊課堂存檔對照，不另計提問頻次",
       "questions": [
         "qa-000005",
         "qa-000006",
         "qa-000021"
-      ]
+      ],
+      "canonicalRecord": "Q062"
     },
     {
       "recordId": "CLASS-10",
       "date": "2026-09-13",
       "sha256": "fa16871c572fa7aa99cd6aad0d47734b09aafc99b226f4fc01c771ffe487af1d",
-      "status": "已整理（僅列出的子問題）",
+      "status": "舊課堂存檔對照，不另計提問頻次",
       "questions": [
         "qa-000007"
-      ]
+      ],
+      "canonicalRecord": "Q061"
     }
   ]
 }

@@ -25,3 +25,5 @@ python3 scripts/subset-font.py /path/to/SourceHanSansTW-VF.ttf.woff2
 2026-09-21 本機驗證：Cloudflare 建置檢查通過；瀏覽器驗收 42 項通過（20 項示範資料測試不適用）。390×844 截圖與 360／390／430px 測試通過。Chrome 實際字型檢查確認標題、中英文題名、按鈕、正文及英文錯誤訊息均使用自訂思源黑體；首頁首次字型下載 213,120 bytes，只載入首頁與拉丁分段。四份分段無重疊且完整保留原字型 20,763 個 Unicode 對應。
 
 2026-09-22 改版驗證：標題、介面按鈕與正文的 Chrome 實際字型為 `SAT Han Sans TC`，操作指令依新規格使用 Menlo 等系統等寬字型。390px 首頁只下載 home 與 latin 分段，合計 139,580 bytes，沒有載入約 5MB 的 extended 分段。四份字型仍完整覆蓋原字型 20,763 個 Unicode 對應。
+
+2026-09-23 全部問答匯入後：62 題保留完整思源黑體覆蓋，首頁 home 與 latin 共 183,144 bytes。390px 實際字型與網路紀錄確認未載入 extended 分段。

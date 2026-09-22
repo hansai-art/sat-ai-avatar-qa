@@ -11,7 +11,7 @@ const url=new URL(site);
 if(url.protocol!=='https:' || url.username || url.password || url.search || url.hash || url.pathname!=='/')throw new Error('SITE_URL 必須是無路徑、無查詢參數的 HTTPS 站台網址');
 const env={...process.env,BUILD_MODE:mode,BASE_PATH:'/',SITE_URL:url.origin,ASTRO_TELEMETRY_DISABLED:'1'};
 const astroBin=path.join('node_modules/astro',JSON.parse(fs.readFileSync('node_modules/astro/package.json','utf8')).bin.astro);
-for(const args of [[astroBin,'check'],['--test','tests/core.test.mjs'],['scripts/build.mjs',mode]]) {
+for(const args of [[astroBin,'check'],['--test',...fs.readdirSync('tests').filter(name=>name.endsWith('.test.mjs')).sort().map(name=>'tests/'+name)],['scripts/build.mjs',mode]]) {
   const result=spawnSync(process.execPath,args,{stdio:'inherit',env});
   if(result.status!==0)process.exit(result.status || 1);
 }

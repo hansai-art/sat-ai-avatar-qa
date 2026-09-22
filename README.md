@@ -2,7 +2,7 @@
 
 公開閱讀的課程問答網站。程式採 Astro 靜態網站，內容是一題一檔的 Markdown，搜尋由 Pagefind 在瀏覽器執行。網站不需要會員帳號、資料庫或 AI API 金鑰。
 
-**目前提供 22 題由真實學生提問整理的正式 FAQ。** 首頁提供章節與問題類型兩個入口、固定十題與完整列表；章節內依小節分組。三維篩選可組合且標示題數，卡片點擊進入結論先行的答案頁。來源與未整理項目見 [來源對照](docs/content-source-audit.json)。示範資料只保留在測試模式。
+**目前提供 62 題由真實學生提問整理的正式 FAQ。** 首頁提供章節與問題類型兩個入口、固定十題與完整列表；章節內依小節分組。三維篩選可組合且標示題數，卡片點擊進入結論先行的答案頁。66 筆來源、104 個問題對應項目與去重紀錄見 [來源對照](docs/content-source-audit.json)。示範資料只保留在測試模式。全部匯入結果見 [完整問答匯入](docs/FAQ-FULL-IMPORT.md)。
 
 公開站：[sathans.pages.dev](https://sathans.pages.dev)。GitHub：[hansai-art/sat-ai-avatar-qa](https://github.com/hansai-art/sat-ai-avatar-qa)。舊站保留路徑與查詢參數，301 轉至新站。
 

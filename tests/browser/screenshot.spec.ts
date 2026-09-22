@@ -19,7 +19,8 @@ test('截圖在瀏覽器辨識繁中與英文，確認文字後才搜尋',async(
  expect(requests.some(r=>r.url.includes('/ocr/'))).toBe(true);
  await page.locator('#screenshot-text').fill(info.mode==='demo'?'429':'BotFather');
  await page.getByRole('button',{name:'用這些文字搜尋'}).click();
- await expect(page.locator('#result-count')).toHaveText(info.mode==='demo'?'找到 1 個問題':'找到 2 個問題');
+ if(info.mode==='demo')await expect(page.locator('#result-count')).toHaveText('找到 1 個問題');
+ else await expect(page.locator('#result-list [data-question-id="qa-000001"]')).toBeVisible();
  await expect(page.locator('#result-list .question-card').first()).toHaveAttribute('data-question-id',info.mode==='demo'?'qa-900004':'qa-000001');
  await expect(page.getByLabel('搜尋問題',{exact:true})).toHaveValue(info.mode==='demo'?'429':'BotFather');
  await expect(page.locator('#screenshot-preview')).not.toHaveAttribute('src');
