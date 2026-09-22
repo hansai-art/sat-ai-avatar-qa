@@ -9,7 +9,7 @@ const q=Astro.props.question as Question,d=q.data;
 const {Content,headings}=await render(q);
 const all=await getQuestions();
 const related=relatedQuestions(q,all);
-const lessons=taxonomy.chapters.filter(c=>c.id!=='ch01').flatMap(c=>c.lessons).filter(l=>d.lessonRefs.includes(l.id));
+const lessons=taxonomy.chapters.flatMap(c=>c.lessons).filter(l=>d.lessonRefs.includes(l.id));
 const aliases=taxonomy.tools.filter(t=>d.toolRefs.includes(t.id)).flatMap(t=>t.aliases);
 const toc=headings.filter(h=>h.depth===2);
 const indexed=d.publication==='published';
@@ -48,12 +48,12 @@ const platforms:Record<string,string>={windows:'Windows',macos:'macOS',linux:'Li
       {lessons.map(l=><span class="tag" data-pagefind-filter={`lesson:${l.id}`}>{l.title}</span>)}
     </div>
     <div class="article-dates" data-pagefind-ignore><span>內容更新 <time datetime={d.updatedAt}>{d.updatedAt}</time></span><span>{buildMode==='demo'?'示範日期':'編輯核對'} {d.verifiedAt||'未確認'}</span>{d.reviewedBy&&<span>{taxonomy.contributors.find(c=>c.id===d.reviewedBy)?.name}</span>}</div>
-    <div class="question-provenance" data-pagefind-ignore><span class:list={['origin-badge',{anticipated:d.questionOrigin==='anticipated'}]}>{buildMode==='demo'?'示範 · ':''}{d.questionOrigin==='anticipated'?'延伸問題':'學員已問'}</span>{d.askedBy.length>0&&<p class="asker">提問：{d.askedBy.map((person,index)=><>{index>0?'、':''}<a href={person.sourceUrl} target="_blank" rel="noopener noreferrer">{person.name} · 原討論 ↗</a></>)}</p>}{d.questionOrigin==='anticipated'&&<p class="muted">由既有問題延伸整理，尚未收到學員提問。</p>}</div>
+    <div class="question-provenance" data-pagefind-ignore><span class:list={['origin-badge',{anticipated:d.questionOrigin==='anticipated'}]}>{buildMode==='demo'?'示範 · ':''}{d.questionOrigin==='anticipated'?'延伸問題':'學員已問'}</span>{d.askedBy.length>0&&<p class="asker">提問：{d.askedBy.map((person,index)=><>{index>0?'、':''}<a href={person.sourceUrl} target="_blank" rel="noopener noreferrer">學員提問 · 原討論 ↗</a></>)}</p>}{d.questionOrigin==='anticipated'&&<p class="muted">由既有問題延伸整理，尚未收到學員提問。</p>}</div>
 {d.reviewNote&&<p class="muted">{d.reviewNote}</p>}{d.sourceRefs.length>0&&<details class="source-records"><summary>查看原始提問對照</summary><ul>{d.sourceRefs.map(ref=><li>{ref.recordId} · {ref.askedAt} · {ref.part}</li>)}</ul></details>}<ul>{sources.map(s=><li><span class="source-kind">{sourceLabels[s.kind]}</span>{s.url?<a href={s.url} target="_blank" rel="noopener noreferrer">{s.title} ↗</a>:<span>{s.title}</span>}{s.checkedAt&&<span class="muted"> · 核對於 {s.checkedAt}</span>}{s.note&&<p>{s.note}</p>}</li>)}</ul></section>
     {(d.keywords.length>0||aliases.length>0)&&<details class="search-terms"><summary>相關搜尋用語</summary><p data-pagefind-weight="2">{[...new Set([...d.keywords,...aliases])].join('、')}</p></details>}
     <span hidden data-pagefind-filter={`intent:${d.intent}`} data-pagefind-meta={`intent:${d.intent}`}></span><span hidden data-pagefind-sort={`faq:${faqKey(q)}`}></span><span hidden data-pagefind-sort={`course:${courseKey(q,taxonomy)}`}></span><span hidden data-pagefind-meta={`firstStep:${d.firstStep||''}`}></span>
     {taxonomy.chapters.map(c=><span hidden data-pagefind-sort={`course-${c.id}:${courseKey(q,taxonomy,c.id)}`}></span>)}
-    <span hidden data-pagefind-filter={`origin:${d.questionOrigin}`} data-pagefind-meta={`questionOrigin:${d.questionOrigin}`}></span><span hidden data-pagefind-meta={`askedBy:${d.askedBy.map(p=>p.name).join('、')}`}></span><span hidden data-pagefind-meta={`contentOrigin:${d.contentOrigin}`}></span>
+    <span hidden data-pagefind-filter={`origin:${d.questionOrigin}`} data-pagefind-meta={`questionOrigin:${d.questionOrigin}`}></span><span hidden data-pagefind-meta={`contentOrigin:${d.contentOrigin}`}></span>
     <span hidden data-pagefind-meta={`qaId:${q.id}`}></span><span hidden data-pagefind-meta={`updatedAt:${d.updatedAt}`} data-pagefind-sort={`updated:${d.updatedAt}`}></span><span hidden data-pagefind-meta={`answerStatus:${d.answerStatus}`}></span><span hidden data-pagefind-meta={`chapters:${d.chapterRefs.join(',')}`}></span><span hidden data-pagefind-meta={`tools:${d.toolRefs.join(',')}`}></span><span hidden data-pagefind-meta={`type:${d.type}`}></span>
   </article>
   <aside class="article-aside">{toc.length>1&&<nav aria-label="文章目錄"><p class="nav-label">這一頁的內容</p>{toc.map(h=><a href={`#${h.slug}`}>{h.text}</a>)}</nav>}<a class="outline-button" href="https://sat.cool/course/201">回到課程 ↗</a><p class="muted">搭配{d.chapterRefs.map(id=>label('chapters',id)).join('、')}閱讀</p></aside></div>

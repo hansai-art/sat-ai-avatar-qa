@@ -6,7 +6,7 @@ test('首頁、章節與行動版沒有整頁溢出',async({page})=>{
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBeTruthy();
  await expect(page.locator('#static-results .question-card')).toHaveCount(info.searchableIds.length);
  await page.goto('chapters/ch01/');await expect(page.getByRole('heading',{name:'第 1 章',exact:true})).toBeVisible();
- await expect(page.getByRole('heading',{name:'本章小節'})).toHaveCount(0);
+ await expect(page.getByRole('heading',{name:'本章小節'})).toBeVisible();
 });
 test('搜尋、篩選交集與 URL 還原',async({page})=>{
  test.skip(info.mode!=='demo','此案例使用合成示範題');
@@ -111,13 +111,13 @@ test('首頁搜尋片段、放寬條件保留關鍵字、返回搜尋',async({pa
  const searchURL=page.url();await page.locator('#result-list .answer-link').first().click();
  await page.locator('#back-to-search').click();await expect(page).toHaveURL(searchURL);
 });
-test('完整列表與搜尋結果皆將延伸問題排後，第一章舊小節網址合併',async({page})=>{
+test('完整列表與搜尋結果皆將延伸問題排後，第一章小節網址保留',async({page})=>{
  test.skip(info.mode!=='demo','此案例使用合成示範題');
  await page.goto('./');await expect(page.locator('#static-results .question-card').last()).toHaveAttribute('data-question-id','qa-900015');
  await expect(page.locator('#static-results .question-card').last()).toContainText('示範 · 延伸問題');
  await page.goto('./?sort=updated&page=2');await expect(page.locator('#result-list .question-card').last()).toHaveAttribute('data-question-id','qa-900015');
  await page.goto('./?lesson=ch01-03');await expect(page.getByLabel('課程章節',{exact:true})).toHaveValue('ch01');
- await expect(page).not.toHaveURL(/lesson=/);await expect(page.locator('#result-list .question-card')).toHaveCount(3);
+ await expect(page).toHaveURL(/lesson=ch01-03/);await expect(page.getByLabel('課程小節',{exact:true})).toHaveValue('ch01-03');
 });
 test('手機首屏可看見第一題，複製按鈕靠近標題',async({page})=>{
  await page.goto('./');const first=page.locator('#result-list .question-card').first();await expect(first).toBeVisible();

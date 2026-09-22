@@ -50,10 +50,11 @@ export function validateQuestions(entries, taxonomy, mode, today=todayTaipei()) 
   }
   for(const chapter of taxonomy.chapters) {
     if(new Set(chapter.lessons.map(l=>l.order)).size!==chapter.lessons.length) fail(chapter.id,'小節 order 重複');
-    if(mode==='production' && (!chapter.confirmed || chapter.id!=='ch01' && chapter.lessons.some(l=>!l.confirmed))) fail(chapter.id,'請先核對課綱並設定 confirmed=true');
+    if(mode==='production' && (!chapter.confirmed || chapter.lessons.some(l=>!l.confirmed))) fail(chapter.id,'請先核對課綱並設定 confirmed=true');
   }
   for(const q of entries) {
     const d=q.data, id=q.id;
+    if(d.contentOrigin==='real' && d.askedBy.some(person=>person.name!=='學員提問')) fail(id,'公開題庫只保留「學員提問」匿名標示，姓名留在私人來源紀錄');
     if(new Set(d.sourceRefs.map(r=>r.recordId+'|'+r.part)).size!==d.sourceRefs.length) fail(id,'來源對照不可重複計入同一子問題');
     if(!/^qa-\d{6}$/.test(id)) fail(id,'檔名需為 qa-六位數字.md');
     for(const [field,key] of [['chapterRefs','chapters'],['toolRefs','tools']]) {
@@ -68,7 +69,7 @@ export function validateQuestions(entries, taxonomy, mode, today=todayTaipei()) 
     if(d.publication==='published') {
       if(d.answerStatus==='unverified' || !d.reviewedBy || !d.verifiedAt || !d.sources.length) fail(id,'已發布問答需要審核者、確認日與來源');
       if(!q.body?.trim() || q.body.trim()===d.summary) fail(id,'已發布問答需完整正文');
-      if(d.contentOrigin==='real' && d.questionOrigin==='asked' && !d.askedBy.length) fail(id,'學員已問的正式問題需提供可公開的提問者名稱與原討論網址');
+      if(d.contentOrigin==='real' && d.questionOrigin==='asked' && !d.askedBy.length) fail(id,'學員已問的正式問題需提供匿名提問標示與原討論網址');
       if(d.contentOrigin==='real' && d.questionOrigin==='asked' && (!d.firstStep || !d.sourceRefs.length)) fail(id,'正式 FAQ 需要第一步與來源對照');
     }
     if(d.questionOrigin==='anticipated' && d.askedBy.length) fail(id,'延伸問題不可標記為學員提問');

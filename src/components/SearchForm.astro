@@ -17,7 +17,7 @@ const {filters={},full=false,dynamic=false,root='/questions/'}=Astro.props;
     <div class="secondary-filters"><details class="filter-panel"><summary>更多篩選<span id="filter-summary"></span></summary><div class="filters">
       <label><span id="tool-label">使用工具</span><select name="tool" aria-labelledby="tool-label"><option value="">全部工具</option>{taxonomy.tools.map(t=><option value={t.id} selected={filters.tool===t.id}>{t.name}</option>)}</select></label>
       <label><span id="type-label">問題類型</span><select name="type" aria-labelledby="type-label"><option value="">全部類型</option>{taxonomy.types.map(t=><option value={t.id} selected={filters.type===t.id}>{t.name}</option>)}</select></label>
-      <label id="lesson-filter"><span id="lesson-label">課程小節</span><select name="lesson" aria-labelledby="lesson-label"><option value="">全部小節</option>{taxonomy.chapters.filter(c=>c.id!=='ch01').flatMap(c=>c.lessons.map(l=><option value={l.id} data-chapter={c.id}>{c.title}・{l.title}</option>))}</select></label>
+      <label id="lesson-filter"><span id="lesson-label">課程小節</span><select name="lesson" aria-labelledby="lesson-label"><option value="">全部小節</option>{taxonomy.chapters.flatMap(c=>c.lessons.map(l=><option value={l.id} data-chapter={c.id}>{c.title}・{l.title}</option>))}</select></label>
     </div></details>{dynamic&&<button class="text-button" type="button" id="clear-filters" hidden>清除篩選</button>}</div>
     {dynamic&&<ScreenshotSearch/>}
   </>:Object.entries(filters).map(([key,value])=><input type="hidden" name={key} value={value}/>)}

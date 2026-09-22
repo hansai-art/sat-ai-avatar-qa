@@ -29,7 +29,7 @@ function syncForm(){
   for(const radio of form.querySelectorAll<HTMLInputElement>('input[type=radio]'))radio.checked=radio.value===state[radio.name as keyof typeof state];
   syncLessons();syncFilters();
 }
-function syncLessons(){const chapter=control('chapter').value;document.querySelector<HTMLElement>('#lesson-filter')!.hidden=chapter==='ch01';for(const opt of (control('lesson') as HTMLSelectElement).options){const disabled=!!opt.value&&!!chapter&&opt.dataset.chapter!==chapter;opt.disabled=disabled;opt.hidden=disabled;}}
+function syncLessons(){const chapter=control('chapter').value;for(const opt of (control('lesson') as HTMLSelectElement).options){const disabled=!!opt.value&&!!chapter&&opt.dataset.chapter!==chapter;opt.disabled=disabled;opt.hidden=disabled;}}
 function syncFilters(){
   document.querySelector<HTMLElement>('#chapter-filter')!.hidden=state.sort!=='course'&&!state.chapter;
   document.querySelector<HTMLElement>('#sort-description')!.textContent=state.q?'依搜尋關聯排序':state.sort==='course'?'依章節與小節順序':state.sort==='updated'?'依最近更新':'新手卡關優先';
