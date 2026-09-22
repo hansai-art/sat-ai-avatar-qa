@@ -20,7 +20,6 @@ const images=await Promise.all(question.data.screenshots.map(async shot=>{
 }));
 ---
 {images.length>0&&<section class="question-images" id="operation-images" aria-label="操作畫面對照">
-  <h2>對照畫面</h2>
   <div class="image-previews">{images.map(shot=><figure class="image-preview">
     <a class="image-preview-link" href={shot.full.src} target="_blank" rel="noopener noreferrer" data-qa-image data-pswp-width={shot.width} data-pswp-height={shot.height} aria-label={`放大圖片：${shot.alt}`}>
       <img src={shot.preview.src} width={shot.preview.attributes.width} height={shot.preview.attributes.height} alt={shot.alt} loading="lazy" decoding="async"/>

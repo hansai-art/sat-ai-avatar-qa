@@ -2,18 +2,16 @@
 import {render} from 'astro:content';
 import {faqKey,courseKey} from '../../lib/faq.mjs';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import QuestionCard from '../../components/QuestionCard.astro';
 import InterfaceText from '../../components/InterfaceText.astro';
 import QuestionImages from '../../components/QuestionImages.astro';
 import ImageViewer from '../../components/ImageViewer.astro';
 import {getQuestions,taxonomy,href,label,relatedQuestions,buildMode,type Question} from '../../lib/content';
 export async function getStaticPaths(){return (await getQuestions()).map(q=>({params:{id:q.id},props:{question:q}}));}
 const q=Astro.props.question as Question,d=q.data;
-const {Content,headings}=await render(q);
+const {Content}=await render(q);
 const all=await getQuestions(),related=relatedQuestions(q,all);
 const lessons=taxonomy.chapters.flatMap(c=>c.lessons).filter(l=>d.lessonRefs.includes(l.id));
 const aliases=taxonomy.tools.filter(t=>d.toolRefs.includes(t.id)).flatMap(t=>t.aliases);
-const toc=[{slug:'conclusion',text:'先看結論'},...(d.firstStep?[{slug:'first-step',text:'先做這一步'}]:[]),...(d.screenshots.length?[{slug:'operation-images',text:'對照畫面'}]:[]),...headings.filter(h=>h.depth===2),...(related.length?[{slug:'related-questions',text:'你可能也會遇到'}]:[])];
 const indexed=d.publication==='published';
 const sourceLabels:Record<string,string>={official:'官方文件',instructor:'講師說明',course:'課程資料',community:'社群討論',other:'補充資料'};
 const sourceOrder=['official','instructor','course','community','other'];
@@ -22,7 +20,7 @@ const platforms:Record<string,string>={windows:'Windows',macos:'macOS',linux:'Li
 const [conclusion,...explanation]=d.summary.split(/(?<=[。！？])/u);
 ---
 <BaseLayout title={d.title} description={d.summary} noindex={!indexed} activeChapter={d.chapterRefs[0]}>
-  <nav class="breadcrumb" aria-label="所在位置"><a href={href('/questions/')} id="back-to-search">全部問題</a><span aria-hidden="true">›</span><a href={href(`/chapters/${d.chapterRefs[0]}/`)}>{label('chapters',d.chapterRefs[0])}</a></nav>
+  <nav class="breadcrumb answer-breadcrumb" aria-label="所在位置"><a href={href('/questions/')} id="back-to-search">全部問題</a><span aria-hidden="true">›</span><a href={href(`/chapters/${d.chapterRefs[0]}/`)}>{label('chapters',d.chapterRefs[0])}</a></nav>
   <script is:inline define:vars={{searchPaths:[href('/'),href('/questions/')]}}>
     try {const previous=new URL(sessionStorage.getItem('qa-last-search')||searchPaths[1],location.origin);if(previous.origin===location.origin&&searchPaths.includes(previous.pathname)){const back=document.querySelector('#back-to-search');back.href=previous.pathname+previous.search;back.textContent=previous.search?'返回搜尋結果':'返回問題列表';}}catch{}
   </script>
@@ -32,21 +30,18 @@ const [conclusion,...explanation]=d.summary.split(/(?<=[。！？])/u);
         <h1 data-pagefind-meta="title" data-pagefind-weight="5">{d.title}</h1>
         <div class="answer-meta"><a class="category-label" data-category={d.type} href={href(`/types/${d.type}/`)}><span class="category-dot" aria-hidden="true"></span>{label('types',d.type)}</a>{d.chapterRefs.map(id=><a href={href(`/chapters/${id}/`)}>{label('chapters',id)}</a>)}<button type="button" class="text-button" id="copy-link">複製連結</button></div>
         <span id="copy-status" role="status" data-pagefind-ignore></span><input id="copy-fallback" readonly aria-label="可手動複製的問題網址" hidden data-pagefind-ignore/>
-        <details class="mobile-toc" data-pagefind-ignore><summary>這一頁的內容</summary><nav aria-label="手機文章目錄">{toc.map(h=><a href={`#${h.slug}`}>{h.text}</a>)}</nav></details>
       </header>
       {d.publication==='archived'&&<aside class="notice warning" data-pagefind-ignore><strong>這題已封存</strong><p>{d.reviewNote}</p>{d.supersededBy&&<a href={href(`/questions/${d.supersededBy}/`)}>閱讀更新後的答案</a>}</aside>}
       {d.answerStatus==='needs-update'&&<aside class="notice warning"><strong>這份答案待更新</strong><p>{d.reviewNote}</p></aside>}
-      <section class="short-answer" id="conclusion"><h2 class="short-answer-label">{buildMode==='demo'?'簡答版型示範':'先看結論'}</h2><p data-pagefind-meta="summary" data-pagefind-weight="3"><strong><InterfaceText text={conclusion}/></strong><InterfaceText text={explanation.join('')}/></p></section>
-      {d.nextLinks.length>0&&<nav class="next-links" aria-label="直接前往">{d.nextLinks.map(link=><a href={link.url} target="_blank" rel="noopener noreferrer">{link.title} <span aria-hidden="true">↗</span></a>)}</nav>}
-      {d.uiPath.length>0&&<nav class="operation-path" aria-label="操作路徑"><span class="section-caption">操作路徑</span><ol>{d.uiPath.map((step,i)=><li>{i>0&&<span aria-hidden="true">›</span>}<code>{step}</code></li>)}</ol></nav>}
-      {d.firstStep&&<section class="first-step" id="first-step"><h2>先做這一步</h2>{d.firstStep.split(/(?<=[。！？])/u).filter(Boolean).map(step=><p><InterfaceText text={step}/></p>)}</section>}
+      <section class="short-answer" id="conclusion" aria-label="簡答">{buildMode==='demo'&&<h2 class="short-answer-label">簡答版型示範</h2>}<p data-pagefind-meta="summary" data-pagefind-weight="3"><strong><InterfaceText text={conclusion}/></strong><InterfaceText text={explanation.join('')}/></p></section>
       {(d.appliesTo||d.platforms.length>0)&&<p class="applies-to">適用情況：{[d.appliesTo,...d.platforms.map(p=>platforms[p])].filter(Boolean).join(' · ')}</p>}
-      {d.caution&&<aside class="answer-caution"><strong>留意這件事</strong><p>{d.caution}</p></aside>}
       <QuestionImages question={q}/>
-      <div class="prose zh-prose"><Content/></div>
+      <div class="prose zh-prose" id="first-step"><Content/></div>
+      {d.caution&&<aside class="answer-caution"><p><InterfaceText text={d.caution}/></p></aside>}
+      <nav class="next-links" aria-label="操作指南與課程入口">{d.nextLinks.map(link=><a href={link.url} target="_blank" rel="noopener noreferrer">{link.title} <span aria-hidden="true">↗</span></a>)}{!d.nextLinks.some(link=>link.url==='https://sat.cool/course/201/comment')&&<a href="https://sat.cool/course/201/comment" target="_blank" rel="noopener noreferrer">回課程留言提問 <span aria-hidden="true">↗</span></a>}</nav>
       {d.errorMessages.length>0&&<details class="error-text"><summary>對照錯誤訊息原文</summary>{d.errorMessages.map(error=><pre data-pagefind-weight="3"><code>{error}</code></pre>)}</details>}
       {d.videos.length>0&&<section class="video-section"><h2>影片補充</h2>{d.videos.map(v=><a class="video-card" href={v.url} target="_blank" rel="noopener noreferrer"><div><h3>{v.title}</h3><p>{v.description}</p>{v.timestampLabel&&<small>{v.timestampLabel}</small>}</div><span aria-hidden="true">↗</span></a>)}</section>}
-      {related.length>0&&<section id="related-questions" class="related-questions" data-pagefind-ignore><h2>你可能也會遇到</h2><div class="question-list">{related.map(item=><QuestionCard question={item}/>)}</div></section>}
+      {related.length>0&&<section id="related-questions" class="related-questions" data-pagefind-ignore><h2>你可能也會遇到</h2><ul class="related-links">{related.map(item=><li><a href={href(`/questions/${item.id}/`)}>{item.data.title}<span aria-hidden="true">›</span></a></li>)}</ul></section>}
       <details class="sources" id="source-records" data-pagefind-ignore><summary>來源與核對紀錄</summary><div class="source-content">
         <p>提問來源：{d.questionOrigin==='asked'?'學員提問（已匿名）':'延伸問題，尚未收到學員提問'}</p>
         <p>內容更新 <time datetime={d.updatedAt}>{d.updatedAt}</time> · 編輯核對 {d.verifiedAt||'未確認'}{d.reviewedBy&&` · ${taxonomy.contributors.find(c=>c.id===d.reviewedBy)?.name}`}</p>
@@ -65,7 +60,6 @@ const [conclusion,...explanation]=d.summary.split(/(?<=[。！？])/u);
       <span hidden data-pagefind-filter={`origin:${d.questionOrigin}`} data-pagefind-meta={`questionOrigin:${d.questionOrigin}`}></span><span hidden data-pagefind-meta={`contentOrigin:${d.contentOrigin}`}></span>
       <span hidden data-pagefind-meta={`qaId:${q.id}`}></span><span hidden data-pagefind-meta={`updatedAt:${d.updatedAt}`} data-pagefind-sort={`updated:${d.updatedAt}`}></span><span hidden data-pagefind-meta={`answerStatus:${d.answerStatus}`}></span><span hidden data-pagefind-meta={`chapters:${d.chapterRefs.join(',')}`}></span><span hidden data-pagefind-meta={`tools:${d.toolRefs.join(',')}`}></span><span hidden data-pagefind-meta={`type:${d.type}`}></span>
     </article>
-    <aside class="article-aside"><nav aria-label="文章目錄"><p class="nav-label">這一頁的內容</p>{toc.map(h=><a data-toc-link href={`#${h.slug}`}>{h.text}</a>)}</nav><a class="outline-button" href="https://sat.cool/classroom/201">回到課程 <span aria-hidden="true">↗</span></a></aside>
   </div>
   <ImageViewer/>
 </BaseLayout>
@@ -75,9 +69,4 @@ const [conclusion,...explanation]=d.summary.split(/(?<=[。！？])/u);
     try{await navigator.clipboard.writeText(url);status.textContent='已複製連結';}
     catch{const input=document.querySelector<HTMLInputElement>('#copy-fallback')!;input.hidden=false;input.value=url;input.focus();input.select();status.textContent='請手動複製下方網址';}
   });
-  const links=[...document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]')];
-  const sections=links.map(a=>document.getElementById(decodeURIComponent(a.hash.slice(1)))).filter(Boolean) as HTMLElement[];
-  let scheduled=false;
-  function highlight(){scheduled=false;const atBottom=scrollY>0&&scrollY+innerHeight>=document.documentElement.scrollHeight-2;const current=atBottom?sections.at(-1):[...sections].reverse().find(el=>el.getBoundingClientRect().top<=150)||sections[0];for(const a of links){if(decodeURIComponent(a.hash.slice(1))===current?.id)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');}}
-  window.addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(highlight);}},{passive:true});highlight();
 </script>

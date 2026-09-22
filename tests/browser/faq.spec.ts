@@ -82,7 +82,9 @@ test('手機首屏兩個題名、主要點擊區和答案頁無溢出',async({pa
   await expect(page.locator('.filter-panel')).not.toHaveAttribute('open','');
   for(const locator of [page.getByRole('button',{name:'搜尋',exact:true}),page.locator('.browse-entries a').first(),page.locator('#starter-questions .question-card-link').first()])expect((await locator.boundingBox())!.height).toBeGreaterThanOrEqual(44);
   await page.locator('.filter-panel summary').click();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  await page.goto('questions/qa-000001/');await expect(page.locator('.mobile-toc')).not.toHaveAttribute('open','');
+  await page.goto('questions/qa-000001/');await expect(page.locator('.mobile-toc,.article-aside,[data-toc-link]')).toHaveCount(0);
+  await page.evaluate(()=>document.fonts.ready);
+  expect((await page.locator('.prose ol>li').nth(1).boundingBox())!.y+(await page.locator('.prose ol>li').nth(1).boundingBox())!.height).toBeLessThan(844);
   await expect(page.locator('.mobile-chapters')).not.toHaveAttribute('open','');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   expect(await page.locator('.prose').evaluate(el=>parseFloat(getComputedStyle(el).fontSize))).toBe(16);
  }
@@ -101,17 +103,25 @@ test('所有答案均有直接入口與匿名來源，編輯註記不進正文',
   await page.goto('questions/'+id+'/');await expect(page.locator('.short-answer strong')).not.toBeEmpty();await expect(page.locator('.next-links a').first()).toHaveAttribute('href',/^https:\/\//);
   await expect(page.locator('.source-content')).toBeHidden();await expect(page.locator('.prose')).not.toContainText('## 對應課程');
   await expect(page.locator('.prose')).not.toContainText('提供的紀錄沒有最後解決結果');await expect(page.locator('[data-pagefind-meta^="askedBy"]')).toHaveCount(0);
+  await expect(page.getByText('這一頁的內容',{exact:true})).toHaveCount(0);
+  await expect(page.locator('.first-step,.operation-path,.short-answer h2')).toHaveCount(0);
+  await expect(page.locator('.related-questions .question-card')).toHaveCount(0);
+  await page.evaluate(()=>document.fonts.ready);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  await expect(page.locator('.next-links a[href="https://sat.cool/course/201/comment"]')).toBeVisible();
  }
 });
 
-test('桌機目錄標示中文小標與頁尾段落，正文限制寬度',async({page})=>{
+test('桌機直接呈現解法，無目錄或重複步驟區，相關題目只有標題',async({page})=>{
  await page.setViewportSize({width:1440,height:1000});await page.goto('questions/qa-000002/');await page.evaluate(()=>document.fonts.ready);
  expect((await page.locator('.answer').boundingBox())!.width).toBeLessThanOrEqual(720);
  await expect(page.locator('.sidebar .chapter-nav.active')).toContainText('第 1 章');
- await page.locator('.article-aside').getByRole('link',{name:'依這個順序排查',exact:true}).click();
- await expect(page.locator('[data-toc-link][aria-current=location]')).toHaveText('依這個順序排查');
- await page.locator('.article-aside a[href="#related-questions"]').click();
- await expect(page.locator('[data-toc-link][aria-current=location]')).toHaveText('你可能也會遇到');
+ await expect(page.locator('.mobile-toc,.article-aside,[data-toc-link],.first-step,.operation-path')).toHaveCount(0);
+ await expect(page.locator('.prose ol>li').first()).toContainText('Settings → Providers');
+ const related=page.locator('.related-links a').first();await expect(related).toHaveAttribute('href',/questions\/qa-\d+\//);
+ expect((await related.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+ const target=await related.getAttribute('href');await related.click();expect(new URL(page.url()).pathname).toBe(target);
+ await page.goto('questions/qa-000001/#conclusion');await expect(page.locator('#conclusion')).toBeInViewport();
 });
 
 for(const [query,id] of [['HTTP 429','qa-000053'],['pairing code','qa-000055'],['沒有登入','qa-000051'],['沒有授權','qa-000051'],['安裝卡住','qa-000050'],['需求遺漏','qa-000058'],['記帳','qa-000037'],['人資','qa-000048'],['Google Drive','qa-000049']])test('新增學生問法可找到答案：'+query,async({page})=>{await page.goto('./?q='+encodeURIComponent(query));await expect(page.locator('#result-list [data-question-id="'+id+'"]')).toBeVisible();});
