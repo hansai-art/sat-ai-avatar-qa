@@ -23,7 +23,7 @@ const info=JSON.parse(readFileSync('dist/build-info.json','utf8'));
 if(mode==='production') {
   // Preserve previously shared demo links without mixing fixtures into real FAQs.
   const replacements=[4,19,1,2,3,1,16,15,16,22,3,6,7,18,15];
-  writeFileSync('dist/_redirects',replacements.map((target,i)=>`/questions/qa-${900001+i}/ /questions/qa-${String(target).padStart(6,'0')}/ 301`).join('\n')+'\n');
+  writeFileSync('dist/_redirects',replacements.map((target,i)=>`/questions/qa-${900001+i}/ /questions/qa-${String(target).padStart(6,'0')}/ 301`).join('\n')+'\n/types/how-to/ /types/concept/ 301\n');
 }
 
 try {

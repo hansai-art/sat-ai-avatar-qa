@@ -2,7 +2,7 @@
 
 公開閱讀的課程問答網站。程式採 Astro 靜態網站，內容是一題一檔的 Markdown，搜尋由 Pagefind 在瀏覽器執行。網站不需要會員帳號、資料庫或 AI API 金鑰。
 
-**目前提供 22 題由真實學生提問整理的正式 FAQ。** 首頁以新手卡關優先，可切換課程順序，篩選操作排錯、概念理解與課程資源，點題目原地展開短答。來源與未整理項目見 [來源對照](docs/content-source-audit.json)。示範資料只保留在測試模式。
+**目前提供 22 題由真實學生提問整理的正式 FAQ。** 首頁提供章節與問題類型兩個入口、固定十題與完整列表；章節內依小節分組。三維篩選可組合且標示題數，卡片點擊進入結論先行的答案頁。來源與未整理項目見 [來源對照](docs/content-source-audit.json)。示範資料只保留在測試模式。
 
 公開站：[sathans.pages.dev](https://sathans.pages.dev)。GitHub：[hansai-art/sat-ai-avatar-qa](https://github.com/hansai-art/sat-ai-avatar-qa)。舊站保留路徑與查詢參數，301 轉至新站。
 
@@ -58,7 +58,7 @@ npm run test:e2e
 3. 編輯 `src/content/questions/qa-xxxxxx.md`，參照 [回答品質標準](docs/FAQ-ANSWER-STANDARD.md) 與 [資料規格](docs/SPEC.md)。檔名就是固定 ID，不因標題改動而更名。2026-09-20 的 22 題內容改寫見 [逐題紀錄](docs/FAQ-ANSWER-REVISION-2026-09-20.md)。
 4. 圖片放在 `src/assets/questions/qa-xxxxxx/`，再從 Markdown 使用相對路徑引用，例如 `../../assets/questions/qa-xxxxxx/screen.png`。圖片要有 alt，每張小於 2MiB，發布前完成去識別化。
 5. `videos` 填安全 HTTPS 網址、標題與說明；不支援影片上傳或 iframe。
-6. 學員已問設 `questionOrigin: asked`，填 `askedBy` 的可公開 `name` 與原討論 `sourceUrl`。推測問題設 `anticipated`、`askedBy: []`，需由實際問題延伸並另行核對答案。填寫 `intent`、`faqOrder`、`firstStep`、`sourceRefs`；核對來源後填實際 `reviewedBy` 與 `verifiedAt`（AI 編輯使用 `editorial`，不可冒充 Hans 人工重審），設定 `answerStatus: verified`、`publication: published`。`contentOrigin` 必須是 `real`。
+6. 學員已問設 `questionOrigin: asked`，填 `askedBy.name: 學員提問` 與原討論 `sourceUrl`，真實姓名不得放進公開儲存庫。推測問題設 `anticipated`、`askedBy: []`，需由實際問題延伸並另行核對答案。填寫統一的六分類 `type`、`faqOrder`、`firstStep`、`nextLinks`、`sourceRefs`；核對來源後填實際 `reviewedBy` 與 `verifiedAt`（AI 編輯使用 `editorial`，不可冒充 Hans 人工重審），設定 `answerStatus: verified`、`publication: published`。`contentOrigin` 必須是 `real`。
 7. 更新 `updatedAt`。只有重新核對來源，才更新 `verifiedAt`，並註明核對者與限制。
 8. 執行品質檢查與正式建置，經分支／PR 合併。
 

@@ -107,7 +107,7 @@ flowchart TD
 | chapterRefs | string[]，必填 | 至少一筆；已確認章節 ID，或 general；去重 |
 | lessonRefs | string[]，預設 [] | 必須存在且其 chapterId 包含於 chapterRefs |
 | toolRefs | string[]，必填 | 至少一筆；工具 ID，無特定工具用 general |
-| type | enum，必填 | setup、account-billing、troubleshooting、how-to、use-case、course-resources |
+| type | enum，必填 | setup、account-billing、troubleshooting、concept、use-case、course-resources |
 | platforms | string[]，預設 [] | windows、macos、linux、ios、android、web；沒有就不顯示 |
 | keywords | string[]，預設 [] | 每項 1～80 字元，最多 12 項；放別名及常見說法 |
 | errorMessages | string[]，預設 [] | 最多 5 項，每項 ≤2,000 字元；不得含真實密鑰／帳號 |
@@ -228,7 +228,7 @@ taxonomy.json 包含四類資料及編輯者顯示資訊：
 
 此為節錄格式示例。實作已包含 ch01～ch09、general、六個問題類型及 45 個小節標題。小節取自 Hans 指定的「林思翰知識衛星課程回答」Skill 教材快照，非即時平台課綱；confirmed 仍為 false，待正式內容進站前核對。general 是通用分類，不偽裝成第十章。
 
-每個 lesson 含 id、order、title、confirmed、url（選填），例如 ch01-05。可先依有來源的教材快照建立小節；只有正式課綱已核對後，才設 confirmed=true。章名可改，ID 穩定。production 模式要求正式章節 confirmed=true；第二章以後存在的小節也需 confirmed=true。第一章舊小節只保留歷史資料，不影響查詢或正式發布；空章仍可存在。
+每個 lesson 含 id、order、title、confirmed、url（選填），例如 ch01-05。可先依有來源的教材快照建立小節；只有正式課綱已核對後，才設 confirmed=true。章名可改，ID 穩定。production 模式要求正式章節 confirmed=true；所有章節的小節也需 confirmed=true；空章仍可存在但零題入口隱藏。
 
 分類驗證：ID 唯一、order 不重複、lesson 只歸屬單一章、別名不得指向多個不同工具、contributors ID 可解析。平台清單用程式固定 enum，不增加第五份分類檔案。
 
@@ -251,7 +251,7 @@ BUILD_MODE 只允許 demo 或 production，預設 production。
 | /questions/ | 全部問題與搜尋；靜態頁加搜尋增強 |
 | /questions/qa-000001/ | 單題，從非 draft 的可發布資料生成 |
 | /chapters/ | 全部章節總覽 |
-| /chapters/ch01/ | 第一章全部問題，不提供小節入口 |
+| /chapters/ch01/ | 第一章全部問題，按有題目的小節分組 |
 | /tools/ | 有內容的工具總覽 |
 | /tools/hermes-agent/ | 工具問題清單 |
 | /types/troubleshooting/ | 問題類型清單 |
@@ -369,7 +369,7 @@ URL 參數：
 | sort | relevance 或 updated |
 | page | 整數 ≥1，預設 1 |
 
-未知參數忽略；未知分類值清除並以不阻擋操作的文字提示。第一章舊 lesson 參數轉成 chapter=ch01，不再限縮小節。其他 lesson 有效且未指定 chapter 時，自動補其章節；兩者衝突時清除 lesson，保留 chapter。重複參數只取第一個，解析後序列化成唯一狀態。
+未知參數忽略；未知分類值清除並以不阻擋操作的文字提示。所有 lesson 有效且未指定 chapter 時，自動補其章節；兩者衝突時清除 lesson，保留 chapter。重複參數只取第一個，解析後序列化成唯一狀態。
 
 只輸入空白視為空搜尋；保留原文供使用者看見，正規化字串僅用於查詢。英文大小寫不作不同工具；繁簡轉換、任意拼字容錯及通用語意搜尋不在 V1 的保證範圍。
 
@@ -687,13 +687,18 @@ Node 內建測試負責狀態解析、路徑、日期、分類引用、替代循
 
 ## 2026-09-20：手機 FAQ 介面與內容欄位
 
-- `intent`: `operation | concept | resources`，公開用途篩選；`type` 保留原細分類與路由。
+- `type` 使用單一六分類；`intent` 僅保留舊資料匯入相容，不再顯示。
 - `faqOrder`: 正整數，越小越前；預設 99999，不代表人氣。學員已問仍先於延伸題。
 - `firstStep`: 簡短可執行動作；正式已問題必填。
 - `sourceRefs`: `{recordId, part, askedAt}` 陣列，正式已問題必填，同一來源的同一子問題不可重複。`askedBy` 去重保留真實出處。
 - `reviewedBy: editorial` 代表 AI 依來源編輯核對，不等於 Hans 人工重新審核或學生環境實測。
-- URL 新增 `intent` 及 `sort=course`。預設常見順序，舊 `sort=updated` 相容；有關鍵字時按關聯，清空後恢復選定順序。
-- 課程模式按課綱／小節排序；選章時以該章的小節排序跨章題。第一章聚合，不拆小節。
-- 原地展開短答與第一步，完整解法維持一題一頁。返回可恢復 URL、頁碼、展開題與捲動位置。
+- URL 保留 `chapter`、`type`、`tool`、舊 `lesson` 及 `sort=course`。舊 `intent` 對應分類或清除並提示。預設常見順序，舊 `sort=updated` 相容；有關鍵字時按關聯，清空後恢復選定順序。
+- 課程模式按課綱／小節排序；選章時以該章的小節排序跨章題。每章依已確認小節分組，空小節隱藏。
+- 卡片只放標題、一句結論、分類與章節，整卡連到完整解法；第一步只放在詳細頁。返回可恢復 URL、頁碼與捲動位置。
 - 不執行 JavaScript 仍提供完整列表與原生 details；搜尋失敗提供重試與章節入口。
 - `docs/content-source-audit.json` 只保留來源指紋、編號與處理狀態；原始輸入不進 repo 或公開產物。
+
+
+## 2026-09-22 學生入口與視覺層級
+
+最新實作與驗收以 `STUDENT-REVAMP-2026-09-22.md` 為準。首頁搜尋、兩個平行入口、固定十題、完整列表。三維篩選題數依交集計算，零題隱藏。詳細頁結論先行，新增 `nextLinks`、`uiPath`、`caution`、`editorialNotes`；來源與核對資訊預設收合。`askedBy.name` 只能是「學員提問」。正文與介面使用思源黑體，指令依本輪規格使用等寬字型。

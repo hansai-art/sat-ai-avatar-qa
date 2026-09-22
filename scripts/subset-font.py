@@ -54,7 +54,11 @@ def unicode_ranges(points):
 
 cmap = set(TTFont(SOURCE).getBestCmap())
 latin = {c for c in cmap if c < 0x300 or 0x2000 <= c <= 0x206F}
-home = characters(ROOT / 'dist/index.html') & cmap - latin
+home = characters(ROOT / 'dist/index.html')
+for script in (ROOT / 'src/scripts').glob('*.ts'):
+    home.update(map(ord, script.read_text()))
+home.update(map(ord, '＋−›⌂'))  # CSS-generated UI controls also appear on the homepage.
+home = home & cmap - latin
 content = set().union(*(characters(p) for p in (ROOT / 'dist').rglob('*.html')))
 content = content & cmap - latin - home
 groups = {'latin': latin, 'home': home, 'content': content,

@@ -75,13 +75,13 @@ test('學員問題需有可追溯的匿名來源，延伸問題不可偽裝提�
  assert.deepEqual(publishedQuestions([anticipated,asked]).map(q=>q.id),[asked.id,anticipated.id]);
 });
 
-test('用途與瀏覽順序可分享，搜尋時仍按關聯，清空後恢復課程順序',()=>{
+test('舊用途遷移至單一分類，瀏覽順序可分享，搜尋時仍按關聯，清空後恢復課程順序',()=>{
  const state=parseState('q=Hermes&intent=concept&sort=course&chapter=ch00&page=2',taxonomy).state;
- assert.equal(state.intent,'concept');assert.equal(state.sort,'course');
+ assert.equal(state.type,'concept');assert.equal(state.sort,'course');
  assert.equal(queryOptions(state).sort,undefined);
  assert.deepEqual(queryOptions({...state,q:''}).sort,{'course-ch00':'asc'});
  assert.deepEqual(parseState(serializeState(state),taxonomy).state,state);
- assert.equal(parseState('intent=bad&sort=bad',taxonomy).state.intent,'');
+ assert.equal(parseState('intent=bad&sort=bad',taxonomy).state.type,'');
  assert.equal(parseState('intent=bad&sort=bad',taxonomy).state.sort,'common');
 });
 test('同一來源同一子問題不能重複計入，來源日期不可在未來',()=>{
@@ -99,4 +99,17 @@ test('正式題庫阻擋公開學員姓名，每章小節網址皆保留',()=>{
 test('FAQ 編輯排序穩定，延伸題仍在學生提問之後',()=>{
  const a=make({faqOrder:2}),b={...make({faqOrder:1}),id:'qa-000101'},c={...make({questionOrigin:'anticipated',askedBy:[],faqOrder:1}),id:'qa-000102'};
  assert.deepEqual(publishedQuestions([c,a,b]).map(q=>q.id),[b.id,a.id,c.id]);
+});
+
+import {facetFilters,lessonGroups} from '../src/lib/faq.mjs';
+test('章節分組收錄第一章小節，未分小節題不遺失，空小節不顯示',()=>{
+ const chapter=taxonomy.chapters.find(c=>c.id==='ch01');
+ const groups=lessonGroups([make({lessonRefs:['ch01-03']}),{...make(),id:'qa-000101'}],chapter);
+ assert.deepEqual(groups.map(g=>g.id),['ch01-03','general']);
+ assert.equal(groups.flatMap(g=>g.questions).length,2);
+});
+test('交集題數只移除自己的維度，換章也移除舊小節',()=>{
+ const s={chapter:'ch01',lesson:'ch01-05',type:'troubleshooting',tool:'telegram'};
+ assert.deepEqual(facetFilters(s,'chapter'),{type:'troubleshooting',tool:'telegram'});
+ assert.deepEqual(facetFilters(s,'tool'),{chapter:'ch01',type:'troubleshooting',lesson:'ch01-05'});
 });

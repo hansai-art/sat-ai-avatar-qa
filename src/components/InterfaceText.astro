@@ -1,0 +1,7 @@
+---
+interface Props {text:string;}
+const {text}=Astro.props;
+// Render only known interface terms as code. Never interpret author text as HTML.
+const parts=text.split(/(\/start|\/help|\/newbot|https?:\/\/|\b(?:Gateway|Bot Token|API Key|user ID|base URL|profile|Start|Settings|Providers)\b)/g);
+---
+{parts.map((part,index)=>index%2?<code>{part}</code>:part)}

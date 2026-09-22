@@ -9,16 +9,20 @@ const refs = z.array(text(1,80)).refine(xs => new Set(xs).size === xs.length, '�
 const https = z.string().refine(safeHttps, '需為不含憑證的 HTTPS 網址');
 export const questionSchema = z.object({
   title: text(4,100), summary: text(15,240), chapterRefs: refs.min(1), lessonRefs: refs.default([]), toolRefs: refs.min(1),
-  type: z.enum(['setup','account-billing','troubleshooting','how-to','use-case','course-resources']),
+  type: z.enum(['setup','account-billing','troubleshooting','concept','use-case','course-resources']),
   platforms: z.array(z.enum(['windows','macos','linux','ios','android','web'])).default([]),
   keywords: refs.max(12).default([]), errorMessages: z.array(z.string().max(2000)).max(5).default([]),
   publication: z.enum(['draft','published','archived']).default('draft'),
   answerStatus: z.enum(['unverified','verified','needs-update']).default('unverified'),
   contentOrigin: z.enum(['real','demo']).default('real'),
   questionOrigin: z.enum(['asked','anticipated']).default('asked'),
-  intent: z.enum(['operation','concept','resources']).default('operation'),
+  intent: z.enum(['operation','concept','resources']).optional(), // Legacy fixture/import compatibility; never shown in the UI.
   faqOrder: z.number().int().min(1).max(99999).default(99999),
   firstStep: text(1,300).optional(),
+  nextLinks: z.array(z.object({title:text(1,100),url:https}).strict()).max(3).default([]),
+  uiPath: z.array(text(1,80)).max(6).default([]),
+  caution: text(1,300).optional(),
+  editorialNotes: z.array(text(1,800)).default([]),
   sourceRefs: z.array(z.object({recordId:text(1,80),part:text(1,120),askedAt:date}).strict()).default([]),
   askedBy: z.array(z.object({name:text(1,80),sourceUrl:https}).strict()).max(20).default([]),
   createdAt: date, updatedAt: date, verifiedAt: date.nullable().default(null),

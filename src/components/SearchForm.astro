@@ -1,25 +1,25 @@
 ---
 import ScreenshotSearch from './ScreenshotSearch.astro';
-import {href,taxonomy} from '../lib/content';
-import {intents} from '../lib/faq.mjs';
-interface Props {filters?:Record<string,string>;full?:boolean;dynamic?:boolean;root?:string;}
-const {filters={},full=false,dynamic=false,root='/questions/'}=Astro.props;
+import {href,taxonomy,getPublished} from '../lib/content';
+import {matchesQuestion} from '../lib/faq.mjs';
+interface Props {filters?:Record<string,string>;full?:boolean;dynamic?:boolean;root?:string;home?:boolean;}
+const {filters={},full=false,dynamic=false,root='/questions/',home=false}=Astro.props;
+const all=await getPublished();
+const dimensions=[{key:'chapter',title:'課程章節',all:'全部章節',values:taxonomy.chapters},{key:'type',title:'問題分類',all:'全部分類',values:taxonomy.types},{key:'tool',title:'使用工具',all:'全部工具',values:taxonomy.tools}];
+const counts=(key:string,value:string)=>all.filter(q=>matchesQuestion(q,{...filters,[key]:value})).length;
 ---
 <form action={href(root)} method="get" class="search-form" id={dynamic?'search-form':undefined} role="search">
   <label class="sr-only" for="question-search">搜尋問題</label>
   <div class="search-bar"><input id="question-search" name="q" type="search" placeholder="輸入問題、工具名稱或錯誤訊息" autocomplete="off" maxlength="200"/><button class="primary-button" type="submit">搜尋</button></div>
+  {dynamic&&<ScreenshotSearch/>}
+  {home&&<nav class="browse-entries" aria-label="選擇找答案的方式"><a href={href('/chapters/')}><strong>依章節瀏覽</strong><span>看正在上的那一章 <span aria-hidden="true">›</span></span></a><a href={href('/types/')}><strong>依問題類型找</strong><span>從卡住的情況找 <span aria-hidden="true">›</span></span></a></nav>}
   {full?<>
-    <fieldset class="browse-switch"><legend class="sr-only">瀏覽順序</legend>{[['common','常見優先'],['course','課程順序']].map(([value,name])=><label><input type="radio" name="sort" value={value} checked={value==='common'}/><span>{name}</span></label>)}</fieldset>
-    <fieldset class="intent-switch"><legend class="sr-only">依問題用途篩選</legend>{[{id:'',name:'全部'},...intents].map(item=><label><input type="radio" name="intent" value={item.id} checked={!item.id}/><span>{item.name}</span></label>)}</fieldset>
-    <div class="primary-filter" id="chapter-filter" hidden={dynamic&&!filters.chapter}>
-      <label><span id="chapter-label">課程章節</span><select name="chapter" aria-labelledby="chapter-label"><option value="">全部章節</option>{taxonomy.chapters.map(c=><option value={c.id} selected={filters.chapter===c.id}>{c.title}{c.description?' · '+c.description:''}</option>)}</select></label>
-    </div>
-    <div class="secondary-filters"><details class="filter-panel"><summary>更多篩選<span id="filter-summary"></span></summary><div class="filters">
-      <label><span id="tool-label">使用工具</span><select name="tool" aria-labelledby="tool-label"><option value="">全部工具</option>{taxonomy.tools.map(t=><option value={t.id} selected={filters.tool===t.id}>{t.name}</option>)}</select></label>
-      <label><span id="type-label">問題類型</span><select name="type" aria-labelledby="type-label"><option value="">全部類型</option>{taxonomy.types.map(t=><option value={t.id} selected={filters.type===t.id}>{t.name}</option>)}</select></label>
-      <label id="lesson-filter"><span id="lesson-label">課程小節</span><select name="lesson" aria-labelledby="lesson-label"><option value="">全部小節</option>{taxonomy.chapters.flatMap(c=>c.lessons.map(l=><option value={l.id} data-chapter={c.id}>{c.title}・{l.title}</option>))}</select></label>
-    </div></details>{dynamic&&<button class="text-button" type="button" id="clear-filters" hidden>清除篩選</button>}</div>
-    {dynamic&&<ScreenshotSearch/>}
+    <details class="filter-panel"><summary>更多篩選<span id="filter-summary"></span></summary><div class="filters">
+      {dimensions.map(dim=><label><span id={`${dim.key}-label`}>{dim.title}</span><select name={dim.key} aria-labelledby={`${dim.key}-label`}><option value="">{dim.all}（{all.filter(q=>matchesQuestion(q,filters,dim.key)).length} 題）</option>{dim.values.map(item=>{const count=counts(dim.key,item.id);return <option value={item.id} data-label={'title' in item?item.title:item.name} hidden={!count&&filters[dim.key]!==item.id} disabled={!count&&filters[dim.key]!==item.id} selected={filters[dim.key]===item.id}>{'title' in item?item.title:item.name}（{count} 題）</option>;})}</select></label>)}
+    </div></details>
+    <input type="hidden" name="lesson" value={filters.lesson||''}/>
+    {dynamic&&<div class="active-filters" id="active-filters" hidden><span id="active-filter-label"></span><button class="text-button" type="button" id="clear-filters">清除篩選</button></div>}
+    {!dynamic&&<button class="outline-button" type="submit">套用篩選</button>}
   </>:Object.entries(filters).map(([key,value])=><input type="hidden" name={key} value={value}/>)}
-  <noscript><p class="notice">全文搜尋與篩選需要 JavaScript。下方完整列表可直接展開閱讀，也可<a href={href('/chapters/')}>按章節瀏覽</a>。</p></noscript>
+  <noscript><p class="notice">全文搜尋與篩選需要 JavaScript。你仍可<a href={href('/chapters/')}>按章節瀏覽</a>或閱讀下方問題。</p></noscript>
 </form>

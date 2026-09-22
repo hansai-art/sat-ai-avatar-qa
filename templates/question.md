@@ -1,14 +1,16 @@
 ---
 title: "請填寫具體問題標題"
-intent: operation # operation / concept / resources
 faqOrder: 99999
-firstStep: "填入學生可先做的第一步"
+firstStep: "填入具體按鈕、路徑或可執行動作"
+nextLinks: [] # [{title: "官方操作指南", url: "HTTPS 網址"}]
+uiPath: [] # 只填已核對的介面名稱，例如 ["外掛", "安裝外掛"]
+editorialNotes: [] # 原始資料限制、編輯示範說明收合在來源區
 sourceRefs: [] # 正式已問題需 recordId、part、askedAt
 summary: "請先用一到兩句話，直接說明判斷與最重要的處理方式。"
 chapterRefs: ["general"]
 lessonRefs: []
 toolRefs: ["general"]
-type: "troubleshooting"
+type: "troubleshooting" # setup / troubleshooting / account-billing / concept / course-resources / use-case
 platforms: []
 keywords: []
 errorMessages: []
@@ -16,7 +18,7 @@ publication: "draft"
 answerStatus: "unverified"
 contentOrigin: "real"
 questionOrigin: "asked"
-askedBy: [] # 填入可公開名稱與原討論網址：[{name: "名稱", sourceUrl: "HTTPS 網址"}]
+askedBy: [] # 只填匿名標示：[{name: "學員提問", sourceUrl: "HTTPS 網址"}]
 createdAt: "YYYY-MM-DD"
 updatedAt: "YYYY-MM-DD"
 verifiedAt: null

@@ -444,6 +444,8 @@
       "name": "n8n",
       "aliases": []
     },
+    {"id": "notion", "name": "Notion", "aliases": []},
+    {"id": "heptabase", "name": "Heptabase", "aliases": []},
     {
       "id": "general",
       "name": "通用問題",
@@ -461,27 +463,33 @@
   "types": [
     {
       "id": "setup",
-      "name": "安裝與設定"
-    },
-    {
-      "id": "account-billing",
-      "name": "帳號與費用"
+      "name": "安裝與設定",
+      "description": "裝不起來，或不知道從哪裡設定"
     },
     {
       "id": "troubleshooting",
-      "name": "錯誤排除"
+      "name": "錯誤排除",
+      "description": "出現錯誤訊息，或操作後沒有反應"
     },
     {
-      "id": "how-to",
-      "name": "操作方法"
+      "id": "account-billing",
+      "name": "帳號與費用",
+      "description": "要訂什麼方案、哪些地方需要付費"
     },
     {
-      "id": "use-case",
-      "name": "實際應用"
+      "id": "concept",
+      "name": "觀念釐清",
+      "description": "分清名詞，也判斷工具要不要換"
     },
     {
       "id": "course-resources",
-      "name": "課程與資源"
+      "name": "課程範圍與資源",
+      "description": "課程有沒有教、教材去哪裡找"
+    },
+    {
+      "id": "use-case",
+      "name": "實際應用",
+      "description": "把學到的方法用在自己的工作"
     }
   ],
   "contributors": [

@@ -2,11 +2,14 @@
 import '../styles/fonts.css';
 import '../styles/zh-tw-typography.css';
 import '../styles/global.css';
-import {taxonomy,href,buildMode} from '../lib/content';
-interface Props {title:string;description?:string;noindex?:boolean;searchFirst?:boolean;}
-const {title,description='依課程章節、工具與問題類型查找知識衛星 AI 分身課程問答。',noindex=false,searchFirst=false}=Astro.props;
+import '../styles/student-experience.css';
+import {taxonomy,href,buildMode,getPublished} from '../lib/content';
+interface Props {title:string;description?:string;noindex?:boolean;searchFirst?:boolean;activeChapter?:string;}
+const {title,description='依課程章節、工具與問題類型查找知識衛星 AI 分身課程問答。',noindex=false,searchFirst=false,activeChapter}=Astro.props;
 const canonical=!noindex&&Astro.site?.protocol==='https:' ? new URL(Astro.url.pathname,Astro.site).href : undefined;
 const current=Astro.url.pathname;
+const allQuestions=await getPublished();
+const chapterCounts=Object.fromEntries(taxonomy.chapters.map(c=>[c.id,allQuestions.filter(q=>q.data.chapterRefs.includes(c.id)).length]));
 ---
 <!doctype html>
 <html lang="zh-Hant-TW" data-pagefind-ignore={noindex?'all':undefined}>
@@ -26,11 +29,12 @@ const current=Astro.url.pathname;
       <a class="brand" href={href('/')} aria-label="AI 分身課程問答庫首頁"><span class="brand-mark" aria-hidden="true">Q</span><span><span class="brand-name">知識衛星 <span class="brand-slash">/</span> AI 分身</span><span class="brand-sub">課程問答庫</span></span></a>
       <nav class="top-nav" aria-label="主選單"><a href={href('/questions/')} aria-current={current===href('/questions/')?'page':undefined}>全部問題</a><a href={href('/about/')}>使用說明</a><a class="course-link" href="https://sat.cool/course/201">回到課程 <span aria-hidden="true">↗</span></a></nav>
     </header>
+    {!searchFirst&&<details class="mobile-chapters"><summary>課程章節</summary><nav aria-label="手機課程章節">{taxonomy.chapters.filter(c=>chapterCounts[c.id]>0).map(c=><a href={href(`/chapters/${c.id}/`)} aria-current={activeChapter===c.id?'location':undefined}>{c.title}<span>{chapterCounts[c.id]} 題</span></a>)}</nav></details>}
     <div class:list={["app-shell",{"search-first":searchFirst}]}>
       {!searchFirst&&<aside class="sidebar" aria-label="課程導覽">
         <a class:list={['nav-overview',{active:current===href('/')}]} href={href('/')}><span aria-hidden="true">⌂</span> 問答首頁</a>
         <p class="nav-label">依課程章節</p>
-        <nav aria-label="章節">{taxonomy.chapters.map(c=><a class:list={['chapter-nav',{active:current===href(`/chapters/${c.id}/`)}]} href={href(`/chapters/${c.id}/`)} aria-current={current===href(`/chapters/${c.id}/`)?'page':undefined}><span class="chapter-num">{c.id==='general'?'＋':String(c.order).padStart(2,'0')}</span><span>{c.title}</span></a>)}</nav>
+        <nav aria-label="章節">{taxonomy.chapters.filter(c=>chapterCounts[c.id]>0).map(c=><a class:list={['chapter-nav',{active:current===href(`/chapters/${c.id}/`)||activeChapter===c.id}]} href={href(`/chapters/${c.id}/`)} aria-current={current===href(`/chapters/${c.id}/`)?'page':activeChapter===c.id?'location':undefined}><span class="chapter-num">{c.id==='general'?'＋':String(c.order).padStart(2,'0')}</span><span>{c.title}</span><span class="chapter-count">{chapterCounts[c.id]}</span></a>)}</nav>
         <div class="sidebar-divider"></div><a class="nav-overview" href={href('/tools/')}>依工具查找</a><a class="nav-overview" href={href('/types/')}>依問題類型查找</a>
         <p class="sidebar-note">找不到答案？<br/><a href="https://sat.cool/course/201/comment">回課程留言提問 ↗</a></p>
       </aside>}

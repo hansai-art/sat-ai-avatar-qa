@@ -1,5 +1,5 @@
 import {parseState,serializeState,queryOptions,PAGE_SIZE} from '../lib/search-state.mjs';
-import {intentLabel} from '../lib/faq.mjs';
+import {facetFilters} from '../lib/faq.mjs';
 import {withBase} from '../lib/paths.mjs';
 
 const config=document.querySelector<HTMLElement>('#search-config')!;
@@ -18,26 +18,38 @@ let state=parseState(location.search,taxonomy).state;
 let sequence=0,composing=false,timer:ReturnType<typeof setTimeout>|undefined;
 let enginePromise:Promise<any>|undefined;
 const control=(name:string)=>form.elements.namedItem(name) as HTMLInputElement|HTMLSelectElement|RadioNodeList;
-function engine(){return enginePromise ||= import(/* @vite-ignore */ withBase('/pagefind/pagefind.js',base)).then(async mod=>{await mod.options({baseUrl:base,excerptLength:32});return mod;}).catch(error=>{enginePromise=undefined;throw error;});}
+function engine(){return enginePromise ||= import(/* @vite-ignore */ withBase('/pagefind/pagefind.js',base)).then(async mod=>{await mod.options({baseUrl:base,excerptLength:32});await mod.filters();return mod;}).catch(error=>{enginePromise=undefined;throw error;});}
 function element<K extends keyof HTMLElementTagNameMap>(tag:K,text='',className='') {
   const el=document.createElement(tag);el.textContent=text;if(className)el.className=className;return el;
 }
 function label(kind:string,id:string){const item=taxonomy[kind].find((x:any)=>x.id===id);return item?.name||item?.title||id;}
 function syncForm(){
   for(const key of ['q','chapter','lesson','tool','type'])control(key).value=state[key as keyof typeof state] as string;
-  // RadioNodeList.value cannot reliably select the empty "all" value.
-  for(const radio of form.querySelectorAll<HTMLInputElement>('input[type=radio]'))radio.checked=radio.value===state[radio.name as keyof typeof state];
-  syncLessons();syncFilters();
+  for(const radio of document.querySelectorAll<HTMLInputElement>('input[name=sort]'))radio.checked=radio.value===state.sort;
+  syncFilters();
 }
-function syncLessons(){const chapter=control('chapter').value;for(const opt of (control('lesson') as HTMLSelectElement).options){const disabled=!!opt.value&&!!chapter&&opt.dataset.chapter!==chapter;opt.disabled=disabled;opt.hidden=disabled;}}
 function syncFilters(){
-  document.querySelector<HTMLElement>('#chapter-filter')!.hidden=state.sort!=='course'&&!state.chapter;
   document.querySelector<HTMLElement>('#sort-description')!.textContent=state.q?'依搜尋關聯排序':state.sort==='course'?'依章節與小節順序':state.sort==='updated'?'依最近更新':'新手卡關優先';
-
-  document.querySelector<HTMLElement>('#clear-filters')!.hidden=!['chapter','lesson','tool','type','intent'].some(key=>state[key as keyof typeof state]);
-  document.querySelector<HTMLElement>('#filter-summary')!.textContent=[state.tool&&label('tools',state.tool),state.type&&label('types',state.type),state.lesson&&'已選小節'].filter(Boolean).map(value=>' · '+value).join('');
+  const chosen=[state.chapter&&label('chapters',state.chapter),state.type&&label('types',state.type),state.tool&&label('tools',state.tool),state.lesson&&taxonomy.chapters.flatMap((c:any)=>c.lessons).find((l:any)=>l.id===state.lesson)?.title].filter(Boolean);
+  document.querySelector<HTMLElement>('#active-filters')!.hidden=!chosen.length;
+  document.querySelector<HTMLElement>('#active-filter-label')!.textContent=chosen.join(' · ');
+  document.querySelector<HTMLElement>('#filter-summary')!.textContent=chosen.length?` · 已選 ${chosen.length} 項`:'';
+  const starters=document.querySelector<HTMLElement>('#starter-questions');
+  if(starters)starters.hidden=!!(state.q||chosen.length||state.page>1||state.sort!=='common');
 }
-function clearFilters(){state={...state,chapter:'',lesson:'',tool:'',type:'',intent:'',page:1};syncForm();void run('push');}
+function syncFacetCounts(responses:any[]){
+  for(const [index,key] of ['chapter','type','tool'].entries()){
+    const response=responses[index],select=control(key) as HTMLSelectElement;
+    const counts=response.filters?.[key]||{};
+    select.options[0].textContent=({chapter:'全部章節',type:'全部分類',tool:'全部工具'}[key]||'全部')+`（${response.results.length} 題）`;
+    for(const option of [...select.options].slice(1)){
+      const n=counts[option.value]||0,selected=state[key as keyof typeof state]===option.value;
+      option.textContent=`${option.dataset.label}（${n} 題）`;
+      option.hidden=!n&&!selected;option.disabled=!n&&!selected;
+    }
+  }
+}
+function clearFilters(){state={...state,chapter:'',lesson:'',tool:'',type:'',page:1};syncForm();void run('push');}
 function updateUrl(mode:'push'|'replace') {
   const query=serializeState(state),next=root+(query?'?'+query:'');
   if(location.pathname+location.search!==next)history[mode==='push'?'pushState':'replaceState']({},'',next);
@@ -49,40 +61,25 @@ function safeResultUrl(value:string) {
   return url.pathname;
 }
 function resultCard(result:any) {
-  const m=result.meta||{},card=element('article','','question-card');card.dataset.questionId=m.qaId||'';
-  const details=element('details','','faq-item'),summary=element('summary');
-  summary.append(element('h2',m.title||'問題'),element('span','＋','faq-toggle'));
-  summary.querySelector('.faq-toggle')!.setAttribute('aria-hidden','true');
-  summary.append(element('span',intentLabel(m.intent)+' · '+label('chapters',(m.chapters||'').split(',')[0])+(m.answerStatus==='needs-update'?' · 待更新':'')+(m.contentOrigin==='demo'?' · 示範':'')+(m.questionOrigin==='anticipated'?' · 延伸問題':''),'faq-meta'));
-  const answer=element('div','','faq-answer');answer.append(element('p',m.summary||'','card-summary'));
-  if(m.firstStep){const step=element('p','','first-step');step.append(element('strong','先做這一步'),document.createTextNode(m.firstStep));answer.append(step);}
-  if(state.q&&result.excerpt){
-    const excerpt=element('p','','search-excerpt');
-    // Never attach search markup directly. Keep only plain text and highlight nodes.
-    const parsed=new DOMParser().parseFromString(result.excerpt,'text/html');
-    const walker=document.createTreeWalker(parsed.body,NodeFilter.SHOW_TEXT);
-    while(walker.nextNode()){
-      const node=walker.currentNode;
-      if(node.parentElement?.closest('script,style'))continue;
-      excerpt.append(node.parentElement?.closest('mark')?element('mark',node.textContent||''):document.createTextNode(node.textContent||''));
-    }
-    answer.append(excerpt);
-  }
-  const link=element('a','查看完整解法 →','answer-link');link.href=safeResultUrl(result.url);answer.append(link);
-  details.append(summary,answer);card.append(details);return card;
+  const m=result.meta||{},card=element('article','','question-card');card.dataset.questionId=m.qaId||'';card.dataset.category=m.type||'';
+  const link=element('a','','question-card-link');link.href=safeResultUrl(result.url);
+  link.append(element('h2',m.title||'問題'),element('p',(m.summary||'').split(/(?<=[。！？])/u)[0],'card-conclusion'));
+  const meta=element('span','','faq-meta'),category=element('span','','category-label');category.dataset.category=m.type||'';
+  const dot=element('span','','category-dot');dot.setAttribute('aria-hidden','true');category.append(dot,document.createTextNode(label('types',m.type)));
+  meta.append(category,element('span','·'),document.createTextNode(label('chapters',(m.chapters||'').split(',')[0])+(m.answerStatus==='needs-update'?' · 待更新':'')+(m.contentOrigin==='demo'?' · 示範':'')+(m.questionOrigin==='anticipated'?' · 延伸問題':'')));
+  link.append(meta);card.append(link);return card;
 }
 function restoreReadingPosition(){
   try {
     const saved=JSON.parse(sessionStorage.getItem('qa-reading-position')||'null');
     if(!saved||saved.url!==location.pathname+location.search)return;
-    for(const card of document.querySelectorAll<HTMLElement>('.question-card'))if(saved.open.includes(card.dataset.questionId))card.querySelector('details')!.open=true;
     sessionStorage.removeItem('qa-reading-position');
     void document.fonts.ready.then(()=>requestAnimationFrame(()=>window.scrollTo({top:Math.max(0,Number(saved.y)||0),behavior:'instant'})));
   }catch{}
 }
 document.addEventListener('click',event=>{
-  if(!(event.target instanceof Element)||!event.target.closest('.answer-link'))return;
-  try{sessionStorage.setItem('qa-reading-position',JSON.stringify({url:location.pathname+location.search,y:scrollY,open:[...document.querySelectorAll<HTMLElement>('.question-card:has(details[open])')].map(card=>card.dataset.questionId)}));}catch{}
+  if(!(event.target instanceof Element)||!event.target.closest('.question-card-link'))return;
+  try{sessionStorage.setItem('qa-last-search',location.pathname+location.search);sessionStorage.setItem('qa-reading-position',JSON.stringify({url:location.pathname+location.search,y:scrollY}));}catch{}
 });
 async function run(mode:'push'|'replace'='replace') {
   const ticket=++sequence;
@@ -92,20 +89,22 @@ async function run(mode:'push'|'replace'='replace') {
   try {
     const pagefind=await engine();if(ticket!==sequence)return;
     const options=queryOptions(state);
-    // Keep student questions first without downloading every result's article data.
-    const groups=await Promise.all(['asked','anticipated'].map(origin=>pagefind.search(state.q||null,{...options,filters:{...options.filters,origin}})));
+    const [response,...facets]=await Promise.all([
+      pagefind.search(state.q||null,options),
+      ...['chapter','type','tool'].map(key=>pagefind.search(state.q||null,{filters:facetFilters(state,key)}))
+    ]);
     if(ticket!==sequence)return;
-    const response={results:groups.flatMap(group=>group.results)};
+    syncFacetCounts(facets);
     const total=response.results.length,totalPages=Math.max(1,Math.ceil(total/PAGE_SIZE));
     if(state.page>totalPages){state.page=totalPages;updateUrl('replace');}
     const details=await Promise.all(response.results.slice((state.page-1)*PAGE_SIZE,state.page*PAGE_SIZE).map((r:any)=>r.data()));
     if(ticket!==sequence)return;
     count.textContent=`找到 ${total} 個問題`;live.setAttribute('aria-busy','false');
-    list.replaceChildren(...details.map(resultCard));restoreReadingPosition();
+    list.replaceChildren(...details.map(resultCard));syncFilters();restoreReadingPosition();
     if(!total){
       message.hidden=false;
       message.replaceChildren(element('h2','沒有符合的問題'),element('p',state.q?`「${state.q}」沒有找到答案。試試工具名稱、錯誤碼，或放寬篩選條件。`:'試試減少篩選條件，或瀏覽其他章節。'));
-      if(state.chapter||state.lesson||state.tool||state.type||state.intent){const relax=element('button','清除篩選，保留關鍵字','outline-button');relax.type='button';relax.addEventListener('click',clearFilters);message.append(relax);}
+      if(state.chapter||state.lesson||state.tool||state.type){const relax=element('button','清除篩選，保留關鍵字','outline-button');relax.type='button';relax.addEventListener('click',clearFilters);message.append(relax);}
       const clear=element('button','查看全部問題','outline-button');clear.type='button';clear.addEventListener('click',()=>{state=parseState('',taxonomy).state;syncForm();void run('push');});message.append(clear);const ask=element('a','回課程留言提問 ↗','answer-link');ask.href='https://sat.cool/course/201/comment';message.append(ask);
     }
     if(totalPages>1){pagination.hidden=false;pagination.replaceChildren();for(const delta of [-1,0,1]){
@@ -132,7 +131,7 @@ input.addEventListener('focus',()=>{void engine().catch(()=>{});},{once:true});
 input.addEventListener('compositionstart',()=>{composing=true;clearTimeout(timer);sequence++;});
 input.addEventListener('compositionend',()=>{composing=false;clearTimeout(timer);sequence++;timer=setTimeout(()=>fromForm('replace'),250);});
 input.addEventListener('input',()=>{sequence++;clearTimeout(timer);if(!composing)timer=setTimeout(()=>fromForm('replace'),250);});
-for(const select of document.querySelectorAll<HTMLInputElement|HTMLSelectElement>('#search-form select,#search-form input[type=radio]'))select.addEventListener('change',()=>{if(select.name==='chapter')control('lesson').value='';fromForm('push');});
+for(const select of document.querySelectorAll<HTMLInputElement|HTMLSelectElement>('#search-form select,input[name=sort]'))select.addEventListener('change',()=>{if(select.name==='chapter')control('lesson').value='';fromForm('push');});
 window.addEventListener('popstate',()=>{clearTimeout(timer);state=parseState(location.search,taxonomy).state;syncForm();void run();});
 const initial=parseState(location.search,taxonomy);if(initial.notices.length){notice.hidden=false;notice.textContent=initial.notices.join('。');}
 syncForm();void run();
