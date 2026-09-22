@@ -19,6 +19,8 @@ test('小預覽延遲載入，大圖只在開啟後下載；按鈕縮放、返�
  await link.click();await expect(page.getByRole('dialog',{name:'操作圖片檢視器'})).toBeVisible();
  await expect.poll(()=>requests.some(url=>url.endsWith(full!))).toBe(true);
  const close=page.getByRole('button',{name:'關閉圖片',exact:true});await expect(close).toBeFocused();
+ await page.evaluate(()=>document.fonts.ready);
+ expect(requests.filter(url=>/sat-han-sans-tc-extended.*\.woff2/.test(url))).toEqual([]);
  await expect(page.getByRole('button',{name:'縮小',exact:true})).toBeDisabled();
  const initial=await page.evaluate(scale);
  await page.getByRole('button',{name:'放大',exact:true}).click();await expect.poll(()=>page.evaluate(scale)).toBeGreaterThan(initial*1.4);

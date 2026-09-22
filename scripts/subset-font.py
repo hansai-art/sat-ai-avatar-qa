@@ -6,6 +6,7 @@ The upstream font and license are pinned in docs/FONTS.md.
 """
 from html.parser import HTMLParser
 from pathlib import Path
+import re
 import sys
 
 from fontTools import subset
@@ -57,6 +58,11 @@ latin = {c for c in cmap if c < 0x300 or 0x2000 <= c <= 0x206F}
 home = characters(ROOT / 'dist/index.html')
 for script in (ROOT / 'src/scripts').glob('*.ts'):
     home.update(map(ord, script.read_text()))
+for component in (ROOT / 'src').rglob('*.astro'):
+    # Inline client scripts also render labels, such as the return-to-results
+    # breadcrumb; HTML extraction deliberately excludes script contents.
+    for script in re.findall(r'<script\b[^>]*>(.*?)</script>', component.read_text(), re.S):
+        home.update(map(ord, script))
 home.update(map(ord, '＋−›⌂'))  # CSS-generated UI controls also appear on the homepage.
 home = home & cmap - latin
 content = set().union(*(characters(p) for p in (ROOT / 'dist').rglob('*.html')))

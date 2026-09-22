@@ -27,3 +27,5 @@ python3 scripts/subset-font.py /path/to/SourceHanSansTW-VF.ttf.woff2
 2026-09-22 改版驗證：標題、介面按鈕與正文的 Chrome 實際字型為 `SAT Han Sans TC`，操作指令依新規格使用 Menlo 等系統等寬字型。390px 首頁只下載 home 與 latin 分段，合計 139,580 bytes，沒有載入約 5MB 的 extended 分段。四份字型仍完整覆蓋原字型 20,763 個 Unicode 對應。
 
 2026-09-23 全部問答匯入後：62 題保留完整思源黑體覆蓋，首頁 home 與 latin 共 183,144 bytes。390px 實際字型與網路紀錄確認未載入 extended 分段。
+
+2026-09-23 圖片瀏覽器：新增「雙指」「拖曳」等介面文字，並將 Astro 行內 script 的「返回」文字納入 home 分段，避免少數字觸發約 5MB 的 extended 下載。重新分段後 home＋latin 為 190,572 bytes，兩張操作截圖所在的問題頁加上 content 共 311,012 bytes。四份字型仍完整覆蓋 20,763 個 Unicode 對應且無重疊；圖片瀏覽器測試會檢查沒有請求 extended。
