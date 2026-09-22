@@ -3,7 +3,10 @@ import '../styles/fonts.css';
 import '../styles/zh-tw-typography.css';
 import '../styles/global.css';
 import '../styles/student-experience.css';
+import {Image,getImage} from 'astro:assets';
+import portrait from '../assets/brand/hans-portrait.jpg';
 import {taxonomy,href,buildMode,getPublished} from '../lib/content';
+const portraitIcon=await getImage({src:portrait,width:64,height:64,fit:'cover',position:'top',format:'png'});
 interface Props {title:string;description?:string;noindex?:boolean;searchFirst?:boolean;activeChapter?:string;}
 const {title,description='依課程章節、工具與問題類型查找知識衛星 AI 分身課程問答。',noindex=false,searchFirst=false,activeChapter}=Astro.props;
 const canonical=!noindex&&Astro.site?.protocol==='https:' ? new URL(Astro.url.pathname,Astro.site).href : undefined;
@@ -20,13 +23,13 @@ const chapterCounts=Object.fromEntries(taxonomy.chapters.map(c=>[c.id,allQuestio
     {canonical&&<link rel="canonical" href={canonical}/>}
     <meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:type" content="website"/>
     <meta name="theme-color" content="#184ae8"/>
-    <link rel="icon" type="image/svg+xml" href={href('/favicon.svg')}/>
+    <link rel="icon" type="image/png" sizes="64x64" href={portraitIcon.src}/>
   </head>
   <body class="zh-ui">
     <a class="skip-link" href="#main">跳到主要內容</a>
     {buildMode==='demo'&&<div class="demo-banner"><strong>架構預覽</strong><span>以下為示範資料，非正式課程答案</span></div>}
     <header class="site-header">
-      <a class="brand" href={href('/')} aria-label="AI 分身課程問答庫首頁"><span class="brand-mark" aria-hidden="true">Q</span><span><span class="brand-name">知識衛星 <span class="brand-slash">/</span> AI 分身</span><span class="brand-sub">課程問答庫</span></span></a>
+      <a class="brand" href={href('/')} aria-label="AI 分身課程問答庫首頁"><span class="brand-portrait" aria-hidden="true"><Image src={portrait} width={144} alt="" format="webp" loading="eager" decoding="async"/></span><span><span class="brand-name">知識衛星 <span class="brand-slash">/</span> AI 分身</span><span class="brand-sub">課程問答庫</span></span></a>
       <nav class="top-nav" aria-label="主選單"><a href={href('/questions/')} aria-current={current===href('/questions/')?'page':undefined}>全部問題</a><a href={href('/about/')}>使用說明</a><a class="course-link" href="https://sat.cool/course/201">回到課程 <span aria-hidden="true">↗</span></a></nav>
     </header>
     {!searchFirst&&<details class="mobile-chapters"><summary>課程章節</summary><nav aria-label="手機課程章節">{taxonomy.chapters.filter(c=>chapterCounts[c.id]>0).map(c=><a href={href(`/chapters/${c.id}/`)} aria-current={activeChapter===c.id?'location':undefined}>{c.title}<span>{chapterCounts[c.id]} 題</span></a>)}</nav></details>}
