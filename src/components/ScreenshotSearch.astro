@@ -1,21 +1,22 @@
 <details id="screenshot-search" class="screenshot-search">
-  <summary>用截圖找問題</summary>
+  <summary>截圖轉文字（非 AI 判讀）</summary>
   <div class="screenshot-body">
-    <p class="muted">辨識繁中與英文文字，圖片只在你的瀏覽器處理，不會上傳。首次使用需下載辨識資料。</p>
+    <p class="muted">僅擷取文字供你確認後搜尋，不會判斷畫面或通知老師。圖片只在瀏覽器處理。需要協助請<a href="https://sat.cool/course/201/comment">回課程留言</a>。</p>
     <label for="screenshot-file">選擇截圖（PNG、JPEG、WebP，最多 10 MB）</label>
     <input id="screenshot-file" type="file" disabled accept="image/png,image/jpeg,image/webp"/>
     <img id="screenshot-preview" alt="選擇的截圖預覽" hidden/>
     <p id="screenshot-status" role="status" aria-live="polite"></p>
     <div id="screenshot-result" hidden>
-      <label for="screenshot-text">辨識文字：只保留工具名稱或錯誤碼，再搜尋</label>
+      <label for="screenshot-text">搜尋文字：已優先擷取錯誤訊息，請確認</label>
       <textarea id="screenshot-text" rows="4" maxlength="6000" spellcheck="false"></textarea>
-      <p class="muted">辨識可能有誤，請先確認文字。搜尋最多 200 字。</p>
+      <p class="muted">辨識可能有誤，可直接修改。文字太長時會優先保留錯誤訊息，最多 200 字。</p>
       <button id="screenshot-use" type="button" class="primary-button">用這些文字搜尋</button>
     </div>
     <button id="screenshot-clear" type="button" class="outline-button" hidden>取消並清除截圖</button>
   </div>
 </details>
 <script>
+  import {extractSearchText} from '../lib/ocr-query.mjs';
   const panel=document.querySelector<HTMLDetailsElement>('#screenshot-search');
   if(panel){
   const fileInput=document.querySelector<HTMLInputElement>('#screenshot-file')!;
@@ -58,8 +59,8 @@
         if(ticket!==generation)return;
         if(data.type==='progress')status.textContent=data.text;
         else if(data.type==='result'){
-          stop();text.value=data.text.trim().slice(0,6000);result.hidden=!text.value;
-          status.textContent=text.value?(data.text.length>6000?'文字較多，先顯示前 6,000 字；建議裁切到問題區域再辨識。':'辨識完成，請確認並精簡下方文字。'):'沒有辨識到文字，請裁切到文字區域或直接輸入問題。';
+          stop();text.value=extractSearchText(data.text);result.hidden=!text.value;
+          status.textContent=text.value?'已擷取搜尋文字，請確認錯誤碼與工具名稱是否正確。':'沒有辨識到文字，請裁切到文字區域或直接輸入問題。';
           if(text.value)text.focus();
         }else fail('辨識失敗，請重新選擇圖片，或直接輸入錯誤訊息搜尋。');
       };
@@ -70,8 +71,8 @@
     }catch{if(ticket===generation)fail('無法讀取這張圖片，請重新選擇 PNG、JPEG 或 WebP。');}
   });
   document.querySelector('#screenshot-use')!.addEventListener('click',()=>{
-    const query=text.value.trim().replace(/\s+/g,' ');
-    if(!query||[...query].length>200){status.textContent='請留下 1～200 字的工具名稱、錯誤碼或問題重點。';text.focus();return;}
+    const query=extractSearchText(text.value);
+    if(!query){status.textContent='請輸入工具名稱、錯誤碼或問題重點。';text.focus();return;}
     (form.elements.namedItem('q') as HTMLInputElement).value=query;
     panel.open=false;form.requestSubmit();
     document.querySelector('#result-count')?.scrollIntoView({block:'start'});

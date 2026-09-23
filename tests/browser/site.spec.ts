@@ -62,7 +62,7 @@ test('TG 別名及章節、工具、類型交叉篩選',async({page})=>{
  test.skip(info.mode!=='demo','此案例使用合成示範題');
  await page.goto('questions/?q=TG');await expect(page.locator('#result-count')).toHaveText('找到 1 個問題');
  await page.getByLabel('搜尋問題',{exact:true}).fill('');
- await page.getByLabel('課程順序',{exact:true}).check();await page.locator('.filter-panel summary').click();await page.getByLabel('課程章節',{exact:true}).selectOption('ch01');
+ await page.getByLabel('課程順序',{exact:true}).check();await page.locator('.filter-panel > summary').click();await page.getByLabel('課程章節',{exact:true}).selectOption('ch01');
  await page.getByLabel('使用工具',{exact:true}).selectOption('hermes-agent');
  await page.getByLabel('問題分類',{exact:true}).selectOption('setup');
  await expect(page.locator('input[name=lesson]')).toBeHidden();

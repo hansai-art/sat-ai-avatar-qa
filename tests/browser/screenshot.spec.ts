@@ -3,13 +3,24 @@ const info=JSON.parse(fs.readFileSync('dist/build-info.json','utf8'));
 import {test,expect} from '@playwright/test';
 const fixture='tests/fixtures/assets/ocr-error.png';
 
+test('長截圖直接產生可搜尋文字，不要求新手手動刪到 200 字',async({page})=>{
+ test.skip(info.mode!=='production','使用正式題庫已公開的錯誤截圖');test.setTimeout(90_000);
+ await page.goto('./');await page.locator('.filter-panel > summary').click();await page.locator('#screenshot-search summary').click();
+ await expect(page.locator('#screenshot-search summary')).toHaveText('截圖轉文字（非 AI 判讀）');
+ await page.locator('#screenshot-file').setInputFiles('src/assets/questions/qa-000053/http-429-error.png');
+ await expect(page.locator('#screenshot-text')).toHaveValue(/429/,{timeout:60_000});
+ expect([...(await page.locator('#screenshot-text').inputValue())].length).toBeLessThanOrEqual(200);
+ await page.getByRole('button',{name:'用這些文字搜尋'}).click();
+ await expect(page.locator('#result-list .question-card').first()).toHaveAttribute('data-question-id','qa-000053');
+});
+
 test('截圖在瀏覽器辨識繁中與英文，確認文字後才搜尋',async({page,context,baseURL})=>{
  test.setTimeout(90_000);
  const requests:{url:string;method:string}[]=[];
  context.on('request',request=>requests.push({url:request.url(),method:request.method()}));
  await page.goto('./');
  expect(requests.filter(r=>r.url.includes('/ocr/')||r.url.includes('ocr-worker'))).toHaveLength(0);
- await page.locator('#screenshot-search summary').click();
+ await page.locator('.filter-panel > summary').click();await page.locator('#screenshot-search summary').click();
  await page.locator('#screenshot-file').setInputFiles(fixture);
  await expect(page.locator('#screenshot-text')).toBeVisible({timeout:60_000});
  await expect(page.locator('#screenshot-text')).toHaveValue(/429/);
@@ -28,7 +39,7 @@ test('截圖在瀏覽器辨識繁中與英文，確認文字後才搜尋',async(
 });
 
 test('拒絕非圖片、偽裝副檔名與超過大小限制的檔案',async({page})=>{
- await page.goto('./');await page.locator('#screenshot-search summary').click();
+ await page.goto('./');await page.locator('.filter-panel > summary').click();await page.locator('#screenshot-search summary').click();
  const input=page.locator('#screenshot-file');
  await input.setInputFiles({name:'fake.svg',mimeType:'image/svg+xml',buffer:Buffer.from('<svg/>')});
  await expect(page.locator('#screenshot-status')).toContainText('請選擇 PNG');
@@ -41,7 +52,7 @@ test('拒絕非圖片、偽裝副檔名與超過大小限制的檔案',async({pa
 
 test('截圖辨識載入失敗、取消與重新選擇可恢復',async({page,context})=>{
  test.setTimeout(90_000);
- await page.goto('./');await page.locator('#screenshot-search summary').click();
+ await page.goto('./');await page.locator('.filter-panel > summary').click();await page.locator('#screenshot-search summary').click();
  await context.setOffline(true);
  await page.locator('#screenshot-file').setInputFiles(fixture);
  await expect(page.locator('#screenshot-status')).toContainText(/辨識失敗|無法載入/,{timeout:20_000});
@@ -58,6 +69,6 @@ test('截圖辨識載入失敗、取消與重新選擇可恢復',async({page,con
  await expect(page.locator('#screenshot-text')).toHaveValue(/429/,{timeout:60_000});
  await page.locator('#screenshot-text').fill('長'.repeat(201));
  await page.getByRole('button',{name:'用這些文字搜尋'}).click();
- await expect(page.locator('#screenshot-status')).toContainText('1～200 字');
- expect(new URL(page.url()).searchParams.has('q')).toBe(false);
+ await expect(page.getByLabel('搜尋問題',{exact:true})).toHaveValue('長'.repeat(200));
+ await expect(page.locator('#screenshot-search')).not.toHaveAttribute('open','');
 });

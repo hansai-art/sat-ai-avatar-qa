@@ -23,7 +23,7 @@ test('首頁兩個入口、固定十題、整張卡片與收合來源',async({pa
 });
 test('課程排序、分類交集與清空搜尋後恢復',async({page})=>{
  await page.goto('./?sort=course');await expect(page.locator('#result-list .question-card').first()).toHaveAttribute('data-question-id','qa-000011');
- await page.locator('.filter-panel summary').click();await page.getByLabel('問題分類',{exact:true}).selectOption('concept');
+ await page.locator('.filter-panel > summary').click();await page.getByLabel('問題分類',{exact:true}).selectOption('concept');
  await expect(page.locator('#result-list .question-card').first()).toHaveAttribute('data-question-id','qa-000007');
  await page.getByLabel('課程章節',{exact:true}).selectOption('ch03');await expect(page.locator('#result-list .question-card')).toHaveCount(countWhere('ch03','concept'));
  await page.reload();await expect(page.getByLabel('問題分類',{exact:true})).toHaveValue('concept');
@@ -53,7 +53,7 @@ test('無結果可放寬篩選、保留關鍵字或回課程提問',async({page}
 });
 test('三維篩選題數等於交集，零題隱藏，列表與全文同一分類',async({page})=>{
  await page.goto('./');await expect(page.locator('#result-count')).toHaveText(`找到 ${info.searchableIds.length} 個問題`);
- await page.locator('.filter-panel summary').click();await expect(page.locator('.filters select')).toHaveCount(3);
+ await page.locator('.filter-panel > summary').click();await expect(page.locator('.filters select')).toHaveCount(3);
  await page.getByLabel('課程章節',{exact:true}).selectOption('ch01');await expect(page.locator('#result-count')).toHaveText(`找到 ${countWhere('ch01')} 個問題`);
  await page.getByLabel('問題分類',{exact:true}).selectOption('troubleshooting');await expect(page.locator('#result-count')).toHaveText(`找到 ${countWhere('ch01','troubleshooting')} 個問題`);
  await expect(page.locator('select[name=tool] option[value=telegram]')).toHaveText(`Telegram（${countWhere('ch01','troubleshooting','telegram')} 題）`);
@@ -81,7 +81,7 @@ test('手機首屏兩個題名、主要點擊區和答案頁無溢出',async({pa
   expect(metrics.width).toBeLessThanOrEqual(width);expect(metrics.second).toBeLessThan(844);expect(metrics.font).toBeGreaterThanOrEqual(18);
   await expect(page.locator('.filter-panel')).not.toHaveAttribute('open','');
   for(const locator of [page.getByRole('button',{name:'搜尋',exact:true}),page.locator('.browse-entries a').first(),page.locator('#starter-questions .question-card-link').first()])expect((await locator.boundingBox())!.height).toBeGreaterThanOrEqual(44);
-  await page.locator('.filter-panel summary').click();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  await page.locator('.filter-panel > summary').click();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await page.goto('questions/qa-000001/');await expect(page.locator('.mobile-toc,.article-aside,[data-toc-link]')).toHaveCount(0);
   await page.evaluate(()=>document.fonts.ready);
   expect((await page.locator('.prose ol>li').nth(1).boundingBox())!.y+(await page.locator('.prose ol>li').nth(1).boundingBox())!.height).toBeLessThan(844);

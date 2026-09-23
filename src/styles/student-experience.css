@@ -25,6 +25,8 @@ h3,.prose h3{font-size:17px;font-weight:600}
 .search-bar{padding:4px;min-height:56px;background:white;box-shadow:none;border-color:#aeb9c8}
 .search-bar input{font-size:16px}
 .search-bar button{min-height:44px}
+.quick-help{display:flex;gap:4px 20px;flex-wrap:wrap;margin:0;font-size:14px}
+.quick-help a{display:inline-flex;align-items:center;min-height:44px}
 .search-form .screenshot-search:not([open]),.search-form .screenshot-search[open]{position:static;margin:4px 0 0;font-size:14px}
 .search-form .screenshot-search>summary{min-height:44px;display:flex;align-items:center;justify-content:flex-end;padding:4px 0;color:var(--muted);font-size:14px;cursor:pointer}
 .search-form .screenshot-search>summary::before{content:'＋';margin-right:6px}

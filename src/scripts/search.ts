@@ -1,6 +1,8 @@
 import {parseState,serializeState,queryOptions,PAGE_SIZE} from '../lib/search-state.mjs';
 import {facetFilters} from '../lib/faq.mjs';
 import {withBase} from '../lib/paths.mjs';
+import {rankColloquial} from '../lib/colloquial-search.mjs';
+import {matchesQuestion} from '../lib/faq.mjs';
 
 const config=document.querySelector<HTMLElement>('#search-config')!;
 const base=config.dataset.base!,taxonomy=JSON.parse(config.dataset.taxonomy!);
@@ -17,6 +19,8 @@ const notice=document.querySelector<HTMLElement>('#search-notice')!;
 let state=parseState(location.search,taxonomy).state;
 let sequence=0,composing=false,timer:ReturnType<typeof setTimeout>|undefined;
 let enginePromise:Promise<any>|undefined;
+let catalogPromise:Promise<any[]>|undefined;
+function catalog(){return catalogPromise ||= fetch(withBase('/search-catalog.json',base)).then(r=>{if(!r.ok)throw new Error('catalog');return r.json();}).catch(error=>{catalogPromise=undefined;throw error;});}
 const control=(name:string)=>form.elements.namedItem(name) as HTMLInputElement|HTMLSelectElement|RadioNodeList;
 function engine(){return enginePromise ||= import(/* @vite-ignore */ withBase('/pagefind/pagefind.js',base)).then(async mod=>{await mod.options({baseUrl:base,excerptLength:32});await mod.filters();return mod;}).catch(error=>{enginePromise=undefined;throw error;});}
 function element<K extends keyof HTMLElementTagNameMap>(tag:K,text='',className='') {
@@ -100,6 +104,29 @@ async function run(mode:'push'|'replace'='replace') {
     // anywhere, preserving negation, the visible query and all facet counts.
     if(state.q.includes('沒有')&&response.unfilteredResultCount===0){
       [response,...facets]=await searchWithFacets(state.q.replaceAll('沒有','沒'));
+    }
+    if(ticket!==sequence)return;
+    if(state.q){
+      // Keep full-text matches; promote strong title/keyword matches and recover
+      // colloquial queries. One candidate set drives results and all facet counts.
+      try{
+        const documents=await catalog();
+        const lexical=rankColloquial(state.q,documents);
+        const exact=await pagefind.search(state.q,{...options,filters:{}});
+        const original=await Promise.all(exact.results.map((r:any)=>r.data()));
+        // Include the existing negation retry's matches as well.
+        const retried=await Promise.all(response.results.map((r:any)=>r.data()));
+        const ids=[...new Set([...lexical.map((r:any)=>r.doc.id),...original.map((r:any)=>r.meta.qaId),...retried.map((r:any)=>r.meta.qaId)])];
+        const candidates=ids.map(id=>documents.find((d:any)=>d.id===id)).filter(Boolean);
+        const result=(doc:any)=>({data:async()=>({url:doc.url,meta:{...doc,qaId:doc.id,chapters:doc.chapterRefs.join(',')}})});
+        response={results:candidates.filter(doc=>matchesQuestion({data:doc},state)).map(result)};
+        facets=['chapter','type','tool'].map(key=>{
+          const subset=candidates.filter(doc=>matchesQuestion({data:doc},state,key));
+          const counts:Record<string,number>={};
+          for(const doc of subset)for(const value of key==='type'?[doc.type]:doc[key==='chapter'?'chapterRefs':'toolRefs'])counts[value]=(counts[value]||0)+1;
+          return {results:subset,filters:{[key]:counts}};
+        });
+      }catch{/* Pagefind remains available if the supplementary catalog fails. */}
     }
     if(ticket!==sequence)return;
     syncFacetCounts(facets);
