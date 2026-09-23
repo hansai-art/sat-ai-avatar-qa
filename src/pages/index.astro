@@ -5,7 +5,7 @@ import {getPublished,taxonomy} from '../lib/content';
 const questions=await getPublished();
 ---
 <BaseLayout title="搜尋與全部問題" searchFirst>
-  <Listing questions={questions} title="你卡在哪一步？" description="找到問題，點開就有解法。" root="/" dynamic showAll home/>
+  <Listing questions={questions} title="你卡在哪一步？" root="/" dynamic showAll home/>
   <div id="search-config" data-root="/" data-base={import.meta.env.BASE_URL} data-taxonomy={JSON.stringify(taxonomy)} data-total={questions.length}></div>
   <p class="search-help">找不到答案？<a href="https://sat.cool/course/201/comment">回課程留言提問 ↗</a>，請附上錯誤訊息與操作步驟。</p>
 </BaseLayout>

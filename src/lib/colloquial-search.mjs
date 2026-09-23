@@ -1,3 +1,4 @@
+import synonyms from '../data/search-synonyms.json' with {type:'json'};
 // Small lexical supplement to Pagefind, built only from published public fields.
 // It does not infer an answer or send queries to an AI service.
 const replacements=[
@@ -9,6 +10,7 @@ const replacements=[
 ];
 export function normalizeSearch(text){
   let value=text.normalize('NFKC').toLowerCase();
+  for(const group of synonyms){for(const phrase of [...group.phrases].sort((a,b)=>b.length-a.length))value=value.replaceAll(phrase,group.canonical);}
   for(const [pattern,replacement] of replacements)value=value.replace(pattern,replacement);
   return value.replace(/(?:請問|請教|想請問|我想|我已經|已經|可以請|到底|完全|還是|一下|怎麼辦|怎麼|如何|為什麼|應該|是否|是不是|能不能|可不可以|我的|自己的|自己|大家|你們|我們|一直都|一直|我有|還要|我|還|都|就|了|的|呢|嗎|啊|呀)/g,'').replace(/[^\p{L}\p{N}]+/gu,' ');
 }
@@ -44,3 +46,5 @@ export function rankColloquial(query,documents){
   const top=ranked[0]?.score||0;
   return ranked.filter(d=>d.score>=top*.6);
 }
+
+export function searchSuggestions(query){const group=synonyms.find(g=>[g.canonical,...g.phrases].some(p=>query.includes(p)));return (group?.suggestions||['沒回應','連不上','教材下載']).filter(q=>q!==query);}

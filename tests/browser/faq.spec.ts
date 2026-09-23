@@ -7,7 +7,7 @@ const taxonomy=JSON.parse(fs.readFileSync('src/data/taxonomy.json','utf8'));
 test.beforeEach(()=>test.skip(info.mode!=='production','正式學生資料驗收'));
 test('首頁兩個入口、固定十題、整張卡片與收合來源',async({page,baseURL})=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto('./');await expect(page.locator('#result-list .question-card').first()).toBeVisible();
+ await page.goto('./');await expect(page.locator('#starter-questions .question-card').first()).toBeVisible();
  await expect(page.locator('.browse-entries a')).toHaveCount(2);await expect(page.locator('#starter-questions .question-card')).toHaveCount(10);
  await expect(page.locator('.demo-banner')).toHaveCount(0);
  const first=page.locator('#starter-questions .question-card').first();await expect(first).toHaveAttribute('data-question-id','qa-000001');
@@ -41,18 +41,18 @@ for(const [query,id] of [['電腦要一直開嗎','qa-000005'],['BotFather','qa-
  }else await expect(page.locator('#result-list .question-card').first()).toHaveAttribute('data-question-id',id);
 });
 test('分頁、完整解法、返回後保留頁碼與閱讀位置',async({page})=>{
- await page.goto('./');await expect(page.locator('#search-pagination')).toBeVisible();await page.getByRole('button',{name:'下一頁'}).click();await expect(page.locator('#search-pagination')).toContainText(`第 2 / ${Math.ceil(info.searchableIds.length/12)} 頁`);
+ await page.goto('questions/');await expect(page.locator('#search-pagination')).toBeVisible();await page.getByRole('button',{name:'下一頁'}).click();await expect(page.locator('#search-pagination')).toContainText(`第 2 / ${Math.ceil(info.searchableIds.length/12)} 頁`);
  const card=page.locator('#result-list .question-card').nth(3);await card.scrollIntoViewIfNeeded();const y=await page.evaluate(()=>scrollY),url=page.url();
  await card.locator('a').click();await page.locator('#back-to-search').click();await expect(page).toHaveURL(url);
  await expect(page.locator('#search-pagination')).toContainText(`第 2 / ${Math.ceil(info.searchableIds.length/12)} 頁`);await expect.poll(()=>page.evaluate(()=>scrollY)).toBeGreaterThan(Math.max(0,y-80));
 });
 test('無結果可放寬篩選、保留關鍵字或回課程提問',async({page})=>{
  await page.goto('./?q=BotFather&type=account-billing');await expect(page.locator('#search-message')).toContainText('沒有符合的問題');
- await expect(page.locator('#search-message a')).toHaveAttribute('href','https://sat.cool/course/201/comment');await page.getByRole('button',{name:'清除篩選，保留關鍵字'}).click();
+ await expect(page.locator('#search-message .answer-link')).toHaveAttribute('href','https://sat.cool/course/201/comment');await page.getByRole('button',{name:'清除篩選，保留關鍵字'}).click();
  await expect(page.getByLabel('搜尋問題',{exact:true})).toHaveValue('BotFather');await expect(page.locator('#result-list [data-question-id="qa-000001"]')).toBeVisible();
 });
 test('三維篩選題數等於交集，零題隱藏，列表與全文同一分類',async({page})=>{
- await page.goto('./');await expect(page.locator('#result-count')).toHaveText(`找到 ${info.searchableIds.length} 個問題`);
+ await page.goto('questions/');await expect(page.locator('#result-count')).toHaveText(`找到 ${info.searchableIds.length} 個問題`);
  await page.locator('.filter-panel > summary').click();await expect(page.locator('.filters select')).toHaveCount(3);
  await page.getByLabel('課程章節',{exact:true}).selectOption('ch01');await expect(page.locator('#result-count')).toHaveText(`找到 ${countWhere('ch01')} 個問題`);
  await page.getByLabel('問題分類',{exact:true}).selectOption('troubleshooting');await expect(page.locator('#result-count')).toHaveText(`找到 ${countWhere('ch01','troubleshooting')} 個問題`);
@@ -76,7 +76,7 @@ test('每章依小節分組且不遺漏，第 1 章包含安裝與手機設定',
 });
 test('手機首屏兩個題名、主要點擊區和答案頁無溢出',async({page})=>{
  for(const width of [360,390,430]){
-  await page.setViewportSize({width,height:844});await page.goto('./');await expect(page.locator('#result-list .question-card').first()).toBeVisible();await page.evaluate(()=>document.fonts.ready);
+  await page.setViewportSize({width,height:844});await page.goto('./');await expect(page.locator('#starter-questions .question-card').first()).toBeVisible();await page.evaluate(()=>document.fonts.ready);
   const metrics=await page.evaluate(()=>({width:document.documentElement.scrollWidth,second:document.querySelectorAll('#starter-questions .question-card h2')[1].getBoundingClientRect().bottom,font:parseFloat(getComputedStyle(document.querySelector('#starter-questions .question-card h2')!).fontSize)}));
   expect(metrics.width).toBeLessThanOrEqual(width);expect(metrics.second).toBeLessThan(844);expect(metrics.font).toBeGreaterThanOrEqual(18);
   await expect(page.locator('.filter-panel')).not.toHaveAttribute('open','');
@@ -118,7 +118,7 @@ test('桌機直接呈現解法，無目錄或重複步驟區，相關題目只�
  await expect(page.locator('.sidebar .chapter-nav.active')).toContainText('第 1 章');
  await expect(page.locator('.mobile-toc,.article-aside,[data-toc-link],.first-step,.operation-path')).toHaveCount(0);
  await expect(page.locator('.prose ol>li').first()).toContainText('Settings → Providers');
- const related=page.locator('.related-links a').first();await expect(related).toHaveAttribute('href',/questions\/qa-\d+\//);
+ await page.locator('#feedback-no').click();const related=page.locator('.related-links a').first();await expect(related).toHaveAttribute('href',/questions\/qa-\d+\//);
  expect((await related.boundingBox())!.height).toBeGreaterThanOrEqual(44);
  const target=await related.getAttribute('href');await related.click();expect(new URL(page.url()).pathname).toBe(target);
  await page.goto('questions/qa-000001/#conclusion');await expect(page.locator('#conclusion')).toBeInViewport();

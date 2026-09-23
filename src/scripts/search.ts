@@ -1,7 +1,8 @@
 import {parseState,serializeState,queryOptions,PAGE_SIZE} from '../lib/search-state.mjs';
 import {facetFilters} from '../lib/faq.mjs';
 import {withBase} from '../lib/paths.mjs';
-import {rankColloquial} from '../lib/colloquial-search.mjs';
+import {rankColloquial,searchSuggestions} from '../lib/colloquial-search.mjs';
+import {chapterLabel} from '../lib/chapter-label.mjs';
 import {matchesQuestion} from '../lib/faq.mjs';
 
 const config=document.querySelector<HTMLElement>('#search-config')!;
@@ -16,6 +17,9 @@ const message=document.querySelector<HTMLElement>('#search-message')!;
 const count=document.querySelector<HTMLElement>('#result-count')!;
 const pagination=document.querySelector<HTMLElement>('#search-pagination')!;
 const notice=document.querySelector<HTMLElement>('#search-notice')!;
+const resultsSection=document.querySelector<HTMLElement>('#all-questions')!;
+const isHome=resultsSection.dataset.home==='true';
+let scrollAfterSearch=false;
 let state=parseState(location.search,taxonomy).state;
 let sequence=0,composing=false,timer:ReturnType<typeof setTimeout>|undefined;
 let enginePromise:Promise<any>|undefined;
@@ -26,13 +30,16 @@ function engine(){return enginePromise ||= import(/* @vite-ignore */ withBase('/
 function element<K extends keyof HTMLElementTagNameMap>(tag:K,text='',className='') {
   const el=document.createElement(tag);el.textContent=text;if(className)el.className=className;return el;
 }
-function label(kind:string,id:string){const item=taxonomy[kind].find((x:any)=>x.id===id);return item?.name||item?.title||id;}
+function label(kind:string,id:string){const item=taxonomy[kind].find((x:any)=>x.id===id);return kind==='chapters'?chapterLabel(item)||id:item?.name||item?.title||id;}
 function syncForm(){
   for(const key of ['q','chapter','lesson','tool','type'])control(key).value=state[key as keyof typeof state] as string;
   for(const radio of document.querySelectorAll<HTMLInputElement>('input[name=sort]'))radio.checked=radio.value===state.sort;
   syncFilters();
 }
 function syncFilters(){
+  document.querySelector('.main-content')?.classList.toggle('search-mode',!!state.q);
+  document.querySelector<HTMLElement>('.browse-switch')!.hidden=!!state.q;
+  document.querySelector<HTMLElement>('#all-heading')!.textContent=state.q?'搜尋結果':'完整問題列表';
   document.querySelector<HTMLElement>('#sort-description')!.textContent=state.q?'依搜尋關聯排序':state.sort==='course'?'依章節與小節順序':state.sort==='updated'?'依最近更新':'新手卡關優先';
   const chosen=[state.chapter&&label('chapters',state.chapter),state.type&&label('types',state.type),state.tool&&label('tools',state.tool),state.lesson&&taxonomy.chapters.flatMap((c:any)=>c.lessons).find((l:any)=>l.id===state.lesson)?.title].filter(Boolean);
   document.querySelector<HTMLElement>('#active-filters')!.hidden=!chosen.length;
@@ -40,6 +47,7 @@ function syncFilters(){
   document.querySelector<HTMLElement>('#filter-summary')!.textContent=chosen.length?` · 已選 ${chosen.length} 項`:'';
   const starters=document.querySelector<HTMLElement>('#starter-questions');
   if(starters)starters.hidden=!!(state.q||chosen.length||state.page>1||state.sort!=='common');
+  resultsSection.hidden=isHome&&!state.q&&!chosen.length&&state.page===1&&state.sort==='common';
 }
 function syncFacetCounts(responses:any[]){
   for(const [index,key] of ['chapter','type','tool'].entries()){
@@ -88,6 +96,7 @@ document.addEventListener('click',event=>{
 async function run(mode:'push'|'replace'='replace') {
   const ticket=++sequence;
   updateUrl(mode);
+  if(isHome&&resultsSection.hidden){list.replaceChildren();live.setAttribute('aria-busy','false');restoreReadingPosition();return;}
   staticResults.hidden=true;live.hidden=false;message.hidden=true;pagination.hidden=true;list.replaceChildren();
   live.setAttribute('aria-busy','true');count.textContent='正在搜尋…';
   try {
@@ -136,11 +145,14 @@ async function run(mode:'push'|'replace'='replace') {
     if(ticket!==sequence)return;
     count.textContent=`找到 ${total} 個問題`;live.setAttribute('aria-busy','false');
     list.replaceChildren(...details.map(resultCard));syncFilters();restoreReadingPosition();
+    if(scrollAfterSearch){scrollAfterSearch=false;form.scrollIntoView({block:'start',behavior:'instant'});}
     if(!total){
       message.hidden=false;
       message.replaceChildren(element('h2','沒有符合的問題'),element('p',state.q?`「${state.q}」沒有找到答案。試試工具名稱、錯誤碼，或放寬篩選條件。`:'試試減少篩選條件，或瀏覽其他章節。'));
+      const suggestions=element('div','','search-suggestions');suggestions.append(element('p','換個說法試試：'));
+      for(const query of searchSuggestions(state.q)){const button=element('button',query,'outline-button');button.type='button';button.addEventListener('click',()=>{state={...state,q:query,page:1};syncForm();scrollAfterSearch=true;void run('push');});suggestions.append(button);}message.append(suggestions);
       if(state.chapter||state.lesson||state.tool||state.type){const relax=element('button','清除篩選，保留關鍵字','outline-button');relax.type='button';relax.addEventListener('click',clearFilters);message.append(relax);}
-      const clear=element('button','查看全部問題','outline-button');clear.type='button';clear.addEventListener('click',()=>{state=parseState('',taxonomy).state;syncForm();void run('push');});message.append(clear);const ask=element('a','回課程留言提問 ↗','answer-link');ask.href='https://sat.cool/course/201/comment';message.append(ask);
+      const clear=element('a','查看全部問題','outline-button');clear.href=withBase('/questions/',base);message.append(clear);const ask=element('a','回課程留言提問 ↗','answer-link');ask.href='https://sat.cool/course/201/comment';message.append(ask);
     }
     if(totalPages>1){pagination.hidden=false;pagination.replaceChildren();for(const delta of [-1,0,1]){
       if(delta===0){pagination.append(element('span',`第 ${state.page} / ${totalPages} 頁`));continue;}
@@ -158,7 +170,7 @@ async function run(mode:'push'|'replace'='replace') {
 function fromForm(mode:'push'|'replace') {
   clearTimeout(timer);sequence++;
   const params=new URLSearchParams();for(const [key,value] of new FormData(form))if(typeof value==='string')params.set(key,value);
-  state=parseState(params.toString(),taxonomy).state;syncForm();void run(mode);
+  state=parseState(params.toString(),taxonomy).state;scrollAfterSearch=mode==='push'&&!!state.q;syncForm();void run(mode);
 }
 document.querySelector('#clear-filters')!.addEventListener('click',clearFilters);
 form.addEventListener('submit',e=>{e.preventDefault();if(!composing)fromForm('push');});

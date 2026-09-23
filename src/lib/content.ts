@@ -1,5 +1,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import taxonomy from '../data/taxonomy.json';
+import {chapterLabel} from './chapter-label.mjs';
 import {validateQuestions,visibleQuestions,publishedQuestions} from './schema.mjs';
 import {withBase} from './paths.mjs';
 export {taxonomy};
@@ -18,7 +19,7 @@ export function getQuestions():Promise<Question[]> {
 export const getPublished=async()=>publishedQuestions(await getQuestions()) as Question[];
 export function label(kind:'chapters'|'tools'|'types',id:string) {
   const item=taxonomy[kind].find((x:any)=>x.id===id) as {title?:string;name?:string}|undefined;
-  return item?.title || item?.name || id;
+  return kind==='chapters'?chapterLabel(item)||id:item?.title || item?.name || id;
 }
 export function relatedQuestions(q:Question,all:Question[]) {
   const candidates=all.filter(x=>x.id!==q.id && x.data.publication==='published');

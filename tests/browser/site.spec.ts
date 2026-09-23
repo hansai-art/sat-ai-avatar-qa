@@ -4,8 +4,8 @@ const info=JSON.parse(fs.readFileSync('dist/build-info.json','utf8'));
 test('首頁、章節與行動版沒有整頁溢出',async({page})=>{
  await page.goto('./');await expect(page.getByRole('heading',{name:'你卡在哪一步？'})).toBeVisible();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBeTruthy();
- await expect(page.locator('#static-results .question-card')).toHaveCount(info.searchableIds.length);
- await page.goto('chapters/ch01/');await expect(page.getByRole('heading',{name:'第 1 章',exact:true})).toBeVisible();
+ await expect(page.locator('#starter-questions .question-card')).toHaveCount(10);await page.goto('questions/');await expect(page.locator('#static-results .question-card')).toHaveCount(info.searchableIds.length);
+ await page.goto('chapters/ch01/');await expect(page.getByRole('heading',{name:/第 1 章/,level:1})).toBeVisible();
  await expect(page.getByRole('navigation',{name:'本章小節',exact:true})).toBeVisible();
 });
 test('搜尋、篩選交集與 URL 還原',async({page})=>{
@@ -43,7 +43,7 @@ test('不執行搜尋字串中的 HTML',async({page})=>{
  await expect(page.locator('#live-results img')).toHaveCount(0);expect(dialogOpened).toBe(false);
 });
 test('停用 JavaScript 仍可讀取完整列表與問題',async({browser,baseURL})=>{
- const context=await browser.newContext({javaScriptEnabled:false});const page=await context.newPage();await page.goto(baseURL!);await expect(page.locator('#static-results .question-card')).toHaveCount(info.searchableIds.length);await page.locator('#static-results .question-card-link').first().click();await expect(page.locator('.answer h1')).toBeVisible();await context.close();
+ const context=await browser.newContext({javaScriptEnabled:false});const page=await context.newPage();await page.goto(baseURL!);await expect(page.locator('#starter-questions .question-card')).toHaveCount(10);await page.getByRole('link',{name:/看全部.*題/}).click();await expect(page.locator('#static-results .question-card')).toHaveCount(info.searchableIds.length);await page.locator('#static-results .question-card-link').first().click();await expect(page.locator('.answer h1')).toBeVisible();await context.close();
 });
 test('公開示範提示、固定網址與部署版本',async({page,request,baseURL})=>{
  test.skip(info.mode!=='demo','此案例驗證示範部署');
@@ -112,7 +112,7 @@ test('首頁搜尋片段、放寬條件保留關鍵字、返回搜尋',async({pa
 });
 test('完整列表與搜尋結果皆將延伸問題排後，第一章小節網址保留',async({page})=>{
  test.skip(info.mode!=='demo','此案例使用合成示範題');
- await page.goto('./');await expect(page.locator('#static-results .question-card').last()).toHaveAttribute('data-question-id','qa-900015');
+ await page.goto('questions/');await expect(page.locator('#static-results .question-card').last()).toHaveAttribute('data-question-id','qa-900015');
  await expect(page.locator('#static-results .question-card').last()).toContainText('示範 · 延伸問題');
  await page.goto('./?page=2');await expect(page.locator('#result-list .question-card').last()).toHaveAttribute('data-question-id','qa-900015');
  await page.goto('./?lesson=ch01-03');await expect(page.getByLabel('課程章節',{exact:true})).toHaveValue('ch01');

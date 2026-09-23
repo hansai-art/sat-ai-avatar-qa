@@ -4,6 +4,7 @@ import {faqKey,courseKey} from '../../lib/faq.mjs';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import InterfaceText from '../../components/InterfaceText.astro';
 import QuestionImages from '../../components/QuestionImages.astro';
+import AnswerFeedback from '../../components/AnswerFeedback.astro';
 import ImageViewer from '../../components/ImageViewer.astro';
 import {getQuestions,taxonomy,href,label,relatedQuestions,buildMode,type Question} from '../../lib/content';
 export async function getStaticPaths(){return (await getQuestions()).map(q=>({params:{id:q.id},props:{question:q}}));}
@@ -41,7 +42,8 @@ const [conclusion,...explanation]=d.summary.split(/(?<=[。！？])/u);
       <nav class="next-links" aria-label="操作指南與課程入口">{d.nextLinks.map(link=><a href={link.url} target="_blank" rel="noopener noreferrer">{link.title} <span aria-hidden="true">↗</span></a>)}{!d.nextLinks.some(link=>link.url==='https://sat.cool/course/201/comment')&&<a href="https://sat.cool/course/201/comment" target="_blank" rel="noopener noreferrer">回課程留言提問 <span aria-hidden="true">↗</span></a>}</nav>
       {d.errorMessages.length>0&&<details class="error-text"><summary>對照錯誤訊息原文</summary>{d.errorMessages.map(error=><pre data-pagefind-weight="3"><code>{error}</code></pre>)}</details>}
       {d.videos.length>0&&<section class="video-section"><h2>影片補充</h2>{d.videos.map(v=><a class="video-card" href={v.url} target="_blank" rel="noopener noreferrer"><div><h3>{v.title}</h3><p>{v.description}</p>{v.timestampLabel&&<small>{v.timestampLabel}</small>}</div><span aria-hidden="true">↗</span></a>)}</section>}
-      {related.length>0&&<section id="related-questions" class="related-questions" data-pagefind-ignore><h2>你可能也會遇到</h2><ul class="related-links">{related.map(item=><li><a href={href(`/questions/${item.id}/`)}>{item.data.title}<span aria-hidden="true">›</span></a></li>)}</ul></section>}
+      {lessons.length>0&&<section class="lesson-reference" aria-label="回課程對照" data-pagefind-ignore><h2>回課程對照</h2><ul>{lessons.map(l=><li><span>{l.id.replace(/ch0?/,'').replace('-0','-')} · {l.title}</span></li>)}</ul><a href="https://sat.cool/classroom/201" target="_blank" rel="noopener noreferrer">開啟上課教室，選上方單元 ↗</a></section>}
+      <AnswerFeedback question={q} related={related}/>
       <details class="sources" id="source-records" data-pagefind-ignore><summary>來源與核對紀錄</summary><div class="source-content">
         <p>提問來源：{d.questionOrigin==='asked'?'學員提問（已匿名）':'延伸問題，尚未收到學員提問'}</p>
         <p>內容更新 <time datetime={d.updatedAt}>{d.updatedAt}</time> · 編輯核對 {d.verifiedAt||'未確認'}{d.reviewedBy&&` · ${taxonomy.contributors.find(c=>c.id===d.reviewedBy)?.name}`}</p>

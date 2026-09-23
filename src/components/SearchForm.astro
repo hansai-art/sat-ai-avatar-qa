@@ -1,6 +1,7 @@
 ---
+import ContinueLearning from './ContinueLearning.astro';
 import ScreenshotSearch from './ScreenshotSearch.astro';
-import {href,taxonomy,getPublished} from '../lib/content';
+import {href,taxonomy,getPublished,label} from '../lib/content';
 import {matchesQuestion} from '../lib/faq.mjs';
 interface Props {filters?:Record<string,string>;full?:boolean;dynamic?:boolean;root?:string;home?:boolean;}
 const {filters={},full=false,dynamic=false,root='/questions/',home=false}=Astro.props;
@@ -13,9 +14,10 @@ const counts=(key:string,value:string)=>all.filter(q=>matchesQuestion(q,{...filt
   <div class="search-bar"><input id="question-search" name="q" type="search" placeholder="輸入問題、工具名稱或錯誤訊息" autocomplete="off" maxlength="200"/><button class="primary-button" type="submit">搜尋</button></div>
   {home&&all.some(q=>q.id==='qa-000011')&&<nav class="quick-help" aria-label="新手與教材"><a href={href('/questions/qa-000011/')}>第一次來，從哪裡開始？</a><a href={href('/questions/qa-000015/')}>找教材與範例</a></nav>}
   {home&&<nav class="browse-entries" aria-label="選擇找答案的方式"><a href={href('/chapters/')}><strong>依章節瀏覽</strong><span>看正在上的那一章 <span aria-hidden="true">›</span></span></a><a href={href('/types/')}><strong>依問題類型找</strong><span>從卡住的情況找 <span aria-hidden="true">›</span></span></a></nav>}
+  {home&&<ContinueLearning/>}
   {full?<>
     <details class="filter-panel"><summary>更多篩選<span id="filter-summary"></span></summary><div class="filters">
-      {dimensions.map(dim=><label><span id={`${dim.key}-label`}>{dim.title}</span><select name={dim.key} aria-labelledby={`${dim.key}-label`}><option value="">{dim.all}（{all.filter(q=>matchesQuestion(q,filters,dim.key)).length} 題）</option>{dim.values.map(item=>{const count=counts(dim.key,item.id);return <option value={item.id} data-label={'title' in item?item.title:item.name} hidden={!count&&filters[dim.key]!==item.id} disabled={!count&&filters[dim.key]!==item.id} selected={filters[dim.key]===item.id}>{'title' in item?item.title:item.name}（{count} 題）</option>;})}</select></label>)}
+      {dimensions.map(dim=><label><span id={`${dim.key}-label`}>{dim.title}</span><select name={dim.key} aria-labelledby={`${dim.key}-label`}><option value="">{dim.all}（{all.filter(q=>matchesQuestion(q,filters,dim.key)).length} 題）</option>{dim.values.map(item=>{const count=counts(dim.key,item.id);return <option value={item.id} data-label={dim.key==='chapter'?label('chapters',item.id):'title' in item?item.title:item.name} hidden={!count&&filters[dim.key]!==item.id} disabled={!count&&filters[dim.key]!==item.id} selected={filters[dim.key]===item.id}>{dim.key==='chapter'?label('chapters',item.id):'title' in item?item.title:item.name}（{count} 題）</option>;})}</select></label>)}
     </div>{dynamic&&<ScreenshotSearch/>}</details>
     <input type="hidden" name="lesson" value={filters.lesson||''}/>
     {dynamic&&<div class="active-filters" id="active-filters" hidden><span id="active-filter-label"></span><button class="text-button" type="button" id="clear-filters">清除篩選</button></div>}

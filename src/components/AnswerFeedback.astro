@@ -1,0 +1,31 @@
+---
+import {href,type Question} from '../lib/content';
+interface Props {question:Question;related:Question[]}
+const {question:q,related}=Astro.props;
+---
+<section class="answer-feedback" aria-labelledby="feedback-heading" data-pagefind-ignore data-id={q.id} data-title={q.data.title}>
+ <h2 id="feedback-heading">這題有解決你的問題嗎？</h2>
+ <div class="feedback-actions"><button id="feedback-yes" type="button" class="outline-button" aria-pressed="false" disabled>有，解決了</button><button id="feedback-no" type="button" class="outline-button" aria-pressed="false" aria-controls="feedback-help" aria-expanded="false" disabled>還沒解決</button></div>
+ <p id="feedback-status" role="status" class="muted"></p>
+ <div id="feedback-help" hidden>
+  {related.length>0&&<section id="related-questions" class="related-questions"><h3>也看看這幾題</h3><ul class="related-links">{related.map(item=><li><a href={href(`/questions/${item.id}/`)}>{item.data.title}</a></li>)}</ul></section>}
+  <label for="feedback-template">把下面內容補齊，貼到課程留言</label>
+  <textarea id="feedback-template" rows="7" spellcheck="false"></textarea>
+  <p class="muted">不要填入 Token、API Key 或個人資料。</p>
+  <button id="copy-question" type="button" class="outline-button">複製提問格式</button>
+  <a href="https://sat.cool/course/201/comment" class="outline-button" target="_blank" rel="noopener noreferrer">開啟課程留言 ↗</a>
+  <p class="muted">這裡不會送出回饋。貼到課程留言後，老師才看得到。</p>
+ </div>
+ <noscript><p>還沒解決？<a href="https://sat.cool/course/201/comment">回課程留言</a>，附上本題網址、作業系統、做到第幾步及錯誤全文。</p></noscript>
+</section>
+<script>
+ const section=document.querySelector<HTMLElement>('.answer-feedback');
+ if(section){
+  const yes=document.querySelector<HTMLButtonElement>('#feedback-yes')!,no=document.querySelector<HTMLButtonElement>('#feedback-no')!,help=document.querySelector<HTMLElement>('#feedback-help')!,status=document.querySelector<HTMLElement>('#feedback-status')!,text=document.querySelector<HTMLTextAreaElement>('#feedback-template')!;
+  yes.disabled=no.disabled=false;
+  text.value=`問題：${section.dataset.title}\n參考問答：${location.origin+location.pathname}\n作業系統與版本：\n工具與版本：\n做到第幾步：\n錯誤訊息（請遮住密鑰）：\n已經試過的做法：`;
+  function choose(solved:boolean){yes.setAttribute('aria-pressed',String(solved));no.setAttribute('aria-pressed',String(!solved));no.setAttribute('aria-expanded',String(!solved));help.hidden=solved;status.textContent=solved?'已在本頁標記解決，不會送出資料。':'先看相關題目，或把問題貼到課程留言。';}
+  yes.addEventListener('click',()=>choose(true));no.addEventListener('click',()=>choose(false));
+  document.querySelector('#copy-question')!.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(text.value);status.textContent='已複製，請到課程留言貼上並送出。';}catch{text.focus();text.select();status.textContent='請手動複製已選取的提問格式。';}});
+ }
+</script>
