@@ -2,15 +2,26 @@
 import QuestionCard from './QuestionCard.astro';
 import SearchForm from './SearchForm.astro';
 import Pagination from './Pagination.astro';
-import {href,type Question} from '../lib/content';
+import StarMap from './StarMap.astro';
+import {href,label,taxonomy,type Question} from '../lib/content';
 interface Props {questions:Question[];title:string;description?:string;filters?:Record<string,string>;page?:number;root:string;dynamic?:boolean;showAll?:boolean;home?:boolean;}
 const {questions,title,description,filters={},page=1,root,dynamic=false,showAll=false,home=false}=Astro.props;
 const totalPages=Math.max(1,Math.ceil(questions.length/12));
 const starters=questions.filter(q=>q.data.questionOrigin==='asked').slice(0,10);
+const mapChapters=taxonomy.chapters.map(chapter=>({
+  id:chapter.id,
+  label:chapter.id==='general'?'＋':String(chapter.order),
+  title:chapter.description||label('chapters',chapter.id),
+  url:href(`/chapters/${chapter.id}/`),
+  questions:questions.filter(q=>q.data.chapterRefs.includes(chapter.id)).map(q=>({url:href(`/questions/${q.id}/`),title:q.data.title,category:q.data.type})),
+}));
+const activeMapChapter=mapChapters.reduce((best,current)=>current.questions.length>best.questions.length?current:best,mapChapters[0]);
 ---
-<div class="page-heading"><h1>{title}</h1>{description&&<p class="lead">{description}</p>}</div>
-<SearchForm filters={filters} full dynamic={dynamic} root={dynamic?root:'/questions/'} home={home}/>
-{home&&<section id="starter-questions" class="starter-questions" aria-labelledby="starter-heading"><div class="section-heading"><h2 id="starter-heading">新手最常卡住的 {starters.length} 題</h2><a href={href('/questions/')}>看全部 {questions.length} 題</a></div><p class="section-caption">先看跟課時最容易卡住的地方。</p><div class="question-list">{starters.map(q=><QuestionCard question={q}/>)}</div></section>}
+{home?<div class="home-layout">
+  <div class="home-hero"><div class="page-heading"><h1>{title}</h1><p class="lead">找到問題，點開就有解法。</p></div><SearchForm filters={filters} full dynamic={dynamic} root={dynamic?root:'/questions/'} home/></div>
+  <section id="starter-questions" class="starter-questions" aria-labelledby="starter-heading"><div class="section-heading"><h2 id="starter-heading">新手最常卡住的 {starters.length} 題</h2><a href={href('/questions/')}>看全部 {questions.length} 題</a></div><p class="section-caption">先看跟課時最容易卡住的地方。</p><div class="question-list">{starters.map(q=><QuestionCard question={q}/>)}</div></section>
+  <StarMap chapters={mapChapters} activeId={activeMapChapter.id}/>
+</div>:<><div class="page-heading"><h1>{title}</h1>{description&&<p class="lead">{description}</p>}</div><SearchForm filters={filters} full dynamic={dynamic} root={dynamic?root:'/questions/'}/></>}
 <section id="all-questions" hidden={home} data-home={home?"true":undefined} class="all-questions" aria-labelledby={dynamic?"all-heading":undefined} aria-label={!dynamic?title:undefined}>
   {dynamic&&<div class="section-heading"><h2 id="all-heading">完整問題列表</h2></div>}
   {dynamic&&<fieldset class="browse-switch"><legend class="sr-only">瀏覽順序</legend>{[['common','常見優先'],['course','課程順序']].map(([value,name])=><label><input form="search-form" type="radio" name="sort" value={value} checked={value==='common'}/><span>{name}</span></label>)}</fieldset>}

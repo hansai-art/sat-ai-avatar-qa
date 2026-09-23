@@ -3,6 +3,7 @@ import '../styles/fonts.css';
 import '../styles/zh-tw-typography.css';
 import '../styles/global.css';
 import '../styles/student-experience.css';
+import '../styles/sathans-v2.css';
 import {Image,getImage} from 'astro:assets';
 import portrait from '../assets/brand/hans-portrait.jpg';
 import {taxonomy,href,label,buildMode,getPublished} from '../lib/content';
@@ -26,7 +27,7 @@ const chapterCounts=Object.fromEntries(taxonomy.chapters.map(c=>[c.id,allQuestio
     <meta property="og:title" content={shareTitle}/><meta property="og:site_name" content={socialSiteName}/><meta property="og:description" content={description}/><meta property="og:type" content="website"/>
     {canonical&&<meta property="og:url" content={canonical}/>}<meta property="og:image" content={socialImage}/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:type" content="image/png"/><meta property="og:image:alt" content="AI 分身課程問答資料庫，搜尋真實學生問題並找到下一步"/>
     <meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content={shareTitle}/><meta name="twitter:description" content={description}/><meta name="twitter:image" content={socialImage}/><meta name="twitter:image:alt" content="AI 分身課程問答資料庫，搜尋真實學生問題並找到下一步"/>
-    <meta name="theme-color" content="#184ae8"/>
+    <meta name="theme-color" content="#f5f6f8" media="(prefers-color-scheme: light)"/><meta name="theme-color" content="#0f131b" media="(prefers-color-scheme: dark)"/>
     <link rel="icon" type="image/png" sizes="64x64" href={portraitIcon.src}/>
   </head>
   <body class="zh-ui">

@@ -1,0 +1,44 @@
+---
+interface MapQuestion {url:string;title:string;category:string;}
+interface MapChapter {id:string;label:string;title:string;url:string;questions:MapQuestion[];}
+interface Props {chapters:MapChapter[];activeId:string;}
+const {chapters,activeId}=Astro.props;
+const cx=270,cy=150,rotation=-14;
+const rotate=(x:number,y:number)=>{
+  const angle=rotation*Math.PI/180;
+  return [cx+x*Math.cos(angle)-y*Math.sin(angle),cy+x*Math.sin(angle)+y*Math.cos(angle)];
+};
+const rings=chapters.map((chapter,index)=>{
+  const rx=35+index*18,ry=rx*.36;
+  const offset=((index*71)%360)*Math.PI/180;
+  const points=chapter.questions.map((question,questionIndex)=>{
+    const angle=offset+questionIndex*Math.PI*2/Math.max(1,chapter.questions.length);
+    const [x,y]=rotate(rx*Math.cos(angle),ry*Math.sin(angle));
+    const kind=question.category==='troubleshooting'?'error':question.category==='setup'?'setup':question.category==='account-billing'?'billing':'other';
+    return {...question,x,y,kind};
+  });
+  return {...chapter,rx,ry,points,active:chapter.id===activeId};
+});
+---
+<aside class="starmap star-map" aria-labelledby="starmap-title">
+  <div class="starmap-hd">
+    <h2 id="starmap-title">卡關星圖</h2>
+    <p>每個點是一題，點章節進入瀏覽</p>
+  </div>
+  <svg class="orbit-map" viewBox="35 38 470 224" role="img" aria-label="依章節分布的學生常見問題">
+    {rings.map(ring=><g class:list={['ring',{'is-active':ring.active}]}>
+      <a href={ring.url} aria-label={`${ring.title}，${ring.questions.length} 題`}>
+        <ellipse class="orbit-hit" cx={cx} cy={cy} rx={ring.rx} ry={ring.ry} transform={`rotate(${rotation} ${cx} ${cy})`}/>
+        <ellipse class="orbit" cx={cx} cy={cy} rx={ring.rx} ry={ring.ry} transform={`rotate(${rotation} ${cx} ${cy})`}/>
+      </a>
+      {ring.points.map(point=><a href={point.url} tabindex="-1" aria-label={point.title}><circle class={`star-dot star-dot--${point.kind}`} cx={point.x} cy={point.y} r={ring.active?3.7:2.8}><title>{point.title}</title></circle></a>)}
+    </g>)}
+    <circle class="star-core-glow" cx={cx} cy={cy} r="22"/>
+    <circle class="star-core" cx={cx} cy={cy} r="10"/>
+    <text class="star-core-text" x={cx} y={cy+2.5} text-anchor="middle">SAT</text>
+  </svg>
+  <div class="starmap-key" aria-hidden="true"><span><i class="key-error"></i>錯誤排除</span><span><i class="key-setup"></i>安裝與設定</span><span><i class="key-billing"></i>帳號與費用</span><span><i class="key-other"></i>其他</span></div>
+  <ul class="starmap-legend">
+    {chapters.map(chapter=><li class:list={{'is-active':chapter.id===activeId}}><a href={chapter.url}><span class="lg-n">{chapter.label}</span><span class="lg-name">{chapter.title}</span><span class="lg-c">{chapter.questions.length}</span></a></li>)}
+  </ul>
+</aside>
