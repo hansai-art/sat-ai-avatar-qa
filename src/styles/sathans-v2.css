@@ -64,7 +64,7 @@
 
 /* Home: answer entry and chapter map share the first row on wide screens. */
 .zh-ui .app-shell.search-first{display:block;max-width:none;}
-.zh-ui .search-first .main-content{max-width:1264px;margin:0 auto;padding:34px 32px 0;}
+.zh-ui .search-first .main-content{max-width:1264px;margin:0 auto;padding:28px 32px 0;}
 .zh-ui .home-layout{display:grid;grid-template-columns:minmax(0,1fr) 500px;grid-template-areas:"hero map" "starter starter";gap:0 56px;align-items:start;}
 .zh-ui .home-hero{grid-area:hero;min-width:0;}
 .zh-ui .star-map{grid-area:map;min-width:0;}
@@ -193,7 +193,7 @@
   .zh-ui .brand-name{font-size:13px;}.zh-ui .brand-sub{font-size:11px;}
   .zh-ui .mobile-menu{height:58px;}
   .zh-ui .mobile-menu nav{top:48px;}
-  .zh-ui .search-first .main-content{padding:20px 16px 0;}
+  .zh-ui .search-first .main-content{padding:16px 16px 0;}
   .zh-ui .search-first .page-heading h1{font-size:32px;}
   .zh-ui .search-first .lead{margin-top:4px;font-size:15px;}
   .zh-ui .search-first .search-form{margin-top:14px;}

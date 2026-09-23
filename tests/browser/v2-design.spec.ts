@@ -68,7 +68,7 @@ test('搜尋快捷鍵與截圖入口清楚說明不是 AI 判讀',async({page})=
 
 test('搜尋狀態收起星圖並讓結果維持在首屏',async({page})=>{
   await page.setViewportSize({width:1440,height:900});
-  await page.goto('./?q=token');
+  await page.goto('./?q=Telegram');
   await expect(page.locator('.star-map')).toBeHidden();
   const result=page.locator('#result-list .question-card').first();
   await expect(result).toBeVisible();
