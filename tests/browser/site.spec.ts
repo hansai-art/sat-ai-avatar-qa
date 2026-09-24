@@ -2,7 +2,7 @@ import {test,expect} from '@playwright/test';
 import fs from 'node:fs';
 const info=JSON.parse(fs.readFileSync('dist/build-info.json','utf8'));
 test('首頁、章節與行動版沒有整頁溢出',async({page})=>{
- await page.goto('./');await expect(page.getByRole('heading',{name:'你卡在哪一步？'})).toBeVisible();
+ await page.goto('./');await expect(page.getByRole('searchbox',{name:'搜尋問題'})).toBeVisible();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBeTruthy();
  await expect(page.locator('#starter-questions .question-card')).toHaveCount(10);await page.goto('questions/');await expect(page.locator('#static-results .question-card')).toHaveCount(info.searchableIds.length);
  await page.goto('chapters/ch01/');await expect(page.getByRole('heading',{name:/第 1 章/,level:1})).toBeVisible();

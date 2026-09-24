@@ -31,8 +31,8 @@ test('口語搜尋仍遵守篩選，返回與重新整理保留查詢',async({pa
 });
 test('新手、教材入口與可照做的 ID、Gateway 步驟',async({page})=>{
  await page.goto('./');await expect(page.locator('#screenshot-search')).toBeHidden();
- await page.getByRole('link',{name:'第一次來，從哪裡開始？'}).click();await expect(page.locator('h1')).toContainText('完全不會寫程式');
- await page.goto('./');await page.getByRole('link',{name:'找教材與範例'}).click();await expect(page.locator('.prose')).toContainText('9-3');
+ if(await page.locator('.mobile-menu').isVisible())await page.locator('.mobile-menu summary').click();await page.getByRole('link',{name:'第一次上課',exact:true}).filter({visible:true}).click();await expect(page.locator('h1')).toContainText('完全不會寫程式');
+ await page.goto('./');if(await page.locator('.mobile-menu').isVisible())await page.locator('.mobile-menu summary').click();await page.getByRole('link',{name:'教材與範例',exact:true}).filter({visible:true}).click();await expect(page.locator('.prose')).toContainText('9-3');
  await page.goto('questions/qa-000056/');await expect(page.locator('.prose a[href="https://t.me/userinfobot"]')).toBeVisible();await expect(page.locator('.prose')).toContainText('Id');
  await page.goto('questions/qa-000054/');await expect(page.locator('.prose')).toContainText('Messaging');await expect(page.locator('.prose')).toContainText('hermes gateway setup');
 });

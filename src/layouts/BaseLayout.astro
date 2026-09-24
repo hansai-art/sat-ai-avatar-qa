@@ -35,8 +35,8 @@ const chapterCounts=Object.fromEntries(taxonomy.chapters.map(c=>[c.id,allQuestio
     {buildMode==='demo'&&<div class="demo-banner"><strong>架構預覽</strong><span>以下為示範資料，非正式課程答案</span></div>}
     <header class="site-header">
       <a class="brand" href={href('/')} aria-label="AI 分身課程問答庫首頁"><span class="brand-portrait" aria-hidden="true"><Image src={portrait} width={144} alt="" format="webp" loading="eager" decoding="async"/></span><span><span class="brand-name">知識衛星 <span class="brand-slash">/</span> AI 分身</span><span class="brand-sub">課程問答庫</span></span></a>
-      <nav class="top-nav" aria-label="主選單"><a href={href('/questions/')} aria-current={current===href('/questions/')?'page':undefined}>全部問題</a><a href={href('/about/')}>使用說明</a><a class="course-link" href="https://sat.cool/classroom/201">回到課程 <span aria-hidden="true">↗</span></a></nav>
-      <details class="mobile-menu"><summary>選單</summary><nav aria-label="手機主選單"><a href={href('/questions/')}>全部問題</a><a href={href('/chapters/')}>課程章節</a><a href={href('/about/')}>使用說明</a><a href="https://sat.cool/classroom/201">回到課程 ↗</a></nav></details>
+      <nav class="top-nav" aria-label="主選單"><a href={href('/questions/')} aria-current={current===href('/questions/')?'page':undefined}>全部問題</a>{allQuestions.some(q=>q.id==='qa-000015')&&<a href={href('/questions/qa-000015/')}>教材與範例</a>}{allQuestions.some(q=>q.id==='qa-000011')&&<a href={href('/questions/qa-000011/')}>第一次上課</a>}<a href={href('/about/')}>使用說明</a><a class="course-link" href="https://sat.cool/classroom/201">回到課程 <span aria-hidden="true">↗</span></a></nav>
+      <details class="mobile-menu"><summary>選單</summary><nav aria-label="手機主選單"><a href={href('/questions/')}>全部問題</a><a href={href('/chapters/')}>課程章節</a>{allQuestions.some(q=>q.id==='qa-000015')&&<a href={href('/questions/qa-000015/')}>教材與範例</a>}{allQuestions.some(q=>q.id==='qa-000011')&&<a href={href('/questions/qa-000011/')}>第一次上課</a>}<a href={href('/about/')}>使用說明</a><a href="https://sat.cool/classroom/201">回到課程 ↗</a></nav></details>
     </header>
     {!searchFirst&&<details class="mobile-chapters"><summary>課程章節</summary><nav aria-label="手機課程章節">{taxonomy.chapters.filter(c=>chapterCounts[c.id]>0).map(c=><a href={href(`/chapters/${c.id}/`)} aria-current={activeChapter===c.id?'location':undefined}>{label('chapters',c.id)}<span>{chapterCounts[c.id]} 題</span></a>)}</nav></details>}
     <div class:list={["app-shell",{"search-first":searchFirst}]}>
@@ -50,8 +50,8 @@ const chapterCounts=Object.fromEntries(taxonomy.chapters.map(c=>[c.id,allQuestio
       <main id="main" class="main-content"><slot/></main>
     </div>
     <footer class="site-footer"><span>知識衛星 AI 分身課程問答庫</span><span>內容整理：Hans 林思翰 <span aria-hidden="true">·</span> <a href={href('/about/')}>來源與更新說明</a></span></footer>
-    <script is:inline define:vars={{chapters:taxonomy.chapters.map(c=>({id:c.id,url:href(`/chapters/${c.id}/`)})),activeChapter}}>
-      try{const chapter=chapters.find(c=>c.url===location.pathname||c.id===activeChapter);if(chapter&&chapter.id!=='general')localStorage.setItem('qa-last-chapter',chapter.id);}catch{}
+    <script is:inline>
+      try{localStorage.removeItem('qa-last-chapter');}catch{}
     </script>
   </body>
 </html>

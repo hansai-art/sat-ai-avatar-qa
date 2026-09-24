@@ -32,12 +32,17 @@ test('未解決展開一次相關題目與可複製求助格式，不假裝已�
  await expect(page.locator('#feedback-help')).toContainText('這裡不會送出回饋');await expect(page.locator('.lesson-reference')).toContainText('1-5');
  await page.locator('#feedback-yes').click();await expect(page.locator('#feedback-help')).toBeHidden();await expect(page.locator('#feedback-status')).toContainText('不會送出資料');
 });
-test('章節具名，手機可回課程與看說明，上次閱讀可清除',async({page})=>{
- await page.setViewportSize({width:390,height:844});await page.goto('chapters/ch02/');
- await page.goto('./');await expect(page.locator('#continue-chapter')).toContainText('第 2 章・');await expect(page.locator('#continue-question')).toContainText('這章常見');
+test('章節具名，教材在手機選單，停止記錄閱讀章節',async({page})=>{
+ await page.setViewportSize({width:390,height:844});await page.goto('./');
+ await page.evaluate(()=>localStorage.setItem('qa-last-chapter','ch02'));await page.goto('chapters/ch02/');
+ expect(await page.evaluate(()=>localStorage.getItem('qa-last-chapter'))).toBeNull();
+ await page.goto('./');await expect(page.locator('#continue-learning')).toHaveCount(0);await expect(page.locator('.quick-help')).toHaveCount(0);
+ await expect(page.getByText('你卡在哪一步？',{exact:true})).toHaveCount(0);
+ await expect(page.getByText('找到問題，點開就有解法。',{exact:true})).toHaveCount(0);
  await page.locator('.mobile-menu summary').click();await expect(page.getByRole('navigation',{name:'手機主選單'}).getByRole('link',{name:'回到課程'})).toHaveAttribute('href','https://sat.cool/classroom/201');await expect(page.getByRole('navigation',{name:'手機主選單'}).getByRole('link',{name:'使用說明'})).toBeVisible();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
- await page.locator('.mobile-menu summary').click();await page.locator('#clear-progress').click();await expect(page.locator('#continue-learning')).toBeHidden();await page.reload();await expect(page.locator('#continue-learning')).toBeHidden();
+ await expect(page.getByRole('navigation',{name:'手機主選單'}).getByRole('link',{name:'教材與範例'})).toHaveAttribute('href',/questions\/qa-000015\/$/);
+ await page.locator('.mobile-menu summary').click();await page.reload();expect(await page.evaluate(()=>localStorage.getItem('qa-last-chapter'))).toBeNull();
  await expect(page.locator('#starter-questions .faq-meta').first()).toContainText('第 1 章・');
 });
 

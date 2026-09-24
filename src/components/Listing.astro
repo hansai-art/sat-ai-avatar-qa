@@ -18,7 +18,7 @@ const mapChapters=taxonomy.chapters.map(chapter=>({
 const activeMapChapter=mapChapters.reduce((best,current)=>current.questions.length>best.questions.length?current:best,mapChapters[0]);
 ---
 {home?<div class="home-layout">
-  <div class="home-hero"><div class="page-heading"><h1>{title}</h1><p class="lead">找到問題，點開就有解法。</p></div><SearchForm filters={filters} full dynamic={dynamic} root={dynamic?root:'/questions/'} home/></div>
+  <div class="home-hero"><h1 class="sr-only">AI 分身課程問答資料庫</h1><SearchForm filters={filters} full dynamic={dynamic} root={dynamic?root:'/questions/'} home/></div>
   <section id="starter-questions" class="starter-questions" aria-labelledby="starter-heading"><div class="section-heading"><h2 id="starter-heading">新手最常卡住的 {starters.length} 題</h2><a href={href('/questions/')}>看全部 {questions.length} 題</a></div><p class="section-caption">先看跟課時最容易卡住的地方。</p><div class="question-list">{starters.map(q=><QuestionCard question={q}/>)}</div></section>
   <StarMap chapters={mapChapters} activeId={activeMapChapter.id}/>
 </div>:<><div class="page-heading"><h1>{title}</h1>{description&&<p class="lead">{description}</p>}</div><SearchForm filters={filters} full dynamic={dynamic} root={dynamic?root:'/questions/'}/></>}

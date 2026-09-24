@@ -25,8 +25,6 @@ h3,.prose h3{font-size:17px;font-weight:600}
 .search-bar{padding:4px;min-height:56px;background:white;box-shadow:none;border-color:#aeb9c8}
 .search-bar input{font-size:16px}
 .search-bar button{min-height:44px}
-.quick-help{display:flex;gap:4px 20px;flex-wrap:wrap;margin:0;font-size:14px}
-.quick-help a{display:inline-flex;align-items:center;min-height:44px}
 .search-form .screenshot-search:not([open]),.search-form .screenshot-search[open]{position:static;margin:4px 0 0;font-size:14px}
 .search-form .screenshot-search>summary{min-height:44px;display:flex;align-items:center;justify-content:flex-end;padding:4px 0;color:var(--muted);font-size:14px;cursor:pointer}
 .search-form .screenshot-search>summary::before{content:'＋';margin-right:6px}
@@ -165,7 +163,7 @@ h3,.prose h3{font-size:17px;font-weight:600}
 .mobile-chapters nav a[aria-current=location]{color:var(--blue);background:#eaf0fe}
 
 /* Search is a focused state; browsing entrances return when the query clears. */
-.search-mode .page-heading,.search-mode .quick-help,.search-mode .browse-entries,.search-mode #continue-learning,.search-mode .screenshot-search{display:none}
+.search-mode .page-heading,.search-mode .browse-entries,.search-mode .screenshot-search{display:none}
 .search-mode .search-form{margin-bottom:12px}
 .search-mode .filter-panel>summary{display:inline-flex;align-items:center;min-height:44px}
 .search-mode .filters{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:8px}
@@ -185,10 +183,6 @@ h3,.prose h3{font-size:17px;font-weight:600}
 .chapter-nav{align-items:flex-start}
 .chapter-nav>span:nth-child(2){min-width:0;line-height:1.6;white-space:normal}
 .chapter-count{flex:none}
-.continue-learning{font-size:14px;padding:8px 12px;margin:8px 0;background:#edf1f7;border-radius:6px}
-.continue-learning>div{display:flex;justify-content:space-between;gap:8px;align-items:center}
-.continue-learning a{display:block;min-height:44px;padding:8px 0}
-.continue-learning .text-button{flex:none}
 .answer-feedback,.lesson-reference{margin:32px 0;background:#f0f3f7;padding:20px;border-radius:8px}
 .answer-feedback h2,.lesson-reference h2{margin:0 0 12px}
 .answer-feedback h3{margin:20px 0 8px}
