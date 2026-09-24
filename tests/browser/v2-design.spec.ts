@@ -1,6 +1,6 @@
 import {expect,test} from '@playwright/test';
 
-test('桌機首頁採雙欄入口、課程星圖與雙欄精選題',async({page})=>{
+test('桌機首頁左欄接續精選題，課程星圖留在右欄',async({page})=>{
   await page.setViewportSize({width:1440,height:960});
   await page.goto('./');
   await page.evaluate(()=>document.fonts.ready);
@@ -10,9 +10,12 @@ test('桌機首頁採雙欄入口、課程星圖與雙欄精選題',async({page}
   await expect(map).toBeVisible();
   const [heroBox,mapBox]=await Promise.all([hero.boundingBox(),map.boundingBox()]);
   expect(Math.abs(heroBox!.y-mapBox!.y)).toBeLessThan(4);
-  const cards=page.locator('#starter-questions .question-card');
-  const [first,second]=await Promise.all([cards.nth(0).boundingBox(),cards.nth(1).boundingBox()]);
-  expect(Math.abs(first!.y-second!.y)).toBeLessThan(4);
+  const starter=page.locator('#starter-questions');
+  const cards=starter.locator('.question-card');
+  const [starterBox,first,second]=await Promise.all([starter.boundingBox(),cards.nth(0).boundingBox(),cards.nth(1).boundingBox()]);
+  expect(starterBox!.y).toBeLessThan(mapBox!.y+mapBox!.height);
+  expect(starterBox!.y-(heroBox!.y+heroBox!.height)).toBeLessThan(48);
+  expect(second!.y).toBeGreaterThan(first!.y);
   await expect(page.locator('.brand-portrait img')).toBeVisible();
   const font=await page.locator('body').evaluate(node=>getComputedStyle(node).fontFamily);
   expect(font).toContain('SAT Han Sans TC');

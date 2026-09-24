@@ -65,7 +65,7 @@
 /* Home: answer entry and chapter map share the first row on wide screens. */
 .zh-ui .app-shell.search-first{display:block;max-width:none;}
 .zh-ui .search-first .main-content{max-width:1264px;margin:0 auto;padding:28px 32px 0;}
-.zh-ui .home-layout{display:grid;grid-template-columns:minmax(0,1fr) 500px;grid-template-areas:"hero map" "starter starter";gap:0 56px;align-items:start;}
+.zh-ui .home-layout{display:grid;grid-template-columns:minmax(0,1fr) 500px;grid-template-areas:"hero map" "starter map";gap:0 56px;align-items:start;}
 .zh-ui .home-hero{grid-area:hero;min-width:0;}
 .zh-ui .star-map{grid-area:map;min-width:0;}
 .zh-ui .starter-questions{grid-area:starter;}
@@ -176,6 +176,10 @@
 .zh-ui .answer-caution{background:var(--flare-wash);border-color:var(--flare);color:var(--text);}
 .zh-ui .pagination a,.zh-ui .outline-button{background:var(--surface);border-color:var(--hair);color:var(--ink);}
 .zh-ui .mobile-menu nav{background:var(--surface);border-color:var(--hair);}
+
+@media(min-width:1081px){
+  .zh-ui .starter-questions .question-list{grid-template-columns:1fr;}
+}
 
 @media(max-width:1080px){
   .zh-ui .home-layout{display:flex;flex-direction:column;}
