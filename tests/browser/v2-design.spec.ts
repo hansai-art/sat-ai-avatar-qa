@@ -57,6 +57,23 @@ test('深色模式保持文字對比並套用到首頁卡片',async({page})=>{
   expect(contrast(colors.text,colors.surface)).toBeGreaterThanOrEqual(4.5);
 });
 
+test('兩種瀏覽入口用不同色塊，圖示在色塊正中央',async({page})=>{
+  await page.emulateMedia({colorScheme:'dark'});
+  await page.goto('./');
+  const entries=page.locator('.browse-entry');
+  const colors=await entries.evaluateAll(items=>items.map(item=>getComputedStyle(item).backgroundColor));
+  expect(colors[0]).not.toBe(colors[1]);
+  for(const entry of await entries.all()){
+    const centers=await entry.evaluate(node=>{
+      const glyph=node.querySelector('.entry-glyph')!.getBoundingClientRect();
+      const icon=node.querySelector('.entry-glyph svg')!.getBoundingClientRect();
+      return {x:(icon.x+icon.width/2)-(glyph.x+glyph.width/2),y:(icon.y+icon.height/2)-(glyph.y+glyph.height/2)};
+    });
+    expect(Math.abs(centers.x)).toBeLessThan(1);
+    expect(Math.abs(centers.y)).toBeLessThan(1);
+  }
+});
+
 test('搜尋快捷鍵與截圖入口清楚說明不是 AI 判讀',async({page})=>{
   await page.goto('./');
   await page.keyboard.press(process.platform==='darwin'?'Meta+KeyK':'Control+KeyK');
