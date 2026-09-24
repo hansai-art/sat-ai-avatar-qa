@@ -15,7 +15,7 @@ const rings=chapters.map((chapter,index)=>{
     const angle=offset+questionIndex*Math.PI*2/Math.max(1,chapter.questions.length);
     const [x,y]=rotate(rx*Math.cos(angle),ry*Math.sin(angle));
     const kind=question.category==='troubleshooting'?'error':question.category==='setup'?'setup':question.category==='account-billing'?'billing':'other';
-    return {...question,x,y,kind};
+    return {...question,x,y,kind,angle};
   });
   return {...chapter,rx,ry,points,active:chapter.id===activeId};
 });
@@ -25,20 +25,26 @@ const rings=chapters.map((chapter,index)=>{
     <h2 id="starmap-title">卡關星圖</h2>
     <p>每個點是一題，點章節進入瀏覽</p>
   </div>
-  <svg class="orbit-map" viewBox="35 38 470 224" role="img" aria-label="依章節分布的學生常見問題">
-    {rings.map(ring=><g class:list={['ring',{'is-active':ring.active}]}>
+  <svg class="orbit-map" data-starmap data-cx={cx} data-cy={cy} data-rot={rotation} viewBox="35 38 470 224" role="img" aria-label="依章節分布的學生常見問題">
+    {rings.map(ring=><g class:list={['ring',{'is-active':ring.active}]} data-ch={ring.id} data-rx={ring.rx} data-ry={ring.ry} data-name={ring.title} data-label={ring.label} data-count={ring.questions.length}>
       <a href={ring.url} aria-label={`${ring.title}，${ring.questions.length} 題`}>
-        <ellipse class="orbit-hit" cx={cx} cy={cy} rx={ring.rx} ry={ring.ry} transform={`rotate(${rotation} ${cx} ${cy})`}/>
+        <ellipse class="orbit-hit hit" cx={cx} cy={cy} rx={ring.rx} ry={ring.ry} transform={`rotate(${rotation} ${cx} ${cy})`}/>
         <ellipse class="orbit" cx={cx} cy={cy} rx={ring.rx} ry={ring.ry} transform={`rotate(${rotation} ${cx} ${cy})`}/>
       </a>
-      {ring.points.map(point=><a href={point.url} tabindex="-1" aria-label={point.title}><circle class={`star-dot star-dot--${point.kind}`} cx={point.x} cy={point.y} r={ring.active?3.7:2.8}><title>{point.title}</title></circle></a>)}
+      {ring.points.map(point=><a href={point.url} tabindex="-1" aria-label={point.title}><circle class={`star-dot dot star-dot--${point.kind} t-${point.kind==='error'?'err':point.kind==='setup'?'ins':point.kind==='billing'?'fee':'oth'}`} data-t={point.angle} data-q={point.title} cx={point.x} cy={point.y} r={ring.active?3.7:2.8}><title>{point.title}</title></circle></a>)}
     </g>)}
-    <circle class="star-core-glow" cx={cx} cy={cy} r="22"/>
-    <circle class="star-core" cx={cx} cy={cy} r="10"/>
-    <text class="star-core-text" x={cx} y={cy+2.5} text-anchor="middle">SAT</text>
+    <g class="core-g">
+      <circle class="star-core-glow core-glow" cx={cx} cy={cy} r="22"/>
+      <circle class="star-core" cx={cx} cy={cy} r="10"/>
+      <text class="star-core-text" x={cx} y={cy+2.5} text-anchor="middle">SAT</text>
+    </g>
   </svg>
   <div class="starmap-key" aria-hidden="true"><span><i class="key-error"></i>錯誤排除</span><span><i class="key-setup"></i>安裝與設定</span><span><i class="key-billing"></i>帳號與費用</span><span><i class="key-other"></i>其他</span></div>
   <ul class="starmap-legend">
-    {chapters.map(chapter=><li class:list={{'is-active':chapter.id===activeId}}><a href={chapter.url}><span class="lg-n">{chapter.label}</span><span class="lg-name">{chapter.title}</span><span class="lg-c">{chapter.questions.length}</span></a></li>)}
+    {chapters.map(chapter=><li data-ch={chapter.id} class:list={{'is-active':chapter.id===activeId}}><a href={chapter.url}><span class="lg-n">{chapter.label}</span><span class="lg-name">{chapter.title}</span><span class="lg-c">{chapter.questions.length}</span></a></li>)}
   </ul>
 </aside>
+
+<script>
+  import '../scripts/starmap';
+</script>

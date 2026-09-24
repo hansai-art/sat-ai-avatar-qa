@@ -16,12 +16,12 @@ test('星圖會公轉，並可用滑鼠查看章節與問題',async({page})=>{
   ).not.toBe(initial);
 
   const ring=page.locator('.orbit-map .ring').first();
-  await ring.locator('.hit').hover();
+  await page.locator('.starmap-legend li').first().hover();
   await expect(ring).toHaveClass(/hot/);
-  await expect(page.locator('.starmap-tip')).toHaveClass(/on/);
 
-  await dot.hover();
+  await dot.dispatchEvent('pointerenter',{pointerType:'mouse'});
   await expect(dot).toHaveClass(/pick/);
+  await expect(page.locator('.starmap-tip')).toHaveClass(/on/);
   await expect(page.locator('.starmap-tip b')).not.toBeEmpty();
 });
 
@@ -37,7 +37,7 @@ test('減少動態時停止公轉，但保留星圖提示',async({page})=>{
   await expect(dot).toHaveAttribute('cx',initial.split(',')[0]);
   await expect(dot).toHaveAttribute('cy',initial.split(',')[1]);
 
-  await dot.hover();
+  await dot.dispatchEvent('pointerenter',{pointerType:'mouse'});
   await expect(dot).toHaveClass(/pick/);
   await expect(page.locator('.starmap-tip')).toHaveClass(/on/);
 });

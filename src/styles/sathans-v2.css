@@ -148,19 +148,26 @@
 .zh-ui .search-mode .all-questions{margin-top:8px;}
 .zh-ui .empty-state{background:var(--surface);border-color:var(--hair);}
 
-/* The map is a chapter overview. It is static, so it does not compete with answers. */
+/* The map stays secondary to answers, but responds when students explore it. */
 .zh-ui .starmap{position:relative;background:var(--surface);border:1px solid var(--hair);border-radius:20px;padding:18px 18px 12px;overflow:hidden;}
 .zh-ui .starmap-hd{display:flex;align-items:baseline;justify-content:space-between;gap:12px;}
 .zh-ui .starmap-hd h2{margin:0;font-size:15px;font-weight:650;letter-spacing:0;}
 .zh-ui .starmap-hd p{margin:0;font-size:12px;color:var(--muted);}
-.zh-ui .orbit-map{display:block;width:100%;height:auto;margin:4px 0 6px;overflow:visible;}
-.zh-ui .orbit-map a:focus{outline:none;}
-.zh-ui .orbit{fill:none;stroke:var(--hair);stroke-width:1;}
+.zh-ui .orbit-map{display:block;width:100%;height:auto;margin:4px 0 6px;overflow:visible;touch-action:manipulation;-webkit-user-select:none;user-select:none;}
+.zh-ui .orbit-map a,.zh-ui .orbit-map a:focus,.zh-ui .orbit-map a:focus-visible{outline:none;}
+.zh-ui .orbit{fill:none;stroke:var(--hair);stroke-width:1;pointer-events:none;transition:stroke .2s,stroke-width .2s,opacity .25s;}
 .zh-ui .orbit-hit{fill:none;stroke:transparent;stroke-width:12;pointer-events:stroke;cursor:pointer;}
 .zh-ui .ring.is-active .orbit{stroke:var(--signal);stroke-width:1.5;}
 .zh-ui .ring:not(.is-active) .star-dot{opacity:.62;}
-.zh-ui .star-dot{stroke:var(--surface);stroke-width:1.2;}
+.zh-ui .star-dot{stroke:transparent;stroke-width:10;cursor:pointer;pointer-events:all;transition:r .18s cubic-bezier(.2,.8,.2,1),opacity .25s;}
 .zh-ui .star-dot--error{fill:var(--flare);}.zh-ui .star-dot--setup{fill:var(--signal);}.zh-ui .star-dot--billing{fill:var(--amber);}.zh-ui .star-dot--other{fill:var(--other);}
+.zh-ui .orbit-map.focus .ring:not(.hot) .orbit{opacity:.3;}
+.zh-ui .orbit-map.focus .ring:not(.hot) .star-dot{opacity:.18;}
+.zh-ui .orbit-map .ring.hot .orbit{stroke:var(--signal);stroke-width:1.6;opacity:1;}
+.zh-ui .orbit-map .ring.hot .star-dot{opacity:1;}
+.zh-ui .orbit-map .star-dot.pick{r:6.5;}
+.zh-ui .core-g{pointer-events:none;transition:transform .3s cubic-bezier(.2,.8,.2,1);transform-box:fill-box;transform-origin:center;}
+.zh-ui .starmap:hover .core-g{transform:scale(1.1);}
 .zh-ui .star-core-glow{fill:var(--signal);opacity:.12;}
 .zh-ui .star-core{fill:var(--signal);stroke:color-mix(in srgb,var(--surface) 70%,transparent);stroke-width:1;}
 .zh-ui .star-core-text{fill:#fff;font:650 5px/1 var(--font-site);letter-spacing:.4px;}
@@ -169,12 +176,23 @@
 .zh-ui .key-error{background:var(--flare);}.zh-ui .key-setup{background:var(--signal);}.zh-ui .key-billing{background:var(--amber);}.zh-ui .key-other{background:var(--other);}
 .zh-ui .starmap-legend{list-style:none;margin:12px 0 0;padding:10px 0 0;border-top:1px solid var(--hair-soft);display:grid;grid-template-columns:1fr 1fr;column-gap:16px;}
 .zh-ui .starmap-legend a{display:grid;grid-template-columns:16px 1fr auto;gap:8px;padding:3px 6px;border-radius:6px;font-size:12.5px;line-height:1.3;color:var(--text);}
-.zh-ui .starmap-legend a:hover{background:var(--paper);text-decoration:none;}
+.zh-ui .starmap-legend a:hover,.zh-ui .starmap-legend li.hover a{background:var(--paper);text-decoration:none;}
 .zh-ui .starmap-legend .lg-n{font-weight:650;color:var(--muted);font-variant-numeric:tabular-nums;}
 .zh-ui .starmap-legend .lg-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .zh-ui .starmap-legend .lg-c{color:var(--muted);font-variant-numeric:tabular-nums;}
 .zh-ui .starmap-legend .is-active a{background:var(--signal-wash);}
 .zh-ui .starmap-legend .is-active .lg-n,.zh-ui .starmap-legend .is-active .lg-name{color:var(--signal-ink);font-weight:650;}
+.zh-ui .starmap-tip{position:absolute;z-index:5;left:0;top:0;width:max-content;max-width:min(260px,calc(100% - 16px));padding:7px 10px;border-radius:8px;background:var(--ink);color:var(--paper);font-size:12px;line-height:1.45;pointer-events:none;opacity:0;transform:translate(-50%,calc(-100% - 10px));transition:opacity .15s;box-shadow:0 8px 24px color-mix(in srgb,#000 22%,transparent);}
+.zh-ui .starmap-tip.on{opacity:1;}
+.zh-ui .starmap-tip b{display:block;font-weight:600;}
+.zh-ui .starmap-tip small{display:block;opacity:.75;font-size:11.5px;}
+@media(prefers-reduced-motion:no-preference){
+  .zh-ui .orbit-map .ring{animation:starmap-settle .7s cubic-bezier(.2,.8,.2,1) both;transform-box:fill-box;transform-origin:center;}
+  .zh-ui .orbit-map .ring:nth-child(2){animation-delay:.04s;}.zh-ui .orbit-map .ring:nth-child(3){animation-delay:.08s;}.zh-ui .orbit-map .ring:nth-child(4){animation-delay:.12s;}.zh-ui .orbit-map .ring:nth-child(5){animation-delay:.16s;}.zh-ui .orbit-map .ring:nth-child(6){animation-delay:.2s;}.zh-ui .orbit-map .ring:nth-child(7){animation-delay:.24s;}.zh-ui .orbit-map .ring:nth-child(8){animation-delay:.28s;}.zh-ui .orbit-map .ring:nth-child(9){animation-delay:.32s;}.zh-ui .orbit-map .ring:nth-child(10){animation-delay:.36s;}.zh-ui .orbit-map .ring:nth-child(11){animation-delay:.4s;}
+  .zh-ui .core-glow{animation:starmap-breathe 4.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center;}
+}
+@keyframes starmap-settle{from{opacity:0;transform:scale(.94);}}
+@keyframes starmap-breathe{50%{opacity:.55;transform:scale(.9);}}
 
 /* Detail and directory pages use the same quiet surfaces and hierarchy. */
 .zh-ui .app-shell:not(.search-first){max-width:1264px;grid-template-columns:264px minmax(0,1fr);}
