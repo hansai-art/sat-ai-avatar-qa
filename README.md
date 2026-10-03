@@ -144,6 +144,7 @@ VERIFY_URL=https://sathans.pages.dev npm run test:e2e
 - [實作與規格差異](docs/IMPLEMENTATION.md)：本次已實作部分與待內容到位的檢查。
 - [驗收紀錄](docs/ACCEPTANCE.md)：已執行結果與未執行項目。
 - [工作台整合規格](docs/WORKBENCH-INTEGRATION.md)：單一 Q&A 資料、內外兩個檢視與狀態同步規則。
+- [學生回報與排錯流程](docs/STUDENT-FEEDBACK.md)：公開站回報格式、工作台收錄欄位與速度驗收。
 
 ## 使用聲明
 
