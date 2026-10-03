@@ -45,7 +45,7 @@ const {question:q,related}=Astro.props;
   kind.addEventListener('change',()=>{text.value=template();});
   function choose(solved:boolean){
    yes.setAttribute('aria-pressed',String(solved));no.setAttribute('aria-pressed',String(!solved));no.setAttribute('aria-expanded',String(!solved));help.hidden=solved;
-   try{localStorage.setItem(`qa-feedback:${section.dataset.qaId}`,solved?'solved':'needs-help');}catch{}
+   try{localStorage.setItem(`qa-feedback:${section.dataset.qaId||''}`,solved?'solved':'needs-help');}catch{}
    status.textContent=solved?'已在本頁標記解決，不會送出資料。':'先看相關題目，或複製整理好的內容貼到課程留言。';
   }
   yes.addEventListener('click',()=>choose(true));no.addEventListener('click',()=>choose(false));
