@@ -66,4 +66,4 @@
 - Markdown 是公開 FAQ 的唯一可編輯正本。
 - Pagefind、`build-info.json` 與網站列表都是衍生資料，不可反向編輯。
 - 工作台可以保存來源、判斷、版本和狀態，但不保存另一份完整公開答案。
-- 若需要自動同步，應讀取公開 Markdown 的 `qa_id)、`publication)、`answerStatus)、`updatedAt) 與 `sourceRefs)，不可用頁面標題或搜尋結果文字當識別。
+- 若需要自動同步，應讀取公開 Markdown 的 `qa_id`、`publication`、`answerStatus`、`updatedAt` 與 `sourceRefs`，不可用頁面標題或搜尋結果文字當識別。
