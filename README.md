@@ -143,6 +143,7 @@ VERIFY_URL=https://sathans.pages.dev npm run test:e2e
 - [Spec](docs/SPEC.md)：欄位、搜尋、路由、部署與驗收規格。
 - [實作與規格差異](docs/IMPLEMENTATION.md)：本次已實作部分與待內容到位的檢查。
 - [驗收紀錄](docs/ACCEPTANCE.md)：已執行結果與未執行項目。
+- [工作台整合規格](docs/WORKBENCH-INTEGRATION.md)：單一 Q&A 資料、內外兩個檢視與狀態同步規則。
 
 ## 使用聲明
 
