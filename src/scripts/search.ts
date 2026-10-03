@@ -188,4 +188,4 @@ input.addEventListener('input',()=>{sequence++;clearTimeout(timer);if(!composing
 for(const select of document.querySelectorAll<HTMLInputElement|HTMLSelectElement>('#search-form select,input[name=sort]'))select.addEventListener('change',()=>{if(select.name==='chapter')control('lesson').value='';fromForm('push');});
 window.addEventListener('popstate',()=>{clearTimeout(timer);state=parseState(location.search,taxonomy).state;syncForm();if(isHome){if(hasActiveSearch())void run();else restoreReadingPosition();}else void run('replace',true);});
 const initial=parseState(location.search,taxonomy);if(initial.notices.length){notice.hidden=false;notice.textContent=initial.notices.join('。');}
-syncForm();void run();
+syncForm();if(isHome){if(hasActiveSearch())void run();else restoreReadingPosition();}else void run('replace',true);
