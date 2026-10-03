@@ -93,10 +93,17 @@ document.addEventListener('click',event=>{
   if(!(event.target instanceof Element)||!event.target.closest('.question-card-link'))return;
   try{sessionStorage.setItem('qa-last-search',location.pathname+location.search);sessionStorage.setItem('qa-reading-position',JSON.stringify({url:location.pathname+location.search,y:scrollY}));}catch{}
 });
+function hasActiveSearch(){
+  return !!state.q||!!state.chapter||!!state.lesson||!!state.tool||!!state.type||state.page>1||state.sort!=='common';
+}
 async function run(mode:'push'|'replace'='replace') {
   const ticket=++sequence;
   updateUrl(mode);
   if(isHome&&resultsSection.hidden){list.replaceChildren();live.setAttribute('aria-busy','false');restoreReadingPosition();return;}
+  if(!hasActiveSearch()){
+    staticResults.hidden=false;live.hidden=true;message.hidden=true;pagination.hidden=true;
+    list.replaceChildren();syncFilters();restoreReadingPosition();return;
+  }
   staticResults.hidden=true;live.hidden=false;message.hidden=true;pagination.hidden=true;list.replaceChildren();
   live.setAttribute('aria-busy','true');count.textContent='正在搜尋…';
   try {
@@ -179,6 +186,6 @@ input.addEventListener('compositionstart',()=>{composing=true;clearTimeout(timer
 input.addEventListener('compositionend',()=>{composing=false;clearTimeout(timer);sequence++;timer=setTimeout(()=>fromForm('replace'),250);});
 input.addEventListener('input',()=>{sequence++;clearTimeout(timer);if(!composing)timer=setTimeout(()=>fromForm('replace'),250);});
 for(const select of document.querySelectorAll<HTMLInputElement|HTMLSelectElement>('#search-form select,input[name=sort]'))select.addEventListener('change',()=>{if(select.name==='chapter')control('lesson').value='';fromForm('push');});
-window.addEventListener('popstate',()=>{clearTimeout(timer);state=parseState(location.search,taxonomy).state;syncForm();void run();});
+window.addEventListener('popstate',()=>{clearTimeout(timer);state=parseState(location.search,taxonomy).state;syncForm();if(hasActiveSearch())void run();else restoreReadingPosition();});
 const initial=parseState(location.search,taxonomy);if(initial.notices.length){notice.hidden=false;notice.textContent=initial.notices.join('。');}
 syncForm();void run();
