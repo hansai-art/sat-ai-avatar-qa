@@ -1,0 +1,100 @@
+/* 2026-10 新手卡關改善：安裝卡關地圖、截圖入口文字與答案頁位置提示。沿用 sathans-v2 的色彩 token。 */
+
+/* 首頁右欄：安裝步驟在上，課程星圖在下；搜尋時一起收起。 */
+.zh-ui .home-aside{grid-area:map;min-width:0;display:grid;gap:20px;align-content:start;}
+.zh-ui .home-aside .star-map{grid-area:auto;}
+.zh-ui .search-mode .home-aside{display:none;}
+
+.zh-ui .install-steps{background:var(--surface);border:1px solid var(--hair);border-radius:20px;padding:18px 18px 8px;}
+.zh-ui .install-steps-hd h2{margin:0;font-size:15px;font-weight:650;letter-spacing:0;}
+.zh-ui .install-steps-hd p{margin:2px 0 0;font-size:12.5px;line-height:1.6;color:var(--muted);}
+.zh-ui .install-steps-list{list-style:none;margin:10px 0 0;padding:0;}
+.zh-ui .install-steps-list li+li{border-top:1px solid var(--hair-soft);}
+.zh-ui .install-steps-list a{display:grid;grid-template-columns:26px minmax(0,1fr) auto;align-items:center;gap:10px;min-height:44px;padding:4px 4px;color:var(--ink);font-size:14.5px;line-height:1.4;}
+.zh-ui .install-steps-list a:hover{text-decoration:none;color:var(--signal-ink);}
+.zh-ui .install-step-n{display:inline-grid;place-items:center;flex:none;width:26px;height:26px;border-radius:50%;background:var(--signal-wash);color:var(--signal-ink);font-size:13px;font-weight:650;line-height:1;font-variant-numeric:tabular-nums;}
+.zh-ui .install-step-count{font-size:12.5px;color:var(--muted);white-space:nowrap;}
+.zh-ui .install-steps-more{display:inline-flex;align-items:center;gap:4px;min-height:44px;font-size:13.5px;font-weight:600;}
+
+/* 安裝卡關地圖頁 */
+.zh-ui .install-heading{margin-bottom:20px;}
+.zh-ui .install-reassure{margin:10px 0 0;font-size:15px;line-height:1.7;color:var(--text);}
+.zh-ui .install-jumps ol{list-style:none;margin:0 0 28px;padding:0;display:flex;flex-wrap:wrap;gap:8px;}
+.zh-ui .install-jumps a{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:6px 14px 6px 8px;background:var(--surface);border:1px solid var(--hair);border-radius:999px;color:var(--ink);font-size:14px;}
+.zh-ui .install-jumps a:hover{border-color:var(--signal);text-decoration:none;}
+.zh-ui .install-roadmap{list-style:none;margin:0;padding:0;}
+.zh-ui .install-step{margin:0 0 20px;padding:22px 24px 10px;background:var(--surface);border:1px solid var(--hair);border-radius:16px;scroll-margin-top:84px;}
+.zh-ui .install-step:target{border-color:var(--signal);box-shadow:0 0 0 3px color-mix(in srgb,var(--signal) 18%,transparent);}
+.zh-ui .install-step-head{display:flex;gap:14px;align-items:flex-start;}
+.zh-ui .install-step-head .install-step-n{width:36px;height:36px;font-size:17px;background:var(--ink);color:var(--paper);}
+.zh-ui .install-step-head h2{margin:2px 0 0;font-size:20px;line-height:1.45;}
+.zh-ui .install-step-lessons{margin:2px 0 0;font-size:13px;line-height:1.6;color:var(--muted);}
+.zh-ui .install-step-desc{margin:14px 0 0;font-size:16px;line-height:1.8;color:var(--text);}
+.zh-ui .install-step-check{display:flex;gap:12px;align-items:baseline;margin:12px 0 0;padding:10px 14px;background:var(--signal-wash);border-radius:10px;font-size:15px;line-height:1.7;color:var(--text);}
+.zh-ui .install-step-check strong{flex:none;color:var(--signal-ink);font-weight:650;}
+.zh-ui .install-step-sub{margin:20px 0 0;font-size:13px;font-weight:600;color:var(--muted);}
+.zh-ui .install-roadmap .question-list{margin-top:2px;}
+.zh-ui .install-roadmap .question-card h3{margin:0 0 4px;font-size:16.5px;font-weight:650;line-height:1.5;color:var(--ink);}
+.zh-ui .install-roadmap .question-card-link:hover h3{color:var(--signal-ink);}
+.zh-ui .install-roadmap .question-card:last-child{border-bottom:0;}
+.zh-ui .install-footer{margin:32px 0 0;padding:20px 24px;background:var(--surface);border:1px solid var(--hair);border-radius:16px;}
+.zh-ui .install-footer h2{margin:0 0 6px;font-size:18px;}
+.zh-ui .install-footer p{margin:0 0 12px;line-height:1.8;}
+.zh-ui .install-footer-links{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;}
+
+/* 第 1 章頁首與答案頁的流程位置 */
+.zh-ui .chapter-callout{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 16px;margin:0 0 24px;padding:12px 18px;background:var(--signal-wash);border-left:3px solid var(--signal);border-radius:0 12px 12px 0;}
+.zh-ui .chapter-callout p{flex:1 1 320px;margin:0;font-size:15px;line-height:1.7;color:var(--text);}
+.zh-ui .chapter-callout strong{margin-right:6px;color:var(--ink);}
+.zh-ui .chapter-callout a,.zh-ui .install-step-ref a{display:inline-flex;align-items:center;gap:4px;min-height:44px;font-weight:600;white-space:nowrap;}
+.zh-ui .install-step-ref{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 16px;margin:32px 0 0;padding:12px 18px;background:var(--surface);border:1px solid var(--hair);border-radius:12px;}
+.zh-ui .install-step-ref p{display:flex;flex-direction:column;margin:0;font-size:14px;line-height:1.6;color:var(--text);}
+.zh-ui .install-step-ref strong{color:var(--ink);}
+.zh-ui .install-step-ref a{font-size:14px;}
+.zh-ui .install-step-ref+.lesson-reference{margin-top:12px;}
+.zh-ui .asked-count{display:inline-flex;align-items:center;min-height:44px;color:var(--muted);}
+
+/* 截圖入口：看得到字，不必先猜圖示的意思。 */
+.zh-ui .search-shot{width:auto;min-width:44px;gap:6px;padding:0 10px;display:inline-flex;align-items:center;justify-content:center;font:600 13px/1 var(--font-site);white-space:nowrap;}
+.zh-ui .search-shot svg{flex:none;}
+.zh-ui .search-shot-label{display:inline-flex;}
+.zh-ui .search-shot-short{display:none;}
+
+/* 少見情況的圖片放在正文之後；深色模式不出現白色卡片。 */
+.zh-ui .question-images-after{margin:8px 0 24px;}
+.zh-ui .image-preview-link{background:var(--surface);border-color:var(--hair);color:var(--ink);}
+.zh-ui .image-preview-link img{background:var(--paper);}
+.zh-ui .image-preview figcaption{color:var(--muted);}
+
+/* 入口卡的副標在窄欄平均斷行，避免最後一行只剩一個字。 */
+.zh-ui .entry-text>span{text-wrap:balance;}
+
+/* 主選單多了兩個入口：平板寬度縮小間距，標籤與品牌名都不斷行。 */
+.zh-ui .top-nav>a,.zh-ui .brand-name{white-space:nowrap;}
+@media(max-width:1180px){.zh-ui .top-nav{gap:18px;}}
+@media(max-width:1080px){
+  .zh-ui .home-aside{order:3;width:100%;margin-top:28px;}
+  .zh-ui .home-aside .star-map{margin-top:0;}
+}
+@media(max-width:960px){.zh-ui .top-nav{gap:14px;font-size:13px;}}
+@media(max-width:860px){
+  .zh-ui .site-header{padding:0 16px;}
+  .zh-ui .top-nav{gap:11px;}
+  .zh-ui .top-nav .course-link{padding-left:10px;padding-right:10px;}
+  .zh-ui .brand{gap:8px;}
+  .zh-ui .brand-portrait{width:36px;height:36px;}
+}
+@media(max-width:767px){
+  .zh-ui .search-shot{height:40px;min-width:40px;gap:4px;padding:0 8px;}
+  .zh-ui .search-shot svg{width:18px;height:18px;}
+  .zh-ui .search-shot-long{display:none;}
+  .zh-ui .search-shot-short{display:inline;}
+  .zh-ui .install-steps{padding:16px 16px 6px;}
+  .zh-ui .install-step{padding:18px 16px 8px;}
+  .zh-ui .install-step-head{gap:12px;}
+  .zh-ui .install-step-head .install-step-n{width:32px;height:32px;font-size:16px;}
+  .zh-ui .install-step-head h2{font-size:18px;}
+  .zh-ui .install-step-check{flex-direction:column;gap:2px;}
+  .zh-ui .install-roadmap .question-card h3{font-size:18px;line-height:1.48;}
+  .zh-ui .install-footer{padding:18px 16px;}
+}

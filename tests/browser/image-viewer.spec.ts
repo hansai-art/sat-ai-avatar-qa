@@ -52,7 +52,7 @@ test('無 JavaScript 仍可看圖片；原始畫面及日期有可讀說明',asy
  for(const id of ['qa-000052','qa-000053']){
   await page.goto(baseURL+'questions/'+id+'/');const link=page.locator('[data-qa-image]');
   await expect(link).toHaveAttribute('target','_blank');await expect(link.locator('img')).toHaveAttribute('alt',/.+/);
-  await expect(page.locator('figcaption')).toContainText('版本：未標示');await expect(page.locator('figcaption time')).toHaveAttribute('datetime',/2026-09-/);
+  await expect(page.locator('figcaption')).not.toContainText('未標示');await expect(page.locator('figcaption')).toContainText('截圖 2026-09-');await expect(page.locator('figcaption time')).toHaveAttribute('datetime',/2026-09-/);
   const full=await link.getAttribute('href');const response=await request.get(new URL(full!,baseURL!).href);expect(response.ok()).toBe(true);expect(response.headers()['content-type']).toContain('image/');
  }
  await context.close();

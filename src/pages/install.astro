@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import QuestionCard from '../components/QuestionCard.astro';
+import {getPublished,href,taxonomy} from '../lib/content';
+import {getInstallSteps,lessonCode} from '../lib/install-steps';
+const published=await getPublished();
+const steps=await getInstallSteps();
+const lessonTitle=(id:string)=>taxonomy.chapters.flatMap(c=>c.lessons).find(l=>l.id===id)?.title||id;
+const counts=taxonomy.chapters.map(c=>({id:c.id,count:published.filter(q=>q.data.chapterRefs.includes(c.id)).length}));
+const ch01=counts.find(c=>c.id==='ch01')?.count||0;
+// 只有第 1 章確實是題數最多的章節時，才說這句安心話。
+const ch01Most=ch01>0&&counts.every(c=>c.id==='ch01'||c.count<ch01);
+---
+<BaseLayout title="安裝卡關地圖" description="從安裝 Hermes 到手機能對話，照順序找到你停在哪一步，再看那一步最常見的卡關。" activeChapter="ch01" noindex={steps.length===0}>
+  <nav class="breadcrumb" aria-label="所在位置"><a href={href('/')}>首頁</a><span aria-hidden="true">›</span><a href={href('/chapters/ch01/')}>第 1 章</a><span aria-hidden="true">›</span><span>安裝卡關地圖</span></nav>
+  <div class="page-heading install-heading">
+    <p class="eyebrow">第 1 章 · 安裝卡關地圖</p>
+    <h1>你卡在第幾步？</h1>
+    <p class="lead">從安裝 Hermes 到手機能對話，照順序檢查，先找到你停在哪一步，再看那一步最常見的卡關。</p>
+    {ch01Most&&steps.length>0&&<p class="install-reassure">全課整理出的問答裡，第 1 章最多，卡住很正常。</p>}
+  </div>
+  {steps.length>0?<>
+    <nav class="install-jumps" aria-label="安裝步驟">
+      <ol>{steps.map(step=><li><a href={`#${step.id}`}><span class="install-step-n" aria-hidden="true">{step.number}</span><span>{step.short}</span></a></li>)}</ol>
+    </nav>
+    <ol class="install-roadmap">
+      {steps.map(step=><li class="install-step" id={step.id}>
+        <div class="install-step-head">
+          <span class="install-step-n" aria-hidden="true">{step.number}</span>
+          <div>
+            <h2><span class="sr-only">第 {step.number} 步：</span>{step.title}</h2>
+            <p class="install-step-lessons">對應單元 {step.lessons.map(id=>`${lessonCode(id)} ${lessonTitle(id)}`).join('，')}</p>
+          </div>
+        </div>
+        <p class="install-step-desc">{step.description}</p>
+        <p class="install-step-check"><strong>檢查點</strong><span>{step.check}</span></p>
+        <p class="install-step-sub">這一步常見的卡關</p>
+        <div class="question-list">{step.questions.map(q=><QuestionCard question={q} heading="h3" showChapter={false}/>)}</div>
+      </li>)}
+    </ol>
+  </>:<p class="notice">架構預覽沒有正式題目，安裝卡關地圖只在正式網站顯示。</p>}
+  <aside class="install-footer">
+    <h2>這頁沒有你的情況？</h2>
+    <p>先用搜尋找錯誤訊息，或看第 1 章全部問題，都找不到再回課程留言，附上做到第幾步，作業系統和完整錯誤，記得遮住 Token 和金鑰。</p>
+    <div class="install-footer-links"><a class="outline-button" href={href('/chapters/ch01/')}>看第 1 章全部問題</a><a class="outline-button" href={href('/questions/')}>搜尋全部問題</a><a href="https://sat.cool/course/201/comment" target="_blank" rel="noopener noreferrer">回課程留言提問 <span aria-hidden="true">↗</span></a></div>
+  </aside>
+</BaseLayout>

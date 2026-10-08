@@ -1,0 +1,22 @@
+[
+ {"id":"step-1","title":"安裝 Hermes","short":"安裝 Hermes","lessons":["ch01-03","ch01-04"],
+  "description":"照第 1 章 1-3 安裝，用終端機安裝的人看 1-4，Windows 也可以跟課，不必先買 Mac。",
+  "check":"安裝跑完，電腦上的 Hermes 能打開。",
+  "questions":["qa-000050","qa-000004"]},
+ {"id":"step-2","title":"登入模型，讓電腦回覆「收到」","short":"登入模型並測試","lessons":["ch01-03","ch01-07"],
+  "description":"安裝完成不等於模型帳號已登入，要到供應商帳號設定登入，再開新對話測試。",
+  "check":"在電腦的 Hermes 傳「請回覆：收到」，有收到回覆。",
+  "questions":["qa-000051","qa-000052","qa-000002","qa-000053","qa-000059","qa-000003","qa-000038"]},
+ {"id":"step-3","title":"用 BotFather 建立自己的 bot","short":"建立 Telegram bot","lessons":["ch01-05"],
+  "description":"在 Telegram 的 BotFather 建立新 bot，先填顯示名稱，再填一個以 bot 結尾而且還沒被用過的 username。",
+  "check":"BotFather 給你一組 Token，搜尋得到自己的 bot。",
+  "questions":["qa-000060"]},
+ {"id":"step-4","title":"把 bot 接上 Hermes","short":"把 bot 接上 Hermes","lessons":["ch01-05"],
+  "description":"把 Token 貼進 Hermes 的 Telegram 設定，允許的使用者填你自己的數字 ID，bot 出現配對碼時，到執行 Hermes 的電腦批准。Token 不要貼到公開的地方。",
+  "check":"Hermes 的 Telegram 設定已儲存 Token 和你的數字 ID，或已批准配對。",
+  "questions":["qa-000056","qa-000055"]},
+ {"id":"step-5","title":"用手機傳訊息測試","short":"手機傳訊息測試","lessons":["ch01-05"],
+  "description":"電腦要開著不休眠並連上網路，替 Hermes 收發手機訊息的 Gateway 也要在運作。",
+  "check":"在自己的 bot 傳「請回覆：收到」，有收到回覆，手機到 Hermes 才算接通。",
+  "questions":["qa-000054","qa-000001","qa-000061","qa-000005"]}
+]

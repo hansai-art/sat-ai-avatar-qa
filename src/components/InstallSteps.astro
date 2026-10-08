@@ -1,0 +1,15 @@
+---
+import {href} from '../lib/content';
+import {getInstallSteps} from '../lib/install-steps';
+const steps=await getInstallSteps();
+---
+{steps.length>0&&<section class="install-steps" aria-labelledby="install-steps-title">
+  <div class="install-steps-hd">
+    <h2 id="install-steps-title">裝 Hermes 卡住了？</h2>
+    <p>從安裝到手機能對話共 {steps.length} 步，點你停住的那一步。</p>
+  </div>
+  <ol class="install-steps-list">
+    {steps.map(step=><li><a href={href(`/install/#${step.id}`)}><span class="install-step-n" aria-hidden="true">{step.number}</span><span class="install-step-name"><span class="sr-only">第 {step.number} 步：</span>{step.short}</span><span class="install-step-count">{step.questions.length} 題</span></a></li>)}
+  </ol>
+  <a class="install-steps-more" href={href('/install/')}>看完整安裝卡關地圖 <span aria-hidden="true">›</span></a>
+</section>}

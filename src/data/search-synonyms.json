@@ -1,4 +1,12 @@
 [
  {"canonical":"沒反應","phrases":["沒有反應","沒有回應","沒有回覆","沒回應","沒回覆","不回應","不回覆","不回","不理我","卡住","卡死","當掉","跑不動","轉圈圈"],"suggestions":["沒回應","連不上","安裝卡住"]},
- {"canonical":"連不上","phrases":["連線失敗","無法連線","連不進去","連接失敗","接不上"],"suggestions":["Telegram 沒回應","Gemini http","模型登入"]}
+ {"canonical":"連不上","phrases":["連線失敗","無法連線","連不進去","連接失敗","接不上"],"suggestions":["Telegram 沒回應","Gemini http","模型登入"]},
+ {"canonical":"安裝失敗","phrases":["安裝不起來","安裝不了","安裝不上","沒辦法安裝","無法安裝","不能安裝","安裝出錯","安裝錯誤","安裝有問題","裝不起來","裝不了","裝不上","裝不好","裝失敗"],"suggestions":["安裝卡住","Windows 安裝","沒有登入畫面"]},
+ {"canonical":"費用","phrases":["會不會很貴","會花很多錢","貴不貴","會很貴","很貴","要不要錢","要付錢","要花錢","花很多錢","很多錢","要付費","要錢","花錢","收錢","免費","價格","價錢","多少錢","收費","付費"],"suggestions":["費用","Gemini 訂閱","Token 用量"]},
+ {"canonical":"沒登入","phrases":["沒辦法登入","登入不了","登入失敗","登不進去","無法登入","不能登入","登不上"],"suggestions":["沒有登入畫面","模型選單","Codex"]},
+ {"canonical":"回放","phrases":["補看直播","重看直播","直播錄影","重播"],"suggestions":["錯過直播","直播回放","課程更新"]},
+ {"canonical":"bot","phrases":["機器人"],"suggestions":["BotFather","bot 名稱","Telegram 沒回應"]},
+ {"canonical":"名稱","phrases":["名字"],"suggestions":["bot 名稱","使用者 ID"]},
+ {"canonical":"mac","phrases":["蘋果電腦","macbook","mac mini","imac"],"suggestions":["Windows","舊電腦"]},
+ {"canonical":"windows","phrases":["windows 11","windows 10","windows11","windows10","win11","win10"],"suggestions":["Windows 安裝","WSL"]}
 ]
