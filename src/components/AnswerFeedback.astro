@@ -8,7 +8,7 @@ const {question:q,related}=Astro.props;
  <div class="feedback-actions"><button id="feedback-yes" type="button" class="outline-button" aria-pressed="false" disabled>有，解決了</button><button id="feedback-no" type="button" class="outline-button" aria-pressed="false" aria-controls="feedback-help" aria-expanded="false" disabled>還沒解決</button></div>
  <p id="feedback-status" role="status" class="muted"></p>
  <div id="feedback-help" hidden>
-  <p class="muted">請保留本題編號 <code>{q.id}</code>，這樣工作台才能和公開問答對上。</p>
+  <p class="muted">貼到課程留言時請保留題號 <code>{q.id}</code>，老師才知道你在問哪一題。</p>
   {related.length>0&&<section id="related-questions" class="related-questions"><h3>也看看這幾題</h3><ul class="related-links">{related.map(item=><li><a href={href(`/questions/${item.id}/`)}>{item.data.title}</a></li>)}</ul></section>}
   <label for="feedback-kind">卡在哪裡</label>
   <select id="feedback-kind">
@@ -19,11 +19,11 @@ const {question:q,related}=Astro.props;
    <option value="other">其他</option>
   </select>
   <label for="feedback-template">把下面內容補齊，貼到課程留言</label>
-  <textarea id="feedback-template" rows="8" spellcheck="false"></textarea>
-  <p class="muted">不要填入 Token、API Key 或個人資料。</p>
+  <textarea id="feedback-template" rows="9" spellcheck="false"></textarea>
+  <p class="muted">作業系統填裝 Hermes 的那台電腦，用電腦開這頁時已自動帶入，請確認，版本不確定可以先留空。不要填入 Token、API Key 或個人資料。</p>
   <button id="copy-question" type="button" class="outline-button">複製提問格式</button>
   <a href="https://sat.cool/course/201/comment" class="outline-button" target="_blank" rel="noopener noreferrer">回報到課程留言 ↗</a>
-  <p class="muted">這裡不會送出回饋，也不會自動送出；貼到課程留言後，老師才能在工作台收錄、去重與追蹤。</p>
+  <p class="muted">這裡不會送出回饋或任何資料，要貼到課程留言送出，老師才看得到。</p>
  </div>
  <noscript><p>還沒解決？<a href="https://sat.cool/course/201/comment">回課程留言</a>，請附上 {q.id}、本題網址、作業系統、做到第幾步及錯誤全文。</p></noscript>
 </section>
@@ -33,11 +33,16 @@ const {question:q,related}=Astro.props;
   const yes=document.querySelector<HTMLButtonElement>('#feedback-yes')!,no=document.querySelector<HTMLButtonElement>('#feedback-no')!,help=document.querySelector<HTMLElement>('#feedback-help')!,status=document.querySelector<HTMLElement>('#feedback-status')!,text=document.querySelector<HTMLTextAreaElement>('#feedback-template')!,kind=document.querySelector<HTMLSelectElement>('#feedback-kind')!;
   yes.disabled=no.disabled=false;
   const qaId=section.dataset.qaId||'';
-  const template=()=>`qa_id：${section.dataset.qaId}
+  // Hermes runs on a computer: prefill only desktop systems, never the phone a student reads on.
+  const platform=((navigator as any).userAgentData?.platform||navigator.platform||navigator.userAgent||'').toLowerCase();
+  const mobile=/android|iphone|ipad|mobile/i.test(navigator.userAgent)||(navigator as any).userAgentData?.mobile;
+  const system=mobile?'':platform.includes('win')?'Windows':platform.includes('mac')?'macOS':platform.includes('linux')?'Linux':'';
+  // qa_id 保留在題號後面，工作台仍可用同一個識別對回公開問答。
+  const template=()=>`題號（qa_id）：${qaId}
 問題：${section.dataset.title}
-回報類型：${kind.value}
+卡在哪裡：${kind.selectedOptions[0]?.textContent||kind.value}
 參考問答：${location.origin+location.pathname}
-作業系統與版本：
+作業系統與版本：${system}
 工具與版本：
 做到第幾步：
 錯誤訊息（請遮住密鑰）：

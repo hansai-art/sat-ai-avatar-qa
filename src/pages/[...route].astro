@@ -4,6 +4,7 @@ import Listing from '../components/Listing.astro';
 import QuestionCard from '../components/QuestionCard.astro';
 import {getPublished,taxonomy,href,label,type Question} from '../lib/content';
 import {courseKey,lessonGroups} from '../lib/faq.mjs';
+import {getInstallSteps} from '../lib/install-steps';
 export async function getStaticPaths() {
   const questions=await getPublished(),paths:any[]=[];
   for(const key of ['chapters','tools','types'] as const) {
@@ -24,6 +25,9 @@ const title=kind==='directory'?({chapters:'依章節瀏覽',tools:'依工具查�
 const chapter=key==='chapters'?taxonomy.chapters.find(c=>c.id===id):undefined;
 const groups:{id:string;title:string;order:number;questions:Question[]}[]=chapter?lessonGroups(questions,chapter):[];
 const directory=key==='all'?[]:taxonomy[key].map(item=>({item,count:questions.filter(q=>key==='chapters'?q.data.chapterRefs.includes(item.id):key==='tools'?q.data.toolRefs.includes(item.id):q.data.type===item.id).length})).filter(entry=>entry.count>0);
+const installSteps=chapter?.id==='ch01'?await getInstallSteps():[];
+const published=chapter?.id==='ch01'?await getPublished():[];
+const chapterIsLargest=published.length>0&&taxonomy.chapters.every(c=>c.id===chapter!.id||published.filter(q=>q.data.chapterRefs.includes(c.id)).length<questions.length);
 ---
 <BaseLayout title={title}>
   <nav class="breadcrumb" aria-label="所在位置"><a href={href('/')}>首頁</a><span aria-hidden="true">›</span>{chapter&&<><a href={href('/chapters/')}>課程章節</a><span aria-hidden="true">›</span></>}<span>{title}</span></nav>
@@ -32,6 +36,7 @@ const directory=key==='all'?[]:taxonomy[key].map(item=>({item,count:questions.fi
     <div class="directory-grid">{directory.map(({item,count})=><a href={href(`/${key}/${item.id}/`)} class="directory-card" data-category={key==='types'?item.id:undefined}><h2>{key==='types'&&<span class="category-dot" aria-hidden="true"></span>}{label(key as 'chapters'|'tools'|'types',item.id)}</h2>{'description' in item&&<p>{item.description}</p>}<span>{count} 題</span><span aria-hidden="true">›</span></a>)}</div>
   </>:chapter?<>
     <div class="page-heading"><h1>{title}</h1><p class="lead">{chapter.description} · {questions.length} 題</p></div>
+    {installSteps.length>0&&<aside class="chapter-callout"><p><strong>卡在安裝？</strong>{chapterIsLargest?'全課整理出的問答裡，這一章最多，卡住很正常，':''}先找到你停在安裝的哪一步，再看那一步最常見的卡關。</p><a href={href('/install/')}>看安裝卡關地圖 <span aria-hidden="true">›</span></a></aside>}
     {groups.length>0?<><nav class="lesson-jumps" aria-label="本章小節">{groups.map(g=><a href={`#lesson-${g.id}`}>{g.id==='general'?'通用':g.id.split('-')[1]} · {g.title}<span>{g.questions.length} 題</span></a>)}</nav>{groups.map(g=><section id={`lesson-${g.id}`} class="lesson-group"><h2>{g.id==='general'?'':`${chapter.order}-${g.order} `}{g.title}<span class="section-caption">{g.questions.length} 題</span></h2><div class="question-list">{g.questions.map(q=><QuestionCard question={q}/>)}</div></section>)}</>:<p class="notice">本章還沒有整理好的問答。<a href={href('/chapters/')}>查看其他章節</a>。</p>}
     <a class="outline-button chapter-filter-link" href={href(`/questions/?chapter=${chapter.id}&sort=course`)}>在本章繼續搜尋與篩選</a>
   </>:<Listing questions={questions} title={title} filters={props.filters} page={props.page} root={props.root!}/>}

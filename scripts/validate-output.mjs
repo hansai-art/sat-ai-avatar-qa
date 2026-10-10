@@ -14,6 +14,9 @@ for(const file of files){
   if(/PRIVATE_FIXTURE_SENTINEL|sk-test-do-not-publish|DRAFT_BODY_SENTINEL/.test(source))errors.push(`產物含私人測試標記 ${file}`);
   if(!file.endsWith('.html'))continue;htmlCount++;
   if(info.mode==='production'&&source.includes('以下為示範資料'))errors.push(`正式產物含示範頁 ${file}`);
+  // 粗體記號緊貼全形標點時 Markdown 不會轉成粗體，學生會直接看到 **。
+  const prose=source.match(/<div class="prose zh-prose"[^>]*>([\s\S]*?)<\/div>/)?.[1];
+  if(prose&&prose.replace(/<(pre|code)\b[\s\S]*?<\/\1>/g,'').replace(/<[^>]+>/g,'').includes('**'))errors.push(`${file}: 正文出現未轉換的 ** 粗體記號，請把 ** 移到全形標點外側`);
   const local=path.relative('dist',file).split(path.sep).join('/');
   const current=new URL(base+(local==='index.html'?'':local.replace(/index\.html$/,'')),origin);
   for(const match of source.matchAll(/(?:href|src)=(?:"([^"]*)"|'([^']*)')/g)){

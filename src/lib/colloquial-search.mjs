@@ -8,11 +8,20 @@ const replacements=[
   [/愛馬仕/gi,'hermes'],[/關機|關掉/g,'關機'],[/零基礎|完全不會|什麼都不懂/g,'新手'],
   [/哪邊|哪兒/g,'哪裡'],[/傳送|發送/g,'傳'],[/發訊息|發消息/g,'傳訊息'],[/消息/g,'訊息'],
 ];
+const escape=text=>text.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+// One pass per group, longest phrase first. The canonical word joins the
+// alternation, so text that already says 安裝失敗 is not rewritten again
+// through its shorter phrase 裝失敗.
+const groups=synonyms.map(group=>[new RegExp([group.canonical,...group.phrases].map(p=>p.normalize('NFKC').toLowerCase()).sort((a,b)=>b.length-a.length).map(escape).join('|'),'g'),group.canonical]);
+// Filler words become separators, so "是費用的嗎" does not create junk pairs
+// such as 是費 that no answer contains. 會 stays: 不會寫程式 needs it.
+const fillers=/(?:請問|請教|想請問|我想|我已經|已經|可以請|到底|完全|還是|一下|怎麼辦|怎麼|如何|為什麼|應該|是否|是不是|能不能|可不可以|要不要|會不會|需不需要|一定要|是什麼|什麼|我的|自己的|自己|大家|你們|我們|一直都|一直|我有|還要|可以|需要|我|還|都|就|了|的|呢|嗎|啊|呀|吧|喔|哦|嘛|是|很)/g;
 export function normalizeSearch(text){
   let value=text.normalize('NFKC').toLowerCase();
-  for(const group of synonyms){for(const phrase of [...group.phrases].sort((a,b)=>b.length-a.length))value=value.replaceAll(phrase,group.canonical);}
+  for(const [pattern,canonical] of groups)value=value.replace(pattern,canonical);
   for(const [pattern,replacement] of replacements)value=value.replace(pattern,replacement);
-  return value.replace(/(?:請問|請教|想請問|我想|我已經|已經|可以請|到底|完全|還是|一下|怎麼辦|怎麼|如何|為什麼|應該|是否|是不是|能不能|可不可以|我的|自己的|自己|大家|你們|我們|一直都|一直|我有|還要|我|還|都|就|了|的|呢|嗎|啊|呀)/g,'').replace(/[^\p{L}\p{N}]+/gu,' ');
+  // Questions and answers share this rule, so separators never hide a match.
+  return value.replace(fillers,' ').replace(/[^\p{L}\p{N}]+/gu,' ');
 }
 function terms(text){
   const value=normalizeSearch(text),result=new Set();

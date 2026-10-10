@@ -1,15 +1,23 @@
 import {expect,test} from '@playwright/test';
 
-test('桌機首頁左欄接續精選題，課程星圖留在右欄',async({page})=>{
+test('桌機首頁左欄接續精選題，右欄先放安裝步驟再放課程星圖',async({page})=>{
   await page.setViewportSize({width:1440,height:960});
   await page.goto('./');
   await page.evaluate(()=>document.fonts.ready);
   const hero=page.locator('.home-hero');
+  const aside=page.locator('.home-aside');
   const map=page.locator('.star-map');
   await expect(hero).toBeVisible();
   await expect(map).toBeVisible();
-  const [heroBox,mapBox]=await Promise.all([hero.boundingBox(),map.boundingBox()]);
-  expect(Math.abs(heroBox!.y-mapBox!.y)).toBeLessThan(4);
+  const [heroBox,asideBox,mapBox]=await Promise.all([hero.boundingBox(),aside.boundingBox(),map.boundingBox()]);
+  expect(Math.abs(heroBox!.y-asideBox!.y)).toBeLessThan(4);
+  expect(asideBox!.x).toBeGreaterThan(heroBox!.x+heroBox!.width);
+  const steps=page.locator('.install-steps');
+  if(await steps.count()){
+    const stepsBox=(await steps.boundingBox())!;
+    expect(Math.abs(stepsBox.y-heroBox!.y)).toBeLessThan(4);
+    expect(mapBox!.y).toBeGreaterThan(stepsBox.y+stepsBox.height);
+  }else expect(Math.abs(heroBox!.y-mapBox!.y)).toBeLessThan(4);
   const starter=page.locator('#starter-questions');
   const cards=starter.locator('.question-card');
   const [starterBox,first,second]=await Promise.all([starter.boundingBox(),cards.nth(0).boundingBox(),cards.nth(1).boundingBox()]);
@@ -76,10 +84,15 @@ test('兩種瀏覽入口用不同色塊，圖示在色塊正中央',async({page}
 
 test('搜尋快捷鍵與截圖入口清楚說明不是 AI 判讀',async({page})=>{
   await page.goto('./');
+  const kbd=page.locator('.search-kbd');
+  if(await kbd.isVisible())await expect(kbd).toHaveText(process.platform==='darwin'?'⌘K':'Ctrl K');
   await page.keyboard.press(process.platform==='darwin'?'Meta+KeyK':'Control+KeyK');
   await expect(page.locator('#question-search')).toBeFocused();
   const button=page.getByRole('button',{name:/截圖轉文字.*非 AI 判讀/});
   await expect(button).toBeVisible();
+  // 新手看得到字，不必先猜圖示：桌機顯示「用截圖找」，手機顯示「截圖」。
+  await expect(button).toContainText(/用截圖找|截圖/);
+  expect(await button.evaluate(el=>(el as HTMLElement).innerText.trim().length)).toBeGreaterThan(0);
   await button.click();
   await expect(page.locator('.filter-panel')).toHaveAttribute('open','');
   await expect(page.locator('#screenshot-search')).toHaveAttribute('open','');

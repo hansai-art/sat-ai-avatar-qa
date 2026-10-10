@@ -9,7 +9,7 @@
 | [模型選單](https://sathans.pages.dev/questions/qa-000052/#operation-images) | Q060 講師回覆附圖 | 2026-09-16 | 展開選單後辨認 ChatGPT or Codex Subscription |
 | [HTTP 429](https://sathans.pages.dev/questions/qa-000053/#operation-images) | Q058 學員附圖 | 2026-09-13 | 辨認錯誤訊息、切換服務商與複製錯誤按鈕 |
 
-兩張均經目視檢查，沒有學生姓名、帳號、Token、API Key 或配對碼，也沒有 EXIF、XMP、IPTC。專案中的檔案與提供的原圖位元一致，不曾用生成圖片替代操作畫面。圖片未標示 Hermes 版本，前台明寫「未標示」。其他帶有聯絡人或配對碼的原始截圖沒有放進公開專案。
+兩張均經目視檢查，沒有學生姓名、帳號、Token、API Key 或配對碼，也沒有 EXIF、XMP、IPTC。專案中的檔案與提供的原圖位元一致，不曾用生成圖片替代操作畫面。圖片未標示 Hermes 版本；資料保留「未標示」，前台自 2026-10-08 起不顯示這個編輯註記，只顯示截圖日期，知道版本時才顯示「Hermes 版本」。其他帶有聯絡人或配對碼的原始截圖沒有放進公開專案。
 
 公開檔案 SHA-256：
 
@@ -34,7 +34,7 @@
 screenshots: [{"file":"model-provider-menu.jpg","alt":"展開模型供應商選單","caption":"講師回覆附圖：在選單中找 ChatGPT or Codex Subscription。","capturedAt":"2026-09-16","version":"未標示","sourceRecord":"Q060"}]
 ```
 
-`sourceRecord` 必須存在於同題 `sourceRefs`，日期不可在未來。圖說、日期、版本皆為必填，缺乏版本資訊就寫「未標示」，不要猜測。最多六張圖，沒有圖片時不顯示空區塊。既有 Markdown 圖片同樣支援縮放，新圖優先使用上述結構以產生小預覽及無 JavaScript 後備連結。
+`sourceRecord` 必須存在於同題 `sourceRefs`，日期不可在未來。圖說、日期、版本皆為必填，缺乏版本資訊就寫「未標示」，不要猜測；前台不顯示「未標示」。另可設 `placement: after`，把少見情況的畫面放在正文之後。最多六張圖，沒有圖片時不顯示空區塊。既有 Markdown 圖片同樣支援縮放，新圖優先使用上述結構以產生小預覽及無 JavaScript 後備連結。
 
 ## 技術與驗收
 
