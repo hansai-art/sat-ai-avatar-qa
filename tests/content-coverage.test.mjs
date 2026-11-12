@@ -22,11 +22,29 @@ test('全部來源紀錄與拆題均有去向，FAQ 可反查來源',()=>{
    assert.ok(q.sourceRefs.some(s=>s.recordId===r.recordId&&s.part===part.part&&s.askedAt===r.date),r.recordId+' '+part.part);
   }
  }
+ const classroom=audit.classroomImports;
+ assert.equal(classroom.records.length,classroom.summary.threadsReviewed);
+ assert.deepEqual([...new Set(classroom.records.map(r=>r.page))],classroom.pagesReviewed);
+ assert.equal(classroom.records.reduce((n,r)=>n+r.screenshotRefs,0),classroom.summary.screenshotRefsInExports);
+ const classroomById=new Map(classroom.records.map(record=>[record.recordId,record]));
+ assert.equal(classroomById.size,classroom.records.length);
+ for(const r of classroom.records){
+  assert.ok(r.replyDates.length,r.recordId);
+  assert.ok(r.subquestions.length,r.recordId);
+  for(const part of r.subquestions){
+   const q=questions.get(part.questionId);
+   assert.ok(q?.sourceRefs.some(s=>s.recordId===r.recordId&&s.part===part.part&&s.askedAt===r.date),r.recordId+' '+part.part);
+  }
+ }
  for(const [id,q] of questions){
   assert.equal(q.publication,'published');assert.equal(q.questionOrigin,'asked');
   assert.ok(q.askedBy.every(x=>x.name==='學員提問'));
   for(const s of q.sourceRefs.filter(s=>s.recordId.startsWith('Q'))){
    const r=audit.records.find(r=>r.recordId===s.recordId);
+   assert.ok(r?.subquestions.some(p=>p.questionId===id&&p.part===s.part),id+' '+s.recordId);
+  }
+  for(const s of q.sourceRefs.filter(s=>s.recordId.startsWith('CLASS-')&&!audit.legacyRecords.some(r=>r.recordId===s.recordId))){
+   const r=classroomById.get(s.recordId);
    assert.ok(r?.subquestions.some(p=>p.questionId===id&&p.part===s.part),id+' '+s.recordId);
   }
  }
