@@ -1,12 +1,12 @@
 {
   "date": "2026-10-03",
-  "scope": "使用者提供資料夾內 Q001 至 Q066 的全部 66 筆問答紀錄，逐筆讀取正文與後續補充。另保留原版 CLASS 存檔映射，不代表平台未提供的其他頁面。",
+  "scope": "使用者提供資料夾內 Q001 至 Q066 的全部 66 筆問答紀錄，逐筆讀取正文與後續補充。另保留原版 CLASS 存檔映射，不代表平台未提供的其他頁面。 另核對本次可讀的「全部單元」第 1–2 頁，逐筆對照列於 classroomImports。",
   "summary": {
     "sourceRecords": 66,
     "recordsWithQuestions": 61,
     "nonQuestionRecords": 5,
     "mappedSubquestions": 104,
-    "publishedQuestions": 62,
+    "publishedQuestions": 73,
     "addedQuestions": 40
   },
   "ranking": "先依阻礙新手跟課的程度安排前十題，其餘參考不同主留言提問者的重複需求。相同主提問者、追問、HTML 重複、支持與結案不灌高頻次。頁面不顯示熱門人數。",
@@ -1299,5 +1299,349 @@
       ],
       "canonicalRecord": "Q061"
     }
-  ]
+  ],
+  "classroomImports": {
+    "checkedAt": "2026-11-12",
+    "sourceUrl": "https://sat.cool/classroom/201",
+    "pagesReviewed": [
+      1,
+      2
+    ],
+    "pagesShownInExport": 6,
+    "summary": {
+      "threadsReviewed": 20,
+      "newQuestions": 11,
+      "updatedQuestions": 6,
+      "screenshotRefsInExports": 15
+    },
+    "records": [
+      {
+        "recordId": "CLASS-11",
+        "date": "2026-11-11",
+        "page": 1,
+        "lesson": "CH 9-1｜課後行動指南：反待辦清單、先建評測、生產力 J 曲線",
+        "replyDates": [
+          "2026-11-12"
+        ],
+        "screenshotRefs": 0,
+        "subquestions": [
+          {
+            "questionId": "qa-000006",
+            "part": "換新電腦要重新做哪些步驟"
+          }
+        ]
+      },
+      {
+        "recordId": "CLASS-12",
+        "date": "2026-11-05",
+        "page": 1,
+        "lesson": "CH 1-4｜Hermes Agent 安裝終端機 CLI 與 TUI（Mac 版本）",
+        "replyDates": [
+          "2026-11-11"
+        ],
+        "screenshotRefs": 1,
+        "subquestions": [
+          {
+            "questionId": "qa-000063",
+            "part": "Codex CLI 登入憑證匯入提示"
+          }
+        ]
+      },
+      {
+        "recordId": "CLASS-13",
+        "date": "2026-11-04",
+        "page": 1,
+        "lesson": "CH 4-6｜自動寫信串接 Gmail：Google Cloud 控制台授權流程",
+        "replyDates": [
+          "2026-11-11"
+        ],
+        "screenshotRefs": 1,
+        "subquestions": [
+          {
+            "questionId": "qa-000064",
+            "part": "評測現有 Skill 與選擇商業工具"
+          }
+        ]
+      },
+      {
+        "recordId": "CLASS-14",
+        "date": "2026-11-04",
+        "page": 1,
+        "lesson": "CH 1-1｜Hermes Agent 完整流程展示",
+        "replyDates": [
+          "2026-11-11"
+        ],
+        "screenshotRefs": 0,
+        "subquestions": [
+          {
+            "questionId": "qa-000030",
+            "part": "公司文件禁止 AI 讀取、記憶或上傳時如何處理"
+          }
+        ]
+      },
+      {
+        "recordId": "CLASS-15",
+        "date": "2026-11-03",
+        "page": 1,
+        "lesson": "CH 1-3｜Hermes Agent 下載安裝指南（Mac 版本）",
+        "replyDates": [
+          "2026-11-11"
+        ],
+        "screenshotRefs": 1,
+        "subquestions": [
+          {
+            "questionId": "qa-000051",
+            "part": "Hermes 能正常聊天但沒有看到綁定畫面"
+          }
+        ]
+      },
+      {
+        "recordId": "CLASS-16",
+        "date": "2026-11-03",
+        "page": 1,
+        "lesson": "CH 6-1｜自動監控政府標案！從電子採購網找案到 Go / No-Go 三道閘門",
+        "replyDates": [
+          "2026-11-03"
+        ],
+        "screenshotRefs": 1,
+        "subquestions": [
+          {
+            "questionId": "qa-000065",
+            "part": "Codex 訂閱不支援所選模型"
+          }
+        ]
+      },
+      {
+        "recordId": "CLASS-17",
+        "date": "2026-11-01",
+        "page": 1,
+        "lesson": "CH 4-5｜用 AI 分身寄陌生開發信：用客製化創意提高回信率",
+        "replyDates": [
+          "2026-11-02"
+        ],
+        "screenshotRefs": 0,
+        "subquestions": [
+          {
+            "questionId": "qa-000066",
+            "part": "模型、工具與專業 AI 成果的差距"
+          }
+        ]
+      },
+      {
+        "recordId": "CLASS-18",
+        "date": "2026-11-01",
+        "page": 1,
+        "lesson": "CH 4-4｜用 POC 避開四個致命錯誤：先拆需求，再叫 AI 執行",
+        "replyDates": [
+          "2026-11-02"
+        ],
+        "screenshotRefs": 0,
+        "subquestions": [
+          {
+            "questionId": "qa-000067",
+            "part": "用範本、回寫與評測固定說明書格式"
+          }
+        ]
+      },
+      {
+        "recordId": "CLASS-19",
+        "date": "2026-10-30",
+        "page": 1,
+        "lesson": "CH 2-5｜AI 寫得文案不像你？訓練個人與品牌專屬 Skill",
+        "replyDates": [
+          "2026-10-30"
+        ],
+        "screenshotRefs": 0,
+        "subquestions": [
+          {
+            "questionId": "qa-000068",
+            "part": "Distilly 被安全掃描封鎖"
+          }
+        ]
+      },
+      {
+        "recordId": "CLASS-20",
+        "date": "2026-10-28",
+        "page": 1,
+        "lesson": "CH 1-5｜手機操控 & 語音輸入 & 介面翻譯 (Telegram 安卓系統替代方案）",
+        "replyDates": [
+          "2026-10-29"
+        ],
+        "screenshotRefs": 1,
+        "subquestions": [
+          {
+            "questionId": "qa-000054",
+            "part": "Telegram 已連線但沒顯示憑證已設定"
+          }
+        ]
+      },
+      {
+        "recordId": "CLASS-21",
+        "date": "2026-10-27",
+        "page": 2,
+        "lesson": "CH 1-3｜Hermes Agent 下載安裝指南（Mac 版本）",
+        "replyDates": [
+          "2026-10-27"
+        ],
+        "screenshotRefs": 2,
+        "subquestions": [
+          {
+            "questionId": "qa-000069",
+            "part": "Claude 雲端版與終端機版怎麼使用知識庫教材"
+          }
+        ],
+        "followups": [
+          "原回覆說明知識庫教材選擇。學生追問 Hermes 的 Claude 主模型設定，本頁另引官方文件補充。"
+        ]
+      },
+      {
+        "recordId": "CLASS-22",
+        "date": "2026-10-27",
+        "page": 2,
+        "lesson": "CH 2-6｜如何蒸餾個人或團隊的創意思考框架？拆解 SOP 與判斷規則",
+        "replyDates": [
+          "2026-10-27"
+        ],
+        "screenshotRefs": 1,
+        "subquestions": [
+          {
+            "questionId": "qa-000015",
+            "part": "創意思考框架的 Skill 在哪裡"
+          }
+        ],
+        "followups": [
+          "後續提到指定的台積電創意思考工具箱，原對話沒有確認該檔案開放下載。",
+          "後續也問到大型模型的數字、畫圖和影片限制，站內另一筆有講師回覆，見 qa-000066。"
+        ]
+      },
+      {
+        "recordId": "CLASS-23",
+        "date": "2026-10-27",
+        "page": 2,
+        "lesson": "CH 2-2｜AI 分身的離線知識庫建立",
+        "replyDates": [
+          "2026-10-27"
+        ],
+        "screenshotRefs": 2,
+        "subquestions": [
+          {
+            "questionId": "qa-000070",
+            "part": "AGENTS.md 沒有任務選讀及每日筆記整理規則"
+          }
+        ]
+      },
+      {
+        "recordId": "CLASS-24",
+        "date": "2026-10-25",
+        "page": 2,
+        "lesson": "CH 1-6｜將你的記憶匯入 AI 分身人格",
+        "replyDates": [
+          "2026-10-26"
+        ],
+        "screenshotRefs": 1,
+        "subquestions": [
+          {
+            "questionId": "qa-000071",
+            "part": "Gemini 無法一次匯出所有對話時如何搬家"
+          }
+        ]
+      },
+      {
+        "recordId": "CLASS-25",
+        "date": "2026-10-25",
+        "page": 2,
+        "lesson": "CH 1-4｜Hermes Agent 安裝終端機 CLI 與 TUI（Mac 版本）",
+        "replyDates": [
+          "2026-10-26"
+        ],
+        "screenshotRefs": 1,
+        "subquestions": [
+          {
+            "questionId": "qa-000051",
+            "part": "選到 API 登入怎麼切回 Codex 訂閱"
+          }
+        ]
+      },
+      {
+        "recordId": "CLASS-26",
+        "date": "2026-10-25",
+        "page": 2,
+        "lesson": "CH 1-3｜Hermes Agent 下載安裝指南（Mac 版本）",
+        "replyDates": [
+          "2026-10-26"
+        ],
+        "screenshotRefs": 1,
+        "subquestions": [
+          {
+            "questionId": "qa-000051",
+            "part": "使用 Hermes 聊天網頁但沒經過 OpenAI 綁定"
+          }
+        ]
+      },
+      {
+        "recordId": "CLASS-27",
+        "date": "2026-10-22",
+        "page": 2,
+        "lesson": "不分單元",
+        "replyDates": [
+          "2026-10-23"
+        ],
+        "screenshotRefs": 1,
+        "subquestions": [
+          {
+            "questionId": "qa-000003",
+            "part": "Codex 訂閱登入與 OpenAI API 計費是否分開"
+          }
+        ]
+      },
+      {
+        "recordId": "CLASS-28",
+        "date": "2026-10-19",
+        "page": 2,
+        "lesson": "CH 1-3-1｜Hermes Agent 下載安裝指南（PC 版本）",
+        "replyDates": [
+          "2026-10-20"
+        ],
+        "screenshotRefs": 0,
+        "subquestions": [
+          {
+            "questionId": "qa-000072",
+            "part": "Hermes 裝在常用電腦還是備用筆電"
+          }
+        ]
+      },
+      {
+        "recordId": "CLASS-29",
+        "date": "2026-10-16",
+        "page": 2,
+        "lesson": "CH 1-4-1｜Hermes Agent 安裝終端機 CLI 與 TUI（PC 版本）",
+        "replyDates": [
+          "2026-10-17"
+        ],
+        "screenshotRefs": 1,
+        "subquestions": [
+          {
+            "questionId": "qa-000073",
+            "part": "Hermes PC 安裝時瀏覽器工具選到 5"
+          }
+        ]
+      },
+      {
+        "recordId": "CLASS-30",
+        "date": "2026-10-09",
+        "page": 2,
+        "lesson": "CH 3-1｜什麼是 MCP？一次搞懂 MCP、API、Skill 差別",
+        "replyDates": [
+          "2026-10-11"
+        ],
+        "screenshotRefs": 0,
+        "subquestions": [
+          {
+            "questionId": "qa-000051",
+            "part": "訂閱 ChatGPT 後在哪個單元學習串接"
+          }
+        ]
+      }
+    ]
+  }
 }

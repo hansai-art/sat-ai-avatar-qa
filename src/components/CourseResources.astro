@@ -1,0 +1,62 @@
+---
+const recaps = [
+  {date: '9/10', title: '讓 AI 接著做：課程筆記與知識庫', url: 'https://www.techhanlin.tw/sat-ai-avatar-live-910/'},
+  {date: '9/3', title: '三個 AI 工作流程案例', url: 'https://www.techhanlin.tw/sat-ai-avatar-live-903/'},
+  {date: '8/27', title: '兩個實作案例與四個判斷原則', url: 'https://www.techhanlin.tw/sat-ai-avatar-live-827/'},
+  {date: '8/13、8/20', title: 'AI 分身要讀懂什麼？', url: 'https://www.techhanlin.tw/sat-ai-avatar-live-820/'},
+];
+---
+<section class="course-resources" aria-label="課程資源" data-pagefind-ignore>
+  <div class="course-group">
+    <a class="group-link" href="https://line.me/ti/g2/EOfIhxII8G5QX0b6ZM6IMOHGm0GkZmDbafceEQ">加入課程專屬 LINE 群組 <span aria-hidden="true">↗</span></a>
+    <p>學員可以在群組提問。加入密碼請查看<a href="https://sat.cool/classroom/201">課程公告</a>。</p>
+  </div>
+  <details>
+    <summary>直播重點回顧</summary>
+    <ul>
+      {recaps.map(({date, title, url}) => (
+        <li><a href={url}><span class="recap-date">{date}</span> {title} <span aria-hidden="true">↗</span></a></li>
+      ))}
+    </ul>
+  </details>
+</section>
+
+<style>
+  .course-resources {
+    background: var(--surface);
+    border: 1px solid var(--hair);
+    border-radius: 12px;
+    padding: 0 14px;
+    color: var(--text);
+    font-size: 14px;
+  }
+
+  .course-group { padding-bottom: 10px; }
+
+  .group-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    min-height: 44px;
+    font-weight: 650;
+  }
+
+  p { margin: -2px 0 0; color: var(--muted); }
+
+  details { border-top: 1px solid var(--hair-soft); }
+
+  summary {
+    min-height: 44px;
+    padding: 10px 0;
+    cursor: pointer;
+    font-weight: 650;
+  }
+
+  ul { margin: 0 0 6px; padding: 0; list-style: none; }
+
+  li + li { border-top: 1px solid var(--hair-soft); }
+
+  li a { display: block; min-height: 44px; padding: 10px 0; }
+
+  .recap-date { margin-inline-end: 5px; color: var(--muted); }
+</style>
