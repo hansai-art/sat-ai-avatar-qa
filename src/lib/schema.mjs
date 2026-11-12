@@ -26,8 +26,8 @@ export const questionSchema = z.object({
     file:z.string().regex(/^[a-z0-9][a-z0-9-]*\.(png|jpe?g|webp|avif)$/i),
     alt:text(1,160),caption:text(1,200),capturedAt:date,
     version:text(1,80),sourceRecord:text(1,80),
-    // after：少見情況的畫面放在正文之後，避免新手第一眼先看到罕見錯誤。
-    placement:z.enum(['before','after']).default('before')
+    // question：提問情境。before、after：解答正文前後的示範。
+    placement:z.enum(['question','before','after']).default('before')
   }).strict()).max(6).default([]),
   editorialNotes: z.array(text(1,800)).default([]),
   sourceRefs: z.array(z.object({recordId:text(1,80),part:text(1,120),askedAt:date}).strict()).default([]),

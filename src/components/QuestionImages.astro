@@ -3,8 +3,14 @@ import {getImage} from 'astro:assets';
 import type {ImageMetadata} from 'astro';
 import type {Question} from '../lib/content';
 import {statSync} from 'node:fs';
-interface Props {question:Question;placement?:'before'|'after'}
+type Placement = Question['data']['screenshots'][number]['placement'];
+interface Props {question:Question;placement?:Placement}
 const {question,placement='before'}=Astro.props;
+const labels:Record<Placement,string>={question:'提問截圖',before:'操作畫面對照',after:'少見情況的畫面'};
+// Preserve existing #operation-images links when the only leading images move into the question.
+const hasAnswerPreview=question.data.screenshots.some(shot=>shot.placement==='before');
+const leadingId=placement==='question'&&hasAnswerPreview?'question-images':'operation-images';
+const sectionId=placement==='after'?'operation-images-after':leadingId;
 const assets=import.meta.glob<{default:ImageMetadata}>('../assets/questions/**/*.{png,jpg,jpeg,webp,avif}');
 const images=await Promise.all(question.data.screenshots.filter(shot=>shot.placement===placement).map(async shot=>{
   const key=`../assets/questions/${question.id}/${shot.file}`;
@@ -21,7 +27,7 @@ const images=await Promise.all(question.data.screenshots.filter(shot=>shot.place
 // 「未標示」只是編輯紀錄，學生看不到版本反而比較不會誤會。
 const knownVersion=(version:string)=>!/^(未標示|未知|不明)$/.test(version.trim());
 ---
-{images.length>0&&<section class:list={['question-images',{'question-images-after':placement==='after'}]} id={placement==='before'?'operation-images':'operation-images-after'} aria-label={placement==='before'?'操作畫面對照':'少見情況的畫面'}>
+{images.length>0&&<section class:list={['question-images',{'question-images-after':placement==='after'}]} id={sectionId} aria-label={labels[placement]}>
   <div class="image-previews">{images.map(shot=><figure class="image-preview">
     <a class="image-preview-link" href={shot.full.src} target="_blank" rel="noopener noreferrer" data-qa-image data-pswp-width={shot.width} data-pswp-height={shot.height} aria-label={`放大圖片：${shot.alt}`}>
       <img src={shot.preview.src} width={shot.preview.attributes.width} height={shot.preview.attributes.height} alt={shot.alt} loading="lazy" decoding="async"/>

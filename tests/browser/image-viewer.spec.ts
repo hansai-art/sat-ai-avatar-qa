@@ -8,6 +8,26 @@ const scale=()=>{
  return el?.getBoundingClientRect().width||0;
 };
 
+test('提問截圖在問題色塊，示範截圖在解答，兩處都保留原圖片連結',async({page})=>{
+ await page.emulateMedia({colorScheme:'dark'});
+ for(const [id,container] of [
+  ['qa-000002','.answer-header'],['qa-000051','.answer-header'],
+  ['qa-000053','.answer-header'],['qa-000063','.answer-header'],
+  ['qa-000052','.answer-body'],['qa-000055','.answer-body']
+ ]){
+  await page.goto('questions/'+id+'/#operation-images');
+  await expect(page.locator('#operation-images')).toHaveCount(1);
+  await expect(page.locator(container+' #operation-images [data-qa-image]')).toBeVisible();
+ }
+ await page.goto('questions/qa-000063/');
+ const preview=page.locator('.answer-header [data-qa-image]');
+ await preview.click();
+ await expect(page.getByRole('dialog',{name:'操作圖片檢視器'})).toBeVisible();
+ await page.getByRole('button',{name:'關閉圖片',exact:true}).click();
+ await expect(preview).toBeFocused();
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});
+
 test('小預覽延遲載入，大圖只在開啟後下載；按鈕縮放、返回位置與焦點',async({page})=>{
  const requests:string[]=[];page.on('request',r=>requests.push(r.url()));
  await page.goto(question);
