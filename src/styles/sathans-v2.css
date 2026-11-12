@@ -201,8 +201,15 @@
 .zh-ui .nav-overview.active,.zh-ui .chapter-nav.active{background:var(--signal-wash);color:var(--signal-ink);}
 .zh-ui .chapter-nav:hover{background:var(--hair-soft);}
 .zh-ui .directory-card,.zh-ui .video-card,.zh-ui .lesson-jumps,.zh-ui .answer-feedback,.zh-ui .lesson-reference,.zh-ui .source-content{background:var(--surface);border-color:var(--hair);color:var(--text);}
-.zh-ui .answer-header{padding:16px 20px 12px;background:var(--surface);border:1px solid var(--hair);border-radius:12px;}
-.zh-ui .question-label{margin:0 0 4px;color:var(--muted);font-size:14px;font-weight:650;line-height:1.4;}
+.zh-ui .answer-header{
+  --question-border:color-mix(in srgb,var(--amber) 46%,var(--hair));
+  padding:16px 20px 12px;
+  background:var(--amber-wash);
+  border:1px solid var(--question-border);
+  border-radius:12px;
+}
+.zh-ui .question-label{margin:0 0 4px;color:var(--amber-ink);font-size:14px;font-weight:650;line-height:1.4;}
+.zh-ui .answer-header .question-images{margin:10px 0 6px;padding-top:12px;border-top:1px solid var(--question-border);scroll-margin-top:80px;}
 .zh-ui .answer h1{font-size:36px;line-height:1.35;font-weight:600;}
 .zh-ui .answer-header .answer-meta{margin-bottom:0;}
 .zh-ui .answer-body{margin-top:20px;}
