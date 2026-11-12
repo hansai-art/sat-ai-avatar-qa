@@ -201,7 +201,13 @@
 .zh-ui .nav-overview.active,.zh-ui .chapter-nav.active{background:var(--signal-wash);color:var(--signal-ink);}
 .zh-ui .chapter-nav:hover{background:var(--hair-soft);}
 .zh-ui .directory-card,.zh-ui .video-card,.zh-ui .lesson-jumps,.zh-ui .answer-feedback,.zh-ui .lesson-reference,.zh-ui .source-content{background:var(--surface);border-color:var(--hair);color:var(--text);}
+.zh-ui .answer-header{padding:16px 20px 12px;background:var(--surface);border:1px solid var(--hair);border-radius:12px;}
+.zh-ui .question-label{margin:0 0 4px;color:var(--muted);font-size:14px;font-weight:650;line-height:1.4;}
 .zh-ui .answer h1{font-size:36px;line-height:1.35;font-weight:600;}
+.zh-ui .answer-header .answer-meta{margin-bottom:0;}
+.zh-ui .answer-body{margin-top:20px;}
+.zh-ui .answer-label{display:flex;align-items:center;gap:12px;margin:0 0 10px;color:var(--signal-ink);font-size:16px;font-weight:650;line-height:1.4;}
+.zh-ui .answer-label::after{content:"";flex:1;border-top:1px solid var(--hair);}
 .zh-ui .short-answer{background:var(--signal-wash);border:0;border-left:3px solid var(--signal);border-radius:0 12px 12px 0;}
 .zh-ui .short-answer-label{color:var(--signal-ink);}
 .zh-ui .short-answer p{color:var(--text);}
@@ -259,6 +265,8 @@
   .zh-ui .starmap-legend{grid-template-columns:1fr;}
   .zh-ui .starmap-legend a{min-height:34px;align-items:center;font-size:13px;}
   .zh-ui .answer h1{font-size:27px;}
+  .zh-ui .answer-header{padding:10px 12px 4px;}
+  .zh-ui .answer-body{margin-top:14px;}
   .zh-ui .mobile-chapters{background:var(--surface);border-color:var(--hair);}
   .zh-ui .mobile-chapters nav a{background:var(--paper);color:var(--ink);}
   .zh-ui .site-footer{margin-top:48px;}

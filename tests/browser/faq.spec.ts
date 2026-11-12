@@ -114,6 +114,13 @@ test('所有答案均有直接入口與匿名來源，編輯註記不進正文',
 
 test('桌機直接呈現解法，無目錄或重複步驟區，相關題目只有標題',async({page})=>{
  await page.setViewportSize({width:1440,height:1000});await page.goto('questions/qa-000002/');await page.evaluate(()=>document.fonts.ready);
+ const question=page.locator('.answer-header'),answer=page.getByRole('region',{name:'解答',exact:true});
+ await expect(question.getByText('問題',{exact:true})).toBeVisible();
+ await expect(question.getByRole('heading',{level:1})).toBeVisible();
+ await expect(answer.locator('#conclusion')).toBeVisible();
+ await expect(answer.locator('#first-step')).toBeVisible();
+ const questionBox=(await question.boundingBox())!,answerBox=(await answer.boundingBox())!;
+ expect(answerBox.y).toBeGreaterThan(questionBox.y+questionBox.height);
  expect((await page.locator('.answer').boundingBox())!.width).toBeLessThanOrEqual(720);
  await expect(page.locator('.sidebar .chapter-nav.active')).toContainText('第 1 章');
  await expect(page.locator('.mobile-toc,.article-aside,[data-toc-link],.first-step,.operation-path')).toHaveCount(0);
