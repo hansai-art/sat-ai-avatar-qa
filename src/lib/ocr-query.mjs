@@ -11,3 +11,19 @@ export function extractSearchText(text){
   if([...chosen].length>160&&codes.length===1)return `HTTP ${codes[0]}`;
   return [...chosen].slice(0,200).join('');
 }
+
+// OCR keeps every toolbar label and splits Chinese into single characters, so the
+// whole transcript rarely matches a question. Look for the error messages and
+// keywords this library already knows; the longest one found is the most specific.
+const normalize=s=>String(s).normalize('NFKC').toLowerCase().replace(/[\s​]+/g,'');
+export function matchKnownPhrase(text,catalog){
+  const hay=normalize(text);
+  let best=null;
+  for(const question of catalog||[]) for(const phrase of question.keywords||[]){
+    const needle=normalize(phrase);
+    if([...needle].length<5||!hay.includes(needle))continue;
+    const score=[...needle].length;
+    if(!best||score>best.score)best={phrase,id:question.id,score};
+  }
+  return best;
+}

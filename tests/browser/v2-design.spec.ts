@@ -45,8 +45,28 @@ test('手機先顯示答案，星圖放在精選題之後且沒有橫向溢出',
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
 
-test('深色模式保持文字對比並套用到首頁卡片',async({page})=>{
+test('預設淺色，系統深色也不例外，按鈕切到深色並記住選擇',async({page})=>{
   await page.emulateMedia({colorScheme:'dark'});
+  await page.goto('./');
+  const bg=()=>page.evaluate(()=>getComputedStyle(document.body).backgroundColor);
+  expect(await bg()).toBe('rgb(255, 255, 255)');
+  await expect(page.locator('html')).not.toHaveAttribute('data-theme','dark');
+  const toggle=page.locator('#theme-toggle');
+  await expect(toggle).toBeVisible();
+  await expect(toggle).toHaveAttribute('aria-pressed','false');
+  await toggle.click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme','dark');
+  await expect(toggle).toHaveAttribute('aria-pressed','true');
+  await page.goto('questions/qa-000063/');
+  await expect(page.locator('html')).toHaveAttribute('data-theme','dark');
+  await page.locator('#theme-toggle').click();
+  await expect(page.locator('html')).not.toHaveAttribute('data-theme','dark');
+  await page.reload();
+  expect(await bg()).toBe('rgb(255, 255, 255)');
+});
+
+test('深色模式保持文字對比並套用到首頁卡片',async({page})=>{
+  await page.addInitScript(()=>localStorage.setItem('qa-theme','dark'));
   await page.goto('./');
   const colors=await page.locator('.question-card').first().evaluate(card=>{
     const body=getComputedStyle(document.body);
@@ -66,7 +86,7 @@ test('深色模式保持文字對比並套用到首頁卡片',async({page})=>{
 });
 
 test('兩種瀏覽入口用不同色塊，圖示在色塊正中央',async({page})=>{
-  await page.emulateMedia({colorScheme:'dark'});
+  await page.addInitScript(()=>localStorage.setItem('qa-theme','dark'));
   await page.goto('./');
   const entries=page.locator('.browse-entry');
   const colors=await entries.evaluateAll(items=>items.map(item=>getComputedStyle(item).backgroundColor));

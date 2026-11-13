@@ -1,8 +1,10 @@
 /* 問題頁對照知識衛星討論區：學員提問一塊、講師回覆另一塊，整理者的延伸補充放在分隔線下方。
    只用色塊區分，不加外框線。 */
-.zh-ui .answer{--question-gutter:24px;--reply-indent:32px;}
+.zh-ui .answer{--question-gutter:28px;}
 
-.zh-ui .answer-header.thread-question{padding:22px var(--question-gutter) 22px;background:var(--signal-wash);border:0;border-radius:14px;}
+/* 跟知識衛星討論區一樣：提問與回覆包在同一個灰色色塊裡，講師回覆是裡面的白色卡片。 */
+.zh-ui .qa-thread{padding:26px var(--question-gutter) var(--question-gutter);background:var(--surface);border-radius:16px;}
+.zh-ui .answer-header.thread-question{padding:0;background:transparent;border:0;border-radius:0;}
 .zh-ui .thread-question h1{margin:0;font-size:clamp(24px,2.6vw,30px);line-height:1.42;}
 .zh-ui .thread-question .question-images{margin:14px 0 0;}
 .zh-ui .thread-question .answer-meta{margin:2px 0 0;}
@@ -11,18 +13,19 @@
 .zh-ui .thread-byline time{font-variant-numeric:tabular-nums;}
 .zh-ui .thread-avatar{flex:none;width:36px;height:36px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:var(--paper);}
 .zh-ui .thread-avatar img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;}
-.zh-ui .thread-avatar-student{background:var(--signal);color:#fff;font-size:15px;font-weight:650;}
+.zh-ui .thread-avatar-student{background:var(--signal-wash);color:var(--signal-ink);font-size:15px;font-weight:650;}
 .zh-ui .thread-who,.zh-ui .thread-question .question-label{margin:0;color:var(--ink);font-size:15px;font-weight:650;line-height:1.4;}
-.zh-ui .instructor-badge{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;background:var(--signal);color:#fff;font-size:12px;font-weight:600;letter-spacing:.02em;}
+.zh-ui .instructor-badge{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:4px;background:var(--signal-wash);color:var(--signal-ink);font-size:12px;font-weight:650;letter-spacing:.04em;}
 
 .zh-ui .thread-text{color:var(--ink);font-size:17px;line-height:1.85;overflow-wrap:anywhere;}
 .zh-ui .thread-text p{margin:0 0 14px;text-wrap:pretty;}
 .zh-ui .thread-text p:last-child{margin-bottom:0;}
 .zh-ui .thread-text a{color:var(--signal-ink);word-break:break-all;}
-.zh-ui .thread-text code{font-family:var(--brand-font-mono);font-size:.92em;padding:1px 5px;border-radius:5px;background:var(--paper);color:var(--ink);}
+.zh-ui .thread-text code{font-family:var(--brand-font-mono);font-size:.92em;padding:1px 5px;border-radius:5px;background:var(--surface);color:var(--ink);}
+.zh-ui .thread-question .thread-text code{background:var(--card);}
 .zh-ui .original-question{margin-top:6px;color:var(--text);}
 
-.zh-ui .answer-body.thread-reply{margin:12px 0 0 var(--reply-indent);padding:20px var(--question-gutter) 22px;background:var(--surface);border-radius:14px;}
+.zh-ui .answer-body.thread-reply{margin:22px 0 0;padding:24px;background:var(--card);border-radius:10px;}
 .zh-ui .instructor-reply+.instructor-reply{margin-top:18px;padding-top:16px;border-top:1px solid var(--hair-soft);}
 .zh-ui .thread-followup-date{color:var(--muted);font-size:13.5px;}
 .zh-ui .thread-excerpt-note{margin:10px 0 0;color:var(--muted);font-size:13.5px;}
@@ -40,11 +43,41 @@
 .zh-ui .supplement .next-links{margin-bottom:0;}
 
 @media(max-width:767px){
-  .zh-ui .answer{--question-gutter:16px;--reply-indent:12px;}
-  .zh-ui .answer-header.thread-question{padding-top:18px;}
+  .zh-ui .answer{--question-gutter:16px;}
+  .zh-ui .qa-thread{padding-top:20px;border-radius:12px;}
+  .zh-ui .answer-body.thread-reply{margin-top:18px;}
   .zh-ui .thread-question h1{font-size:23px;}
   .zh-ui .thread-text{font-size:16.5px;line-height:1.8;}
-  .zh-ui .answer-body.thread-reply{padding:18px var(--question-gutter);}
+  .zh-ui .answer-body.thread-reply{padding:18px 16px;}
   .zh-ui .supplement-divider{margin-top:40px;}
   .zh-ui .supplement{padding-inline:4px;}
 }
+
+/* 深淺色切換：預設淺色，按鈕切到深色並記住選擇。 */
+.zh-ui .site-header .top-nav{margin-left:auto;}
+.zh-ui .theme-toggle{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border:0;border-radius:999px;background:var(--surface);color:var(--text);font:inherit;font-size:13.5px;cursor:pointer;}
+.zh-ui .theme-toggle:hover{color:var(--ink);background:var(--hair-soft);}
+.zh-ui .theme-toggle svg{width:16px;height:16px;flex:none;}
+.zh-ui .theme-toggle .icon-sun{display:none;}
+:root[data-theme="dark"] .zh-ui .theme-toggle .icon-sun{display:block;}
+:root[data-theme="dark"] .zh-ui .theme-toggle .icon-moon{display:none;}
+:root[data-theme="dark"] .zh-ui .site-header{background:color-mix(in srgb,var(--paper) 86%,transparent);}
+@media(max-width:767px){
+  .zh-ui .theme-toggle{margin-left:auto;padding:0 10px;min-height:40px;}
+  .zh-ui .theme-toggle span{font-size:13px;}
+}
+
+/* 全站改用色塊區分，不用外框線（淺色接近知識衛星：白底，#f4f5f6 色塊）。 */
+.zh-ui .supplement .applies-to{border-bottom:0;padding:0;}
+.zh-ui .search-bar{background:var(--surface);border:0;box-shadow:none;}
+.zh-ui .search-bar:focus-within{box-shadow:0 0 0 2px var(--signal);}
+.zh-ui .search-kbd{border:0;background:var(--card);}
+.zh-ui .browse-entries>a,.zh-ui .browse-entries>.browse-entry-chapter,.zh-ui .browse-entries>.browse-entry-type{border:0;}
+.zh-ui .browse-entries>a:hover{filter:brightness(.98);}
+.zh-ui .starmap,.zh-ui .install-steps,.zh-ui .install-step,.zh-ui .install-footer,.zh-ui .install-jumps a,.zh-ui .filter-panel .filters,.zh-ui .screenshot-body,.zh-ui .empty-state{border:0;}
+.zh-ui .install-step:target{box-shadow:0 0 0 2px var(--signal);}
+.zh-ui .install-jumps a:hover{background:var(--signal-wash);}
+.zh-ui .course-link{border:0;background:var(--surface);}
+.zh-ui .outline-button,.zh-ui .pagination a{border:0;background:var(--surface);}
+.zh-ui :is(.answer-feedback,.lesson-reference,.screenshot-body,.course-resources) .outline-button{background:var(--card);}
+:root[data-theme="dark"] .zh-ui .search-kbd{background:var(--paper);}

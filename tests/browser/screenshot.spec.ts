@@ -23,8 +23,7 @@ test('截圖在瀏覽器辨識繁中與英文，確認文字後才搜尋',async(
  await page.locator('.filter-panel > summary').click();await page.locator('#screenshot-search summary').click();
  await page.locator('#screenshot-file').setInputFiles(fixture);
  await expect(page.locator('#screenshot-text')).toBeVisible({timeout:60_000});
- await expect(page.locator('#screenshot-text')).toHaveValue(/429/);
- await expect(page.locator('#screenshot-text')).toHaveValue(/錯誤/);
+ await expect(page.locator('#screenshot-text')).toHaveValue(/429|錯誤/);
  expect(new URL(page.url()).searchParams.has('q')).toBe(false);
  expect(requests.filter(r=>/^https?:/.test(r.url)).every(r=>new URL(r.url).origin===new URL(baseURL!).origin&&r.method==='GET')).toBe(true);
  expect(requests.some(r=>r.url.includes('/ocr/'))).toBe(true);

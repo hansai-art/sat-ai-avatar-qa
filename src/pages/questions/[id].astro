@@ -37,6 +37,7 @@ const slashDate=(day:string)=>day.replaceAll('-','/');
   </script>
   <div class="article-shell">
     <article class="answer" data-pagefind-body={indexed?true:undefined}>
+      <div class="qa-thread">
       <header class="answer-header thread-question" aria-label="學員提問">
         <p class="thread-byline" data-pagefind-ignore><span class="thread-avatar thread-avatar-student" aria-hidden="true">學</span><span class="thread-who question-label">學員提問</span>{askedAt&&<time datetime={askedAt}>{slashDate(askedAt)}</time>}</p>
         <h1 data-pagefind-meta="title" data-pagefind-weight="5">{d.title}</h1>
@@ -61,6 +62,7 @@ const slashDate=(day:string)=>day.replaceAll('-','/');
           <span hidden data-pagefind-meta={`summary:${d.summary}`}></span>
         </>:<div class="short-answer"><p data-pagefind-meta="summary" data-pagefind-weight="3"><strong><InterfaceText text={conclusion}/></strong><InterfaceText text={explanation.join('')}/></p></div>}
       </section>
+      </div>
       <div class="supplement-divider" role="separator" aria-hidden="true" data-pagefind-ignore><span>延伸補充</span></div>
       <section class="supplement" aria-label="延伸補充">
         <p class="supplement-note" data-pagefind-ignore>{thread?'以下由整理者依課程內容與官方文件補充，不是講師在課堂的原始回覆。':'以下由整理者依講師回覆、課程內容與官方文件整理。'}</p>

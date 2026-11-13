@@ -9,7 +9,7 @@ const scale=()=>{
 };
 
 test('提問截圖在學員提問色塊，示範截圖在延伸補充，兩處都保留原圖片連結',async({page})=>{
- await page.emulateMedia({colorScheme:'dark'});
+ await page.addInitScript(()=>localStorage.setItem('qa-theme','dark'));
  for(const [id,container] of [
   ['qa-000002','.answer-header'],['qa-000051','.answer-header'],
   ['qa-000053','.answer-header'],['qa-000063','.answer-header'],

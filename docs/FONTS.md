@@ -31,3 +31,5 @@ python3 scripts/subset-font.py /path/to/SourceHanSansTW-VF.ttf.woff2
 2026-09-23 圖片瀏覽器：新增「雙指」「拖曳」等介面文字，並將 Astro 行內 script 的「返回」文字納入 home 分段，避免少數字觸發約 5MB 的 extended 下載。重新分段後 home＋latin 為 190,572 bytes，兩張操作截圖所在的問題頁加上 content 共 311,012 bytes。四份字型仍完整覆蓋 20,763 個 Unicode 對應且無重疊；圖片瀏覽器測試會檢查沒有請求 extended。
 
 2026-11-14 原始問答上線：71 題補上課堂原文後，「１」「３」等全形數字與原文用字落到 extended 分段，問題頁會多下載約 5MB。依固定來源重新分段，home 520 字 150,732 bytes、content 555 字 174,532 bytes、latin 29,704 bytes，原字型 Unicode 對應仍完整保留。圖片瀏覽器測試確認問題頁沒有請求 extended。
+
+2026-11-14 深淺色切換：加入「深色／淺色」按鈕與截圖比對提示文字後再分段一次，home 525 字 152,244 bytes、content 551 字 173,680 bytes，瀏覽器測試確認問題頁沒有請求 extended。

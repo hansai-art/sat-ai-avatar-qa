@@ -16,7 +16,7 @@
   </div>
 </details>
 <script>
-  import {extractSearchText} from '../lib/ocr-query.mjs';
+  import {extractSearchText,matchKnownPhrase} from '../lib/ocr-query.mjs';
   const panel=document.querySelector<HTMLDetailsElement>('#screenshot-search');
   if(panel){
   const fileInput=document.querySelector<HTMLInputElement>('#screenshot-file')!;
@@ -59,9 +59,14 @@
         if(ticket!==generation)return;
         if(data.type==='progress')status.textContent=data.text;
         else if(data.type==='result'){
-          stop();text.value=extractSearchText(data.text);result.hidden=!text.value;
-          status.textContent=text.value?'已擷取搜尋文字，請確認錯誤碼與工具名稱是否正確。':'沒有辨識到文字，請裁切到文字區域或直接輸入問題。';
-          if(text.value)text.focus();
+          stop();
+          void fetch(import.meta.env.BASE_URL+'search-catalog.json').then(r=>r.ok?r.json():[]).catch(()=>[]).then(catalog=>{
+            if(ticket!==generation)return;
+            const known=matchKnownPhrase(data.text,catalog);
+            text.value=known?known.phrase:extractSearchText(data.text);result.hidden=!text.value;
+            status.textContent=known?`截圖裡有問答庫收錄過的「${known.phrase}」，按下方按鈕就能找到對應答案。`:text.value?'已擷取搜尋文字，請確認錯誤碼與工具名稱是否正確。':'沒有辨識到文字，請裁切到文字區域或直接輸入問題。';
+            if(text.value)text.focus();
+          });
         }else fail('辨識失敗，請重新選擇圖片，或直接輸入錯誤訊息搜尋。');
       };
       worker.onerror=()=>{if(ticket===generation)fail('辨識工具無法載入，請稍後重試，或直接輸入問題。');};

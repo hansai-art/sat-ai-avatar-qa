@@ -1,16 +1,18 @@
 /* Integrated v2 layer: keep the established portrait, Source Han Sans and student-first behavior. */
 :root{
-  color-scheme:light dark;
-  --paper:#f5f6f8;
-  --surface:#fff;
-  --ink:#121826;
-  --text:#3a4150;
-  --muted:#646c7b;
-  --hair:#dfe3e9;
-  --hair-soft:#ebeef2;
-  --signal:#2350f5;
-  --signal-ink:#1a3fcc;
-  --signal-wash:#edf1ff;
+  color-scheme:light;
+  /* Light is the default, matching 知識衛星: white page, #f4f5f6 blocks, #005cff accent. */
+  --paper:#ffffff;
+  --surface:#f4f5f6;
+  --card:#ffffff;
+  --ink:#1f2328;
+  --text:#333333;
+  --muted:#686e78;
+  --hair:#e3e6ea;
+  --hair-soft:#eef0f2;
+  --signal:#005cff;
+  --signal-ink:#004ad0;
+  --signal-wash:#eaf1ff;
   --flare:#e8513f;
   --flare-ink:#a83428;
   --flare-wash:#fdeeec;
@@ -18,10 +20,10 @@
   --amber-ink:#805006;
   --amber-wash:#fbf3e4;
   --other:#8c95a6;
-  --chapter-card:#edf3ff;
-  --chapter-border:#c8d7ff;
-  --chapter-icon-bg:#d9e5ff;
-  --chapter-icon:#244fc7;
+  --chapter-card:#eef4ff;
+  --chapter-border:#cddcff;
+  --chapter-icon-bg:#dbe6ff;
+  --chapter-icon:#0048cc;
   --type-card:#f5efff;
   --type-border:#dfd0f6;
   --type-icon-bg:#eadfff;
@@ -29,8 +31,9 @@
   --blue:var(--signal);
   --line:var(--hair);
 }
-@media(prefers-color-scheme:dark){
-  :root{
+:root[data-theme="dark"]{
+    color-scheme:dark;
+    --card:#20263a;
     --paper:#0f131b;
     --surface:#171c26;
     --ink:#eef1f6;
@@ -57,7 +60,7 @@
     --type-icon-bg:#35264e;
     --type-icon:#c3a2f3;
   }
-}
+
 
 :root,.zh-ui{background:var(--paper);color:var(--text);font-family:var(--font-site);}
 .zh-ui{font-synthesis:none;-webkit-font-smoothing:antialiased;}
