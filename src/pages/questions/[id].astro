@@ -34,7 +34,12 @@ const [conclusion,...explanation]=d.summary.split(/(?<=[。！？])/u);
       <header class="answer-header">
         <p class="question-label" data-pagefind-ignore>問題</p>
         <h1 data-pagefind-meta="title" data-pagefind-weight="5">{d.title}</h1>
-        <div class="answer-meta" data-pagefind-ignore><a class="category-label" data-category={d.type} href={href(`/types/${d.type}/`)}><span class="category-dot" aria-hidden="true"></span>{label('types',d.type)}</a>{d.chapterRefs.map(id=><a href={href(`/chapters/${id}/`)}>{label('chapters',id)}</a>)}{asked>=2&&<span class="asked-count">{asked} 則同學提問</span>}<button type="button" class="text-button" id="copy-link">複製連結</button></div>
+        <div class="answer-meta" data-pagefind-ignore>
+          <a class="category-label" data-category={d.type} href={href(`/types/${d.type}/`)}>{label('types',d.type)}</a>
+          {d.chapterRefs.slice(1).map(id=><a href={href(`/chapters/${id}/`)}>{label('chapters',id)}</a>)}
+          {asked>=2&&<span class="asked-count">{asked} 則同學提問</span>}
+          <button type="button" class="text-button" id="copy-link">複製連結</button>
+        </div>
         <span id="copy-status" role="status" data-pagefind-ignore></span><input id="copy-fallback" readonly aria-label="可手動複製的問題網址" hidden data-pagefind-ignore/>
         <QuestionImages question={q} placement="question"/>
       </header>

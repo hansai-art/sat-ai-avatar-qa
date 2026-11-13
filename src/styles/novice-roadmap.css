@@ -60,12 +60,6 @@
 .zh-ui .search-shot-label{display:inline-flex;}
 .zh-ui .search-shot-short{display:none;}
 
-/* 少見情況的圖片放在正文之後；深色模式不出現白色卡片。 */
-.zh-ui .question-images-after{margin:8px 0 24px;}
-.zh-ui .image-preview-link{background:var(--surface);border-color:var(--hair);color:var(--ink);}
-.zh-ui .image-preview-link img{background:var(--paper);}
-.zh-ui .image-preview figcaption{color:var(--muted);}
-
 /* 入口卡的副標在窄欄平均斷行，避免最後一行只剩一個字。 */
 .zh-ui .entry-text>span{text-wrap:balance;}
 
