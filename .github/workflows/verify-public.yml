@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      SITE_URL: https://sathans.pages.dev
+      SITE_URL: https://sat.aieo.tw
       BUILD_MODE: production
-      VERIFY_URL: https://sathans.pages.dev
+      VERIFY_URL: https://sat.aieo.tw
       VERIFY_COMMIT: ${{ github.sha }}
       ASTRO_TELEMETRY_DISABLED: "1"
     steps:

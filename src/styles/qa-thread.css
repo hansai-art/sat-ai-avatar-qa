@@ -81,3 +81,10 @@
 .zh-ui .outline-button,.zh-ui .pagination a{border:0;background:var(--surface);}
 .zh-ui :is(.answer-feedback,.lesson-reference,.screenshot-body,.course-resources) .outline-button{background:var(--card);}
 :root[data-theme="dark"] .zh-ui .search-kbd{background:var(--paper);}
+
+.zh-ui a.primary-button,.zh-ui a.primary-button:hover{color:#fff;text-decoration:none;}
+:root[data-theme="dark"] .zh-ui a.primary-button{color:#0f131b;}
+.zh-ui .chapter-callout{border-left:0;border-radius:12px;}
+.zh-ui .faq-meta .meta-chapter{min-width:0;}
+/* 避免一個字單獨落到下一行。 */
+.zh-ui :is(h1,h2,h3,p,li,.lesson-jumps a,.card-conclusion){text-wrap:pretty;}

@@ -5,7 +5,9 @@ import path from 'node:path';
 const mode=process.env.BUILD_MODE || 'demo';
 if(!['demo','production'].includes(mode))throw new Error('BUILD_MODE 只能是 demo 或 production');
 // 正式站需固定網址；架構預覽可使用 Cloudflare 注入的本次部署網址。
-const site=process.env.SITE_URL || (mode==='demo' ? process.env.CF_PAGES_URL : '');
+// 正式站網址固定是 sat.aieo.tw，canonical、分享預覽與 sitemap 都用它，不再沿用舊的 sathans.pages.dev。
+const PRODUCTION_ORIGIN='https://sat.aieo.tw';
+const site=mode==='production' ? (process.env.SITE_URL_OVERRIDE || PRODUCTION_ORIGIN) : (process.env.SITE_URL || process.env.CF_PAGES_URL || '');
 if(!site)throw new Error('請設定正式 SITE_URL；demo 可使用 Cloudflare 的 CF_PAGES_URL');
 const url=new URL(site);
 if(url.protocol!=='https:' || url.username || url.password || url.search || url.hash || url.pathname!=='/')throw new Error('SITE_URL 必須是無路徑、無查詢參數的 HTTPS 站台網址');

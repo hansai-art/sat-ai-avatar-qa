@@ -4,7 +4,7 @@
 
 **目前提供 73 題由真實學生提問整理的正式 FAQ。** 首頁提供章節與問題類型兩個入口、固定十題與完整列表；章節內依小節分組。三維篩選可組合且標示題數，卡片點擊進入結論先行的答案頁。既有 66 筆問答紀錄、後續 20 筆課堂討論與去重結果見 [來源對照](docs/content-source-audit.json)。示範資料只保留在測試模式。
 
-公開站：[sathans.pages.dev](https://sathans.pages.dev)。GitHub：[hansai-art/sat-ai-avatar-qa](https://github.com/hansai-art/sat-ai-avatar-qa)。舊站保留路徑與查詢參數，301 轉至新站。
+公開站：[sat.aieo.tw](https://sat.aieo.tw)（canonical、分享預覽與 sitemap 都用這個網址，舊的 sathans.pages.dev 會轉過來）。GitHub：[hansai-art/sat-ai-avatar-qa](https://github.com/hansai-art/sat-ai-avatar-qa)。舊站保留路徑與查詢參數，301 轉至新站。
 
 ## Codex 接手
 

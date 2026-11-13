@@ -78,7 +78,7 @@ function resultCard(result:any) {
   link.append(element('h2',m.title||'問題'),element('p',(m.summary||'').split(/(?<=[。！？])/u)[0],'card-conclusion'));
   const meta=element('span','','faq-meta'),category=element('span','','category-label');category.dataset.category=m.type||'';
   const dot=element('span','','category-dot');dot.setAttribute('aria-hidden','true');category.append(dot,document.createTextNode(label('types',m.type)));
-  meta.append(category,element('span','·'),document.createTextNode(label('chapters',(m.chapters||'').split(',')[0])+(m.answerStatus==='needs-update'?' · 待更新':'')+(m.contentOrigin==='demo'?' · 示範':'')+(m.questionOrigin==='anticipated'?' · 延伸問題':'')));
+  meta.append(category,element('span',label('chapters',(m.chapters||'').split(',')[0])+(m.answerStatus==='needs-update'?' · 待更新':'')+(m.contentOrigin==='demo'?' · 示範':'')+(m.questionOrigin==='anticipated'?' · 延伸問題':''),'meta-chapter'));
   link.append(meta);card.append(link);return card;
 }
 function restoreReadingPosition(){

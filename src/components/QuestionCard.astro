@@ -8,6 +8,6 @@ const Heading=heading;
   <a class="question-card-link" href={href(`/questions/${q.id}/`)}>
     <Heading>{q.data.title}</Heading>
     <p class="card-conclusion">{q.data.summary.split(/(?<=[。！？])/u)[0]}</p>
-    <span class="faq-meta"><span class="category-label" data-category={q.data.type}><span class="category-dot" aria-hidden="true"></span>{label('types',q.data.type)}</span>{showChapter&&<><span aria-hidden="true">·</span>{label('chapters',q.data.chapterRefs[0])}</>}{q.data.answerStatus==='needs-update'?' · 待更新':''}{q.data.contentOrigin==='demo'?' · 示範':''}{q.data.questionOrigin==='anticipated'?' · 延伸問題':''}</span>
+    <span class="faq-meta"><span class="category-label" data-category={q.data.type}><span class="category-dot" aria-hidden="true"></span>{label('types',q.data.type)}</span>{showChapter&&<span class="meta-chapter">{label('chapters',q.data.chapterRefs[0])}</span>}{q.data.answerStatus==='needs-update'?' · 待更新':''}{q.data.contentOrigin==='demo'?' · 示範':''}{q.data.questionOrigin==='anticipated'?' · 延伸問題':''}</span>
   </a>
 </article>

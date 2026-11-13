@@ -22,7 +22,7 @@ const background=Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${w
   <text x="358" y="449" text-anchor="middle" font-family="Arial, PingFang TC, Microsoft JhengHei, sans-serif" font-size="21" font-weight="600" fill="#794520">錯誤排除</text>
   <rect x="456" y="414" width="164" height="54" rx="14" fill="#e9edf6"/>
   <text x="538" y="449" text-anchor="middle" font-family="Arial, PingFang TC, Microsoft JhengHei, sans-serif" font-size="21" font-weight="600" fill="#3d5074">觀念釐清</text>
-  <text x="96" y="548" font-family="Arial, PingFang TC, Microsoft JhengHei, sans-serif" font-size="24" font-weight="600" fill="#152039">sathans.pages.dev</text>
+  <text x="96" y="548" font-family="Arial, PingFang TC, Microsoft JhengHei, sans-serif" font-size="24" font-weight="600" fill="#152039">sat.aieo.tw</text>
 </svg>`);
 
 await fs.mkdir('public',{recursive:true});

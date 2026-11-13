@@ -32,6 +32,7 @@ const hasInstallSteps=(await getInstallSteps()).length>0;
     {canonical&&<meta property="og:url" content={canonical}/>}<meta property="og:image" content={socialImage}/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:type" content="image/png"/><meta property="og:image:alt" content="AI 分身課程問答資料庫，搜尋真實學生問題並找到下一步"/>
     <meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content={shareTitle}/><meta name="twitter:description" content={description}/><meta name="twitter:image" content={socialImage}/><meta name="twitter:image:alt" content="AI 分身課程問答資料庫，搜尋真實學生問題並找到下一步"/>
     <meta name="theme-color" content="#ffffff" id="theme-color"/>
+    <script is:inline>if(location.hostname==='sathans.pages.dev')location.replace('https://sat.aieo.tw'+location.pathname+location.search+location.hash);</script>
     <script is:inline>try{if(localStorage.getItem('qa-theme')==='dark'){document.documentElement.dataset.theme='dark';document.getElementById('theme-color').content='#0f131b';}}catch{}</script>
     <link rel="icon" type="image/png" sizes="64x64" href={portraitIcon.src}/>
   </head>

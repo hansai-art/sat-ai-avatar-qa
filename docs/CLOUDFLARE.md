@@ -1,5 +1,7 @@
 # 免費公開部署設定
 
+> 2026-11-14：正式網址改為 https://sat.aieo.tw。`scripts/build-cloudflare.mjs` 的 production 建置固定使用這個網址（要臨時改用別的網址才設 `SITE_URL_OVERRIDE`），Cloudflare 上舊的 `SITE_URL=https://sathans.pages.dev` 不再影響 canonical。直接開 sathans.pages.dev 會在瀏覽器轉到 sat.aieo.tw。
+
 > 2026-09-20：sathans 正式站使用 BUILD_MODE=production，SITE_URL=https://sathans.pages.dev。已接 GitHub main 自動部署，新增問題不必再調整 Cloudflare。下方 demo 步驟為初次架構預覽用途。
 
 
