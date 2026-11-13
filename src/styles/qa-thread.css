@@ -2,10 +2,10 @@
    只用色塊區分，不加外框線。 */
 .zh-ui .answer{--question-gutter:24px;--reply-indent:32px;}
 
-.zh-ui .answer-header.thread-question{padding:22px var(--question-gutter) 12px;background:var(--signal-wash);border:0;border-radius:14px;}
+.zh-ui .answer-header.thread-question{padding:22px var(--question-gutter) 22px;background:var(--signal-wash);border:0;border-radius:14px;}
 .zh-ui .thread-question h1{margin:0;font-size:clamp(24px,2.6vw,30px);line-height:1.42;}
 .zh-ui .thread-question .question-images{margin:14px 0 0;}
-.zh-ui .thread-question .answer-meta{margin:6px 0 0;}
+.zh-ui .thread-question .answer-meta{margin:2px 0 0;}
 
 .zh-ui .thread-byline{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;margin:0 0 12px;font-size:13.5px;line-height:1.4;color:var(--muted);}
 .zh-ui .thread-byline time{font-variant-numeric:tabular-nums;}
@@ -20,7 +20,7 @@
 .zh-ui .thread-text p:last-child{margin-bottom:0;}
 .zh-ui .thread-text a{color:var(--signal-ink);word-break:break-all;}
 .zh-ui .thread-text code{font-family:var(--brand-font-mono);font-size:.92em;padding:1px 5px;border-radius:5px;background:var(--paper);color:var(--ink);}
-.zh-ui .original-question{margin-top:12px;color:var(--text);}
+.zh-ui .original-question{margin-top:6px;color:var(--text);}
 
 .zh-ui .answer-body.thread-reply{margin:12px 0 0 var(--reply-indent);padding:20px var(--question-gutter) 22px;background:var(--surface);border-radius:14px;}
 .zh-ui .instructor-reply+.instructor-reply{margin-top:18px;padding-top:16px;border-top:1px solid var(--hair-soft);}

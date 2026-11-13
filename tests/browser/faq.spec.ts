@@ -84,7 +84,8 @@ test('手機首屏兩個題名、主要點擊區和答案頁無溢出',async({pa
   await page.locator('.filter-panel > summary').click();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await page.goto('questions/qa-000001/');await expect(page.locator('.mobile-toc,.article-aside,[data-toc-link]')).toHaveCount(0);
   await page.evaluate(()=>document.fonts.ready);
-  expect((await page.locator('#conclusion').boundingBox())!.y).toBeLessThan(844);
+  const q=(await page.locator('.thread-question').boundingBox())!,reply=(await page.locator('#conclusion').boundingBox())!;
+  expect(q.y).toBeLessThan(844);expect(reply.y-(q.y+q.height)).toBeLessThan(24);
   await expect(page.locator('.mobile-chapters')).not.toHaveAttribute('open','');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   expect(await page.locator('.prose').evaluate(el=>parseFloat(getComputedStyle(el).fontSize))).toBe(16);
  }
@@ -149,6 +150,7 @@ test('原始問答保留講師原文並拿掉學員稱呼，原文不含 Markdow
   const reply=page.locator('.thread-reply');
   if(!(await reply.locator('.instructor-reply').count()))continue;
   await expect(page.locator('.thread-question .original-question')).not.toBeEmpty();
+  await expect(page.locator('.thread-reply')).not.toContainText(/RW7AXZWT|drive\.google\.com\/drive\/folders/);
   await expect(reply.locator('.instructor-badge')).toBeVisible();
   await expect(reply.locator('.instructor-reply').first()).not.toContainText('**');
   expect(await reply.locator('.instructor-reply').first().innerText()).not.toMatch(/^to /);

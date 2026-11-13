@@ -4,10 +4,14 @@
 const escapeHtml = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const urlPattern = /https:\/\/[^\s<>"'，。、；！？）)\]」]+/g;
 
+const linkify = text => escapeHtml(text).replace(urlPattern, url => `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
+
 function inline(line) {
-  return line.split(/(`[^`\n]+`)/).map(part => {
+  return line.split(/(`[^`\n]+`|\[[^\]\n]+\]\(https:\/\/[^\s)]+\))/).map(part => {
     if (/^`[^`\n]+`$/.test(part)) return `<code>${escapeHtml(part.slice(1, -1))}</code>`;
-    return escapeHtml(part).replace(urlPattern, url => `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
+    const md = part.match(/^\[([^\]\n]+)\]\((https:\/\/[^\s)]+)\)$/);
+    if (md) return `<a href="${escapeHtml(md[2])}" target="_blank" rel="noopener noreferrer">${escapeHtml(md[1])}</a>`;
+    return linkify(part);
   }).join('');
 }
 

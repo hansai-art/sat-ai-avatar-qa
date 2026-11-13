@@ -29,3 +29,5 @@ python3 scripts/subset-font.py /path/to/SourceHanSansTW-VF.ttf.woff2
 2026-09-23 全部問答匯入後：62 題保留完整思源黑體覆蓋，首頁 home 與 latin 共 183,144 bytes。390px 實際字型與網路紀錄確認未載入 extended 分段。
 
 2026-09-23 圖片瀏覽器：新增「雙指」「拖曳」等介面文字，並將 Astro 行內 script 的「返回」文字納入 home 分段，避免少數字觸發約 5MB 的 extended 下載。重新分段後 home＋latin 為 190,572 bytes，兩張操作截圖所在的問題頁加上 content 共 311,012 bytes。四份字型仍完整覆蓋 20,763 個 Unicode 對應且無重疊；圖片瀏覽器測試會檢查沒有請求 extended。
+
+2026-11-14 原始問答上線：71 題補上課堂原文後，「１」「３」等全形數字與原文用字落到 extended 分段，問題頁會多下載約 5MB。依固定來源重新分段，home 520 字 150,732 bytes、content 555 字 174,532 bytes、latin 29,704 bytes，原字型 Unicode 對應仍完整保留。圖片瀏覽器測試確認問題頁沒有請求 extended。

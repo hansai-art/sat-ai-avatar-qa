@@ -40,9 +40,6 @@ const slashDate=(day:string)=>day.replaceAll('-','/');
       <header class="answer-header thread-question" aria-label="學員提問">
         <p class="thread-byline" data-pagefind-ignore><span class="thread-avatar thread-avatar-student" aria-hidden="true">學</span><span class="thread-who question-label">學員提問</span>{askedAt&&<time datetime={askedAt}>{slashDate(askedAt)}</time>}</p>
         <h1 data-pagefind-meta="title" data-pagefind-weight="5">{d.title}</h1>
-        {thread&&<div class="thread-text original-question" set:html={renderPlainText(thread.question)}/>}
-        {thread?.excerpt&&<p class="thread-excerpt-note" data-pagefind-ignore>原留言一次問了好幾題，這裡節錄和本題有關的提問與回覆。</p>}
-        <QuestionImages question={q} placement="question"/>
         <div class="answer-meta" data-pagefind-ignore>
           <a class="category-label" data-category={d.type} href={href(`/types/${d.type}/`)}>{label('types',d.type)}</a>
           {d.chapterRefs.slice(1).map(id=><a href={href(`/chapters/${id}/`)}>{label('chapters',id)}</a>)}
@@ -50,6 +47,9 @@ const slashDate=(day:string)=>day.replaceAll('-','/');
           <button type="button" class="text-button" id="copy-link">複製連結</button>
         </div>
         <span id="copy-status" role="status" data-pagefind-ignore></span><input id="copy-fallback" readonly aria-label="可手動複製的問題網址" hidden data-pagefind-ignore/>
+        {thread&&<div class="thread-text original-question" set:html={renderPlainText(thread.question)}/>}
+        {thread?.excerpt&&<p class="thread-excerpt-note" data-pagefind-ignore>原留言一次問了好幾題，這裡節錄和本題有關的提問與回覆。</p>}
+        <QuestionImages question={q} placement="question"/>
       </header>
       <section class="answer-body thread-reply" id="conclusion" aria-label={thread?'講師回覆':'重點回答'}>
         {thread?<p class="thread-byline" data-pagefind-ignore><span class="thread-avatar" aria-hidden="true"><Image src={portrait} width={80} alt="" format="webp" loading="lazy" decoding="async"/></span><span class="thread-who">林思翰 Hans</span><span class="instructor-badge">講師回覆</span>{thread.replies[0]&&<time datetime={thread.replies[0].repliedAt}>{slashDate(thread.replies[0].repliedAt)}</time>}</p>
