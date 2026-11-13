@@ -6,6 +6,7 @@ nextLinks: [] # [{title: "官方操作指南", url: "HTTPS 網址"}]
 uiPath: [] # 只填已核對的介面名稱，例如 ["外掛", "安裝外掛"]
 editorialNotes: [] # 原始資料限制、編輯示範說明收合在來源區
 sourceRefs: [] # 正式已問題需 recordId、part、askedAt
+# originalThread: {"question": "學員原始提問", "askedAt": "YYYY-MM-DD", "excerpt": false, "replies": [{"text": "講師原始回覆", "repliedAt": "YYYY-MM-DD"}]} # 課堂原文，只拿掉姓名，見 docs/FAQ-ANSWER-STANDARD.md
 summary: "請先用一到兩句話，直接說明判斷與最重要的處理方式。"
 chapterRefs: ["general"]
 lessonRefs: []

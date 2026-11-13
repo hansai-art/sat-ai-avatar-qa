@@ -84,7 +84,7 @@ test('手機首屏兩個題名、主要點擊區和答案頁無溢出',async({pa
   await page.locator('.filter-panel > summary').click();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await page.goto('questions/qa-000001/');await expect(page.locator('.mobile-toc,.article-aside,[data-toc-link]')).toHaveCount(0);
   await page.evaluate(()=>document.fonts.ready);
-  expect((await page.locator('.prose ol>li').nth(1).boundingBox())!.y+(await page.locator('.prose ol>li').nth(1).boundingBox())!.height).toBeLessThan(844);
+  expect((await page.locator('#conclusion').boundingBox())!.y).toBeLessThan(844);
   await expect(page.locator('.mobile-chapters')).not.toHaveAttribute('open','');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   expect(await page.locator('.prose').evaluate(el=>parseFloat(getComputedStyle(el).fontSize))).toBe(16);
  }
@@ -100,7 +100,7 @@ test('選章後跨章題依當前章的小節排序',async({page})=>{
 test('所有答案均有直接入口與匿名來源，編輯註記不進正文',async({page})=>{
  test.setTimeout(120000);
  for(const id of info.searchableIds){
-  await page.goto('questions/'+id+'/');await expect(page.locator('.short-answer strong')).not.toBeEmpty();await expect(page.locator('.next-links a').first()).toHaveAttribute('href',/^https:\/\//);
+  await page.goto('questions/'+id+'/');await expect(page.locator('.thread-reply :is(.instructor-reply,.short-answer)').first()).not.toBeEmpty();await expect(page.locator('.next-links a').first()).toHaveAttribute('href',/^https:\/\//);
   await expect(page.locator('.source-content')).toBeHidden();await expect(page.locator('.prose')).not.toContainText('## 對應課程');
   await expect(page.locator('.prose')).not.toContainText('提供的紀錄沒有最後解決結果');await expect(page.locator('[data-pagefind-meta^="askedBy"]')).toHaveCount(0);
   await expect(page.getByText('這一頁的內容',{exact:true})).toHaveCount(0);
@@ -112,23 +112,47 @@ test('所有答案均有直接入口與匿名來源，編輯註記不進正文',
  }
 });
 
-test('桌機直接呈現解法，無目錄或重複步驟區，相關題目只有標題',async({page})=>{
- await page.setViewportSize({width:1440,height:1000});await page.goto('questions/qa-000002/');await page.evaluate(()=>document.fonts.ready);
- const question=page.locator('.answer-header'),answer=page.getByRole('region',{name:'解答',exact:true});
- await expect(question.getByText('問題',{exact:true})).toBeVisible();
+test('桌機依序呈現學員提問、講師回覆與延伸補充，無目錄或重複步驟區，相關題目只有標題',async({page})=>{
+ await page.setViewportSize({width:1440,height:1000});await page.goto('questions/qa-000013/');await page.evaluate(()=>document.fonts.ready);
+ const question=page.locator('.thread-question');
+ const reply=page.getByRole('region',{name:'講師回覆',exact:true}),supplement=page.getByRole('region',{name:'延伸補充',exact:true});
+ await expect(question.getByText('學員提問',{exact:true})).toBeVisible();
  await expect(question.getByRole('heading',{level:1})).toBeVisible();
- await expect(answer.locator('#conclusion')).toBeVisible();
- await expect(answer.locator('#first-step')).toBeVisible();
- const questionBox=(await question.boundingBox())!,answerBox=(await answer.boundingBox())!;
- expect(answerBox.y).toBeGreaterThan(questionBox.y+questionBox.height);
+ await expect(question.locator('.original-question')).toContainText('Heptabase');
+ await expect(reply.locator('.instructor-badge')).toHaveText('講師回覆');
+ await expect(reply.locator('.instructor-reply')).toContainText('完全適合');
+ await expect(page.locator('#conclusion')).toBeVisible();
+ await expect(supplement.locator('#first-step')).toBeVisible();
+ await expect(supplement.locator('.supplement-note')).toContainText('不是講師在課堂的原始回覆');
+ const questionBox=(await question.boundingBox())!,replyBox=(await reply.boundingBox())!,divider=(await page.locator('.supplement-divider').boundingBox())!,supplementBox=(await supplement.boundingBox())!;
+ expect(replyBox.y).toBeGreaterThan(questionBox.y+questionBox.height);
+ expect(divider.y).toBeGreaterThan(replyBox.y+replyBox.height);
+ expect(supplementBox.y).toBeGreaterThan(divider.y);
+ const [questionBg,replyBg]=await Promise.all([question.evaluate(n=>getComputedStyle(n).backgroundColor),reply.evaluate(n=>getComputedStyle(n).backgroundColor)]);
+ expect(questionBg).not.toBe(replyBg);
+ expect(await question.evaluate(n=>getComputedStyle(n).borderTopWidth)).toBe('0px');
  expect((await page.locator('.answer').boundingBox())!.width).toBeLessThanOrEqual(720);
- await expect(page.locator('.sidebar .chapter-nav.active')).toContainText('第 1 章');
+ await expect(page.locator('.sidebar .chapter-nav.active')).toContainText('第 2 章');
  await expect(page.locator('.mobile-toc,.article-aside,[data-toc-link],.first-step,.operation-path')).toHaveCount(0);
+ await page.goto('questions/qa-000002/');
  await expect(page.locator('.prose ol>li').first()).toContainText('Settings → Providers');
  await page.locator('#feedback-no').click();const related=page.locator('.related-links a').first();await expect(related).toHaveAttribute('href',/questions\/qa-\d+\//);
  expect((await related.boundingBox())!.height).toBeGreaterThanOrEqual(44);
  const target=await related.getAttribute('href');await related.click();expect(new URL(page.url()).pathname).toBe(target);
  await page.goto('questions/qa-000001/#conclusion');await expect(page.locator('#conclusion')).toBeInViewport();
+});
+
+test('原始問答保留講師原文並拿掉學員稱呼，原文不含 Markdown 記號',async({page})=>{
+ test.setTimeout(120000);
+ for(const id of info.searchableIds as string[]){
+  await page.goto('questions/'+id+'/');
+  const reply=page.locator('.thread-reply');
+  if(!(await reply.locator('.instructor-reply').count()))continue;
+  await expect(page.locator('.thread-question .original-question')).not.toBeEmpty();
+  await expect(reply.locator('.instructor-badge')).toBeVisible();
+  await expect(reply.locator('.instructor-reply').first()).not.toContainText('**');
+  expect(await reply.locator('.instructor-reply').first().innerText()).not.toMatch(/^to /);
+ }
 });
 
 for(const [query,id] of [['HTTP 429','qa-000053'],['pairing code','qa-000055'],['沒有登入','qa-000051'],['沒有授權','qa-000051'],['安裝卡住','qa-000050'],['需求遺漏','qa-000058'],['記帳','qa-000037'],['人資','qa-000048'],['Google Drive','qa-000049']])test('新增學生問法可找到答案：'+query,async({page})=>{await page.goto('./?q='+encodeURIComponent(query));await expect(page.locator('#result-list [data-question-id="'+id+'"]')).toBeVisible();});

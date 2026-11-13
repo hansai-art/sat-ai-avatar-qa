@@ -7,6 +7,8 @@ export const date = z.string().refine(isDate, '日期需為有效 YYYY-MM-DD，�
 const nullableText = text(1, 500).nullable().default(null);
 const refs = z.array(text(1,80)).refine(xs => new Set(xs).size === xs.length, '不可有重複值');
 const https = z.string().refine(safeHttps, '需為不含憑證的 HTTPS 網址');
+// 課堂原文保留換行與網址，頁面以純文字跳脫後顯示，不解讀 HTML 或 Markdown。
+const originalText = z.string().trim().refine(s => [...s].length >= 1 && [...s].length <= 8000, '需為 1～8000 字元');
 export const questionSchema = z.object({
   title: text(4,100), summary: text(15,240), chapterRefs: refs.min(1), lessonRefs: refs.default([]), toolRefs: refs.min(1),
   type: z.enum(['setup','account-billing','troubleshooting','concept','use-case','course-resources']),
@@ -29,6 +31,12 @@ export const questionSchema = z.object({
     // question：提問情境。before、after：解答正文前後的示範。
     placement:z.enum(['question','before','after']).default('before')
   }).strict()).max(6).default([]),
+  // 學員原始提問與講師原始回覆，頁面分成「學員提問」「講師回覆」兩塊，整理後的說明另放延伸補充。
+  originalThread: z.object({
+    question: originalText, askedAt: date,
+    replies: z.array(z.object({text:originalText,repliedAt:date}).strict()).min(1).max(6),
+    excerpt: z.boolean().default(false)
+  }).strict().optional(),
   editorialNotes: z.array(text(1,800)).default([]),
   sourceRefs: z.array(z.object({recordId:text(1,80),part:text(1,120),askedAt:date}).strict()).default([]),
   askedBy: z.array(z.object({name:text(1,80),sourceUrl:https}).strict()).max(20).default([]),
@@ -80,7 +88,13 @@ export function validateQuestions(entries, taxonomy, mode, today=todayTaipei()) 
     if(!taxonomy.types.some(t=>t.id===d.type)) fail(id,'未知問題類型');
     if(d.lessonRefs.some(l=>!lessons.has(l) || !d.chapterRefs.includes(lessons.get(l)))) fail(id,'小節不存在或不屬於所選章節');
     if(d.reviewedBy && !taxonomy.contributors.some(c=>c.id===d.reviewedBy)) fail(id,'未知審核者');
-    for(const day of [d.createdAt,d.updatedAt,d.verifiedAt,...d.sources.map(s=>s.checkedAt),...d.sourceRefs.map(s=>s.askedAt)].filter(Boolean)) if(day>today) fail(id,'日期不可在未來');
+    const thread=d.originalThread;
+    for(const day of [d.createdAt,d.updatedAt,d.verifiedAt,...d.sources.map(s=>s.checkedAt),...d.sourceRefs.map(s=>s.askedAt),thread?.askedAt,...(thread?.replies||[]).map(r=>r.repliedAt)].filter(Boolean)) if(day>today) fail(id,'日期不可在未來');
+    if(thread) {
+      if(d.questionOrigin!=='asked') fail(id,'只有學員已問的題目可以放原始問答');
+      if(thread.replies.some(r=>r.repliedAt<thread.askedAt)) fail(id,'講師回覆日期不可早於提問日期');
+      if([thread.question,...thread.replies.map(r=>r.text)].some(t=>/[\w.+-]+@[\w-]+\.[\w.]+/.test(t))) fail(id,'原始問答不可包含 Email');
+    }
     if(d.createdAt>d.updatedAt || d.verifiedAt && (d.verifiedAt<d.createdAt || d.verifiedAt>d.updatedAt)) fail(id,'日期順序不正確');
     if(d.publication==='published') {
       if(d.answerStatus==='unverified' || !d.reviewedBy || !d.verifiedAt || !d.sources.length) fail(id,'已發布問答需要審核者、確認日與來源');

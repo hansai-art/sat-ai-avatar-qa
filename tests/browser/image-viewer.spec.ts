@@ -8,12 +8,12 @@ const scale=()=>{
  return el?.getBoundingClientRect().width||0;
 };
 
-test('提問截圖在問題色塊，示範截圖在解答，兩處都保留原圖片連結',async({page})=>{
+test('提問截圖在學員提問色塊，示範截圖在延伸補充，兩處都保留原圖片連結',async({page})=>{
  await page.emulateMedia({colorScheme:'dark'});
  for(const [id,container] of [
   ['qa-000002','.answer-header'],['qa-000051','.answer-header'],
   ['qa-000053','.answer-header'],['qa-000063','.answer-header'],
-  ['qa-000052','.answer-body'],['qa-000054','.answer-body'],['qa-000055','.answer-body']
+  ['qa-000052','.supplement'],['qa-000054','.supplement'],['qa-000055','.supplement']
  ]){
   const anchor=id==='qa-000054'?'#operation-images-after':'#operation-images';
   await page.goto('questions/'+id+'/'+anchor);

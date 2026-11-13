@@ -8,6 +8,9 @@ import AnswerFeedback from '../../components/AnswerFeedback.astro';
 import ImageViewer from '../../components/ImageViewer.astro';
 import {getQuestions,taxonomy,href,label,relatedQuestions,buildMode,type Question} from '../../lib/content';
 import {getInstallSteps,askedCount} from '../../lib/install-steps';
+import {Image} from 'astro:assets';
+import portrait from '../../assets/brand/hans-portrait.jpg';
+import {renderPlainText} from '../../lib/plain-text.mjs';
 export async function getStaticPaths(){return (await getQuestions()).map(q=>({params:{id:q.id},props:{question:q}}));}
 const q=Astro.props.question as Question,d=q.data;
 const {Content}=await render(q);
@@ -23,6 +26,9 @@ const sourceOrder=['official','instructor','course','community','other'];
 const sources=[...d.sources].sort((a,b)=>sourceOrder.indexOf(a.kind)-sourceOrder.indexOf(b.kind));
 const platforms:Record<string,string>={windows:'Windows',macos:'macOS',linux:'Linux',ios:'iOS',android:'Android',web:'網頁'};
 const [conclusion,...explanation]=d.summary.split(/(?<=[。！？])/u);
+const thread=d.originalThread;
+const askedAt=thread?.askedAt||[...d.sourceRefs].map(r=>r.askedAt).sort()[0];
+const slashDate=(day:string)=>day.replaceAll('-','/');
 ---
 <BaseLayout title={d.title} description={d.summary} noindex={!indexed} activeChapter={d.chapterRefs[0]}>
   <nav class="breadcrumb answer-breadcrumb" aria-label="所在位置"><a href={href('/questions/')} id="back-to-search">全部問題</a><span aria-hidden="true">›</span><a href={href(`/chapters/${d.chapterRefs[0]}/`)}>{label('chapters',d.chapterRefs[0])}</a></nav>
@@ -31,9 +37,12 @@ const [conclusion,...explanation]=d.summary.split(/(?<=[。！？])/u);
   </script>
   <div class="article-shell">
     <article class="answer" data-pagefind-body={indexed?true:undefined}>
-      <header class="answer-header">
-        <p class="question-label" data-pagefind-ignore>問題</p>
+      <header class="answer-header thread-question" aria-label="學員提問">
+        <p class="thread-byline" data-pagefind-ignore><span class="thread-avatar thread-avatar-student" aria-hidden="true">學</span><span class="thread-who question-label">學員提問</span>{askedAt&&<time datetime={askedAt}>{slashDate(askedAt)}</time>}</p>
         <h1 data-pagefind-meta="title" data-pagefind-weight="5">{d.title}</h1>
+        {thread&&<div class="thread-text original-question" set:html={renderPlainText(thread.question)}/>}
+        {thread?.excerpt&&<p class="thread-excerpt-note" data-pagefind-ignore>原留言一次問了好幾題，這裡節錄和本題有關的提問與回覆。</p>}
+        <QuestionImages question={q} placement="question"/>
         <div class="answer-meta" data-pagefind-ignore>
           <a class="category-label" data-category={d.type} href={href(`/types/${d.type}/`)}>{label('types',d.type)}</a>
           {d.chapterRefs.slice(1).map(id=><a href={href(`/chapters/${id}/`)}>{label('chapters',id)}</a>)}
@@ -41,27 +50,34 @@ const [conclusion,...explanation]=d.summary.split(/(?<=[。！？])/u);
           <button type="button" class="text-button" id="copy-link">複製連結</button>
         </div>
         <span id="copy-status" role="status" data-pagefind-ignore></span><input id="copy-fallback" readonly aria-label="可手動複製的問題網址" hidden data-pagefind-ignore/>
-        <QuestionImages question={q} placement="question"/>
       </header>
-      <section class="answer-body" aria-labelledby="answer-heading">
-        <h2 id="answer-heading" class="answer-label" data-pagefind-ignore>解答</h2>
+      <section class="answer-body thread-reply" id="conclusion" aria-label={thread?'講師回覆':'重點回答'}>
+        {thread?<p class="thread-byline" data-pagefind-ignore><span class="thread-avatar" aria-hidden="true"><Image src={portrait} width={80} alt="" format="webp" loading="lazy" decoding="async"/></span><span class="thread-who">林思翰 Hans</span><span class="instructor-badge">講師回覆</span>{thread.replies[0]&&<time datetime={thread.replies[0].repliedAt}>{slashDate(thread.replies[0].repliedAt)}</time>}</p>
+          :<p class="thread-byline" data-pagefind-ignore><span class="thread-who">重點回答</span></p>}
         {d.publication==='archived'&&<aside class="notice warning" data-pagefind-ignore><strong>這題已封存</strong><p>{d.reviewNote}</p>{d.supersededBy&&<a href={href(`/questions/${d.supersededBy}/`)}>閱讀更新後的答案</a>}</aside>}
         {d.answerStatus==='needs-update'&&<aside class="notice warning"><strong>這份答案待更新</strong><p>{d.reviewNote}</p></aside>}
-        <section class="short-answer" id="conclusion" aria-label="簡答">{buildMode==='demo'&&<h2 class="short-answer-label">簡答版型示範</h2>}<p data-pagefind-meta="summary" data-pagefind-weight="3"><strong><InterfaceText text={conclusion}/></strong><InterfaceText text={explanation.join('')}/></p></section>
+        {thread?<>
+          {thread.replies.map((reply,index)=><div class="thread-text instructor-reply">{index>0&&<p class="thread-followup-date" data-pagefind-ignore>後續補充 <time datetime={reply.repliedAt}>{slashDate(reply.repliedAt)}</time></p>}<Fragment set:html={renderPlainText(reply.text)}/></div>)}
+          <span hidden data-pagefind-meta={`summary:${d.summary}`}></span>
+        </>:<div class="short-answer"><p data-pagefind-meta="summary" data-pagefind-weight="3"><strong><InterfaceText text={conclusion}/></strong><InterfaceText text={explanation.join('')}/></p></div>}
+      </section>
+      <div class="supplement-divider" role="separator" aria-hidden="true" data-pagefind-ignore><span>延伸補充</span></div>
+      <section class="supplement" aria-label="延伸補充">
+        <p class="supplement-note" data-pagefind-ignore>{thread?'以下由整理者依課程內容與官方文件補充，不是講師在課堂的原始回覆。':'以下由整理者依講師回覆、課程內容與官方文件整理。'}</p>
         {(d.appliesTo||d.platforms.length>0)&&<p class="applies-to">適用情況：{[d.appliesTo,...d.platforms.map(p=>platforms[p])].filter(Boolean).join(' · ')}</p>}
         <QuestionImages question={q}/>
         <div class="prose zh-prose" id="first-step"><Content/></div>
         <QuestionImages question={q} placement="after"/>
         {d.caution&&<aside class="answer-caution"><p><InterfaceText text={d.caution}/></p></aside>}
-        <nav class="next-links" aria-label="操作指南與課程入口">{d.nextLinks.map(link=><a href={link.url} target="_blank" rel="noopener noreferrer">{link.title} <span aria-hidden="true">↗</span></a>)}{!d.nextLinks.some(link=>link.url==='https://sat.cool/course/201/comment')&&<a href="https://sat.cool/course/201/comment" target="_blank" rel="noopener noreferrer">回課程留言提問 <span aria-hidden="true">↗</span></a>}</nav>
         {d.errorMessages.length>0&&<details class="error-text"><summary>對照錯誤訊息原文</summary>{d.errorMessages.map(error=><pre data-pagefind-weight="3"><code>{error}</code></pre>)}</details>}
         {d.videos.length>0&&<section class="video-section"><h2>影片補充</h2>{d.videos.map(v=><a class="video-card" href={v.url} target="_blank" rel="noopener noreferrer"><div><h3>{v.title}</h3><p>{v.description}</p>{v.timestampLabel&&<small>{v.timestampLabel}</small>}</div><span aria-hidden="true">↗</span></a>)}</section>}
+        <nav class="next-links" aria-label="操作指南與課程入口">{d.nextLinks.map(link=><a href={link.url} target="_blank" rel="noopener noreferrer">{link.title} <span aria-hidden="true">↗</span></a>)}{!d.nextLinks.some(link=>link.url==='https://sat.cool/course/201/comment')&&<a href="https://sat.cool/course/201/comment" target="_blank" rel="noopener noreferrer">回課程留言提問 <span aria-hidden="true">↗</span></a>}</nav>
       </section>
       {installStep&&<aside class="install-step-ref" aria-label="安裝流程位置" data-pagefind-ignore><p><strong>安裝流程第 {installStep.number} 步，共 {installSteps.length} 步</strong><span>{installStep.title}</span></p><a href={href(`/install/#${installStep.id}`)}>看前後步驟與其他常見卡關 <span aria-hidden="true">›</span></a></aside>}
       {lessons.length>0&&<section class="lesson-reference" aria-label="回課程對照" data-pagefind-ignore><h2>回課程對照</h2><ul>{lessons.map(l=><li><span>{l.id.replace(/ch0?/,'').replace('-0','-')} · {l.title}</span></li>)}</ul><a href="https://sat.cool/classroom/201" target="_blank" rel="noopener noreferrer">開啟上課教室，選上方單元 ↗</a></section>}
       <AnswerFeedback question={q} related={related}/>
       <details class="sources" id="source-records" data-pagefind-ignore><summary>來源與核對紀錄</summary><div class="source-content">
-        <p>提問來源：{d.questionOrigin==='asked'?'學員提問（已匿名）':'延伸問題，尚未收到學員提問'}</p>
+        <p>提問來源：{d.questionOrigin==='asked'?'學員提問（已匿名）':'延伸問題，尚未收到學員提問'}{thread&&' · 學員提問與講師回覆依課程討論原文保留，只拿掉姓名與稱呼'}</p>
         <p>內容更新 <time datetime={d.updatedAt}>{d.updatedAt}</time> · 編輯核對 {d.verifiedAt||'未確認'}{d.reviewedBy&&` · ${taxonomy.contributors.find(c=>c.id===d.reviewedBy)?.name}`}</p>
         <p>對應章節：{d.chapterRefs.map(id=>label('chapters',id)).join('、')}{lessons.length>0&&` · ${lessons.map(l=>l.title).join('、')}`}</p>
         {d.reviewNote&&<p>{d.reviewNote}</p>}{d.editorialNotes.map(note=><p>{note}</p>)}
