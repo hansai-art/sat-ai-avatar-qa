@@ -88,3 +88,80 @@
 .zh-ui .faq-meta .meta-chapter{min-width:0;}
 /* 避免一個字單獨落到下一行。 */
 .zh-ui :is(h1,h2,h3,p,li,.lesson-jumps a,.card-conclusion){text-wrap:pretty;}
+
+/* ===== 手機版整理：所有元件同一條左右邊線、按鈕同高、文字不被截斷 ===== */
+.zh-ui .filter-panel>summary{gap:6px;}
+.zh-ui .filter-panel>summary::after{content:"";width:14px;height:14px;background:currentColor;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;transition:transform .15s;}
+.zh-ui .filter-panel[open]>summary::after{transform:rotate(180deg);}
+.zh-ui .starter-questions .section-heading{border-bottom:0;padding-bottom:6px;}
+.zh-ui .mobile-menu>summary{list-style:none;}
+.zh-ui .mobile-menu>summary::-webkit-details-marker{display:none;}
+.zh-ui .menu-icon{display:none;}
+
+@media(max-width:767px){
+  /* 頁首：頭像、站名靠左，深色與選單是兩顆一樣大的圖示按鈕 */
+  .zh-ui .site-header{gap:8px;}
+  .zh-ui .brand-portrait{width:36px;height:36px;}
+  .zh-ui .theme-toggle,.zh-ui .mobile-menu>summary{width:44px;height:44px;min-height:44px;padding:0;justify-content:center;border-radius:10px;background:var(--surface);color:var(--ink);}
+  .zh-ui .theme-toggle{margin-left:auto;}
+  .zh-ui .theme-toggle span,.zh-ui .mobile-menu .menu-text{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+  .zh-ui .theme-toggle svg,.zh-ui .menu-icon{width:20px;height:20px;}
+  .zh-ui .mobile-menu{height:auto;display:flex;align-items:center;}
+  .zh-ui .mobile-menu>summary{display:inline-flex;align-items:center;min-width:44px;cursor:pointer;}
+  .zh-ui .menu-icon{display:block;}
+  .zh-ui .mobile-menu[open]>summary{background:var(--signal-wash);color:var(--signal-ink);}
+  .zh-ui .mobile-menu nav{top:46px;right:0;border:0;border-radius:12px;box-shadow:0 12px 32px rgba(15,19,27,.16);background:var(--card);}
+
+  /* 搜尋列：截圖只留圖示，提示文字完整顯示 */
+  .zh-ui .search-bar{height:56px;min-height:56px;padding:0 6px 0 14px;gap:2px;border-radius:12px;}
+  .zh-ui .search-bar input{padding:0 4px 0 6px;font-size:16px;min-width:0;}
+  .zh-ui .search-shot{width:auto;height:44px;padding:0 5px;gap:3px;display:inline-flex;align-items:center;}
+  .zh-ui .search-shot svg{display:block;width:18px;height:18px;}
+  .zh-ui .search-shot-label{font-size:13px;}
+  .zh-ui .search-bar .primary-button{height:44px;min-height:44px;padding:0 12px;border-radius:10px;font-size:15px;}
+
+  /* 兩個入口：同高的直式色塊，圖示和箭頭在上、標題說明在下 */
+  .zh-ui .browse-entries{grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;align-items:stretch;}
+  .zh-ui .browse-entries>a{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:14px;min-height:0;border-radius:12px;}
+  .zh-ui .browse-entries>a::after{content:"›";position:absolute;top:14px;right:14px;font-size:18px;line-height:30px;color:var(--muted);}
+  .zh-ui .browse-entries .entry-text>span>span[aria-hidden="true"],.zh-ui .browse-entries .entry-text>span>:last-child:not(:first-child){display:none;}
+  .zh-ui .entry-glyph{width:30px;height:30px;border-radius:8px;}
+  .zh-ui .entry-text>strong{font-size:15.5px;line-height:1.4;}
+  .zh-ui .entry-text>span{display:block;margin-top:2px;font-size:12.5px;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+  .zh-ui .search-first .filter-panel{margin-top:8px;}
+  .zh-ui .filter-panel>summary{min-height:44px;padding:6px 0;font-size:14px;}
+
+  /* 新手 10 題：題號和標題第一行對齊，左邊不再空一大塊 */
+  .zh-ui .starter-questions{margin-top:20px;}
+  .zh-ui .starter-questions .section-heading h2{font-size:18px;}
+  .zh-ui .starter-questions .section-heading a{font-size:14px;}
+  .zh-ui .question-card h2,.zh-ui .all-questions .question-card h2{font-size:18px;line-height:1.48;}
+  .zh-ui .starter-questions .question-card-link{padding:14px 0 14px 30px;}
+  .zh-ui .starter-questions .question-card-link::before{left:0;top:14px;width:20px;text-align:left;font-size:18px;line-height:1.48;font-weight:650;color:var(--muted);}
+  .zh-ui .question-card-link{padding:14px 0;}
+  .zh-ui .card-conclusion{margin:2px 0 8px;}
+  .zh-ui .faq-meta{gap:8px;}
+
+  /* 內頁的「課程章節」列跟頁首同一條邊線，箭頭統一放右邊 */
+  .zh-ui .mobile-chapters>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;color:var(--text);}
+  .zh-ui .mobile-chapters>summary::-webkit-details-marker{display:none;}
+  .zh-ui .mobile-chapters>summary::after{content:"";width:14px;height:14px;background:currentColor;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;transition:transform .15s;}
+  .zh-ui .mobile-chapters[open]>summary::after{transform:rotate(180deg);}
+  .zh-ui .mobile-chapters{border-bottom:0;}
+}
+@media(max-width:767px){
+  /* 問題頁：灰色色塊與白色卡片的內距縮小，正文寬度留給內容 */
+  .zh-ui .qa-thread{padding:18px 14px 14px;}
+  .zh-ui .answer-body.thread-reply{padding:16px 14px;margin-top:16px;}
+  .zh-ui .thread-byline{gap:4px 8px;margin-bottom:10px;}
+  .zh-ui .thread-avatar{width:32px;height:32px;}
+  .zh-ui .thread-who,.zh-ui .thread-question .question-label{font-size:14.5px;}
+  .zh-ui .thread-reply .name-en{display:none;}
+  .zh-ui .thread-byline time{font-size:12.5px;}
+  .zh-ui .thread-question h1{font-size:22px;line-height:1.45;}
+  .zh-ui .thread-question .answer-meta{margin:2px 0 4px;}
+  .zh-ui .image-preview figcaption{font-size:12.5px;}
+  .zh-ui .supplement{padding-inline:2px;}
+  .zh-ui .answer-breadcrumb{font-size:13.5px;}
+}
