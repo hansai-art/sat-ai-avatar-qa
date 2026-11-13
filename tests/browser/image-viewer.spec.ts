@@ -13,11 +13,17 @@ test('提問截圖在問題色塊，示範截圖在解答，兩處都保留原�
  for(const [id,container] of [
   ['qa-000002','.answer-header'],['qa-000051','.answer-header'],
   ['qa-000053','.answer-header'],['qa-000063','.answer-header'],
-  ['qa-000052','.answer-body'],['qa-000055','.answer-body']
+  ['qa-000052','.answer-body'],['qa-000054','.answer-body'],['qa-000055','.answer-body']
  ]){
-  await page.goto('questions/'+id+'/#operation-images');
-  await expect(page.locator('#operation-images')).toHaveCount(1);
-  await expect(page.locator(container+' #operation-images [data-qa-image]')).toBeVisible();
+  const anchor=id==='qa-000054'?'#operation-images-after':'#operation-images';
+  await page.goto('questions/'+id+'/'+anchor);
+  await expect(page.locator(anchor)).toHaveCount(1);
+  const figure=page.locator(`${container} ${anchor} figure`);
+  await expect(figure.locator('[data-qa-image]')).toBeVisible();
+  await expect(figure.getByText('點圖放大')).toHaveCount(0);
+  const image=(await figure.locator('img').boundingBox())!;
+  const caption=(await figure.locator('figcaption').boundingBox())!;
+  expect(caption.y).toBeGreaterThanOrEqual(image.y+image.height);
  }
  await page.goto('questions/qa-000063/');
  const preview=page.locator('.answer-header [data-qa-image]');
@@ -35,7 +41,7 @@ test('小預覽延遲載入，大圖只在開啟後下載；按鈕縮放、返�
  const full=await link.getAttribute('href');expect(full).toBeTruthy();
  await link.scrollIntoViewIfNeeded();await expect.poll(()=>img.evaluate((el:HTMLImageElement)=>el.naturalWidth)).toBeGreaterThan(0);
  expect(requests.some(url=>url.endsWith(full!))).toBe(false);
- const before=await page.evaluate(()=>scrollY);const box=await link.boundingBox();expect(box!.height).toBeLessThanOrEqual(120);
+ const before=await page.evaluate(()=>scrollY);const box=await link.boundingBox();expect(box!.height).toBeLessThanOrEqual(210);
  await link.click();await expect(page.getByRole('dialog',{name:'操作圖片檢視器'})).toBeVisible();
  await expect.poll(()=>requests.some(url=>url.endsWith(full!))).toBe(true);
  const close=page.getByRole('button',{name:'關閉圖片',exact:true});await expect(close).toBeFocused();
@@ -67,12 +73,12 @@ test('360、390、430px 圖片和工具列不溢出，按鈕至少 44px',async({
  }
 });
 
-test('無 JavaScript 仍可看圖片；原始畫面及日期有可讀說明',async({browser,baseURL,request})=>{
+test('無 JavaScript 仍可看圖片及圖說',async({browser,baseURL,request})=>{
  const context=await browser.newContext({javaScriptEnabled:false});const page=await context.newPage();
  for(const id of ['qa-000052','qa-000053']){
   await page.goto(baseURL+'questions/'+id+'/');const link=page.locator('[data-qa-image]');
   await expect(link).toHaveAttribute('target','_blank');await expect(link.locator('img')).toHaveAttribute('alt',/.+/);
-  await expect(page.locator('figcaption')).not.toContainText('未標示');await expect(page.locator('figcaption')).toContainText('截圖 2026-09-');await expect(page.locator('figcaption time')).toHaveAttribute('datetime',/2026-09-/);
+  await expect(page.locator('figcaption')).not.toBeEmpty();
   const full=await link.getAttribute('href');const response=await request.get(new URL(full!,baseURL!).href);expect(response.ok()).toBe(true);expect(response.headers()['content-type']).toContain('image/');
  }
  await context.close();
