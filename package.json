@@ -15,6 +15,7 @@
     "preview": "astro preview",
     "test:e2e": "playwright test",
     "new:question": "node scripts/new-question.mjs",
+    "rank": "node scripts/rank-questions.mjs",
     "build:cloudflare": "node scripts/build-cloudflare.mjs"
   },
   "dependencies": {

@@ -10,12 +10,12 @@ test('首頁兩個入口、固定十題、整張卡片與收合來源',async({pa
  await page.goto('./');await expect(page.locator('#starter-questions .question-card').first()).toBeVisible();
  await expect(page.locator('.browse-entries a')).toHaveCount(2);await expect(page.locator('#starter-questions .question-card')).toHaveCount(10);
  await expect(page.locator('.demo-banner')).toHaveCount(0);
- const first=page.locator('#starter-questions .question-card').first();await expect(first).toHaveAttribute('data-question-id','qa-000001');
- await expect(first.locator('.card-conclusion')).toContainText('BotFather');await expect(first.locator('details,.first-step')).toHaveCount(0);
- await first.locator('a').click();await expect(page.locator('.answer h1')).toContainText('BotFather');
+ const first=page.locator('#starter-questions .question-card').first();await expect(first).toHaveAttribute('data-question-id','qa-000051');
+ await expect(first.locator('.card-conclusion')).toContainText('先傳一則訊息測試');await expect(first.locator('details,.first-step')).toHaveCount(0);
+ await first.locator('a').click();await expect(page.locator('.answer h1')).toContainText('沒有登入或授權畫面');
  await expect(page.locator('#source-records')).not.toHaveAttribute('open','');await expect(page.locator('.source-content')).toBeHidden();
  await expect(page.locator('.prose')).not.toContainText('提供的紀錄沒有最後解決結果');
- await page.locator('#source-records summary').click();await expect(page.locator('.source-content')).toContainText('CLASS-03');await expect(page.locator('.source-content')).toContainText('學員提問（已匿名）');
+ await page.locator('#source-records summary').click();await expect(page.locator('.source-content')).toContainText('CLASS-15');await expect(page.locator('.source-content')).toContainText('學員提問（已匿名）');
  await expect(page.locator('.source-content')).toContainText('AI 編輯核對');
  const build=await (await page.request.get(baseURL+'build-info.json')).json();expect(build.mode).toBe('production');expect(build.searchableIds).toEqual(info.searchableIds);
  if(process.env.VERIFY_COMMIT)expect(build.commit).toBe(process.env.VERIFY_COMMIT);

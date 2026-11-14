@@ -21,7 +21,7 @@ const activeMapChapter=mapChapters.reduce((best,current)=>current.questions.leng
 ---
 {home?<div class="home-layout">
   <div class="home-hero"><h1 class="sr-only">AI 分身課程問答資料庫</h1><SearchForm filters={filters} full dynamic={dynamic} root={dynamic?root:'/questions/'} home/></div>
-  <section id="starter-questions" class="starter-questions" aria-labelledby="starter-heading"><div class="section-heading"><h2 id="starter-heading">新手最常卡住的 {starters.length} 題</h2><a href={href('/questions/')}>看全部 {questions.length} 題</a></div><p class="section-caption">先看跟課時最容易卡住的地方。</p><div class="question-list">{starters.map(q=><QuestionCard question={q}/>)}</div></section>
+  <section id="starter-questions" class="starter-questions" aria-labelledby="starter-heading"><div class="section-heading"><h2 id="starter-heading">新手最常卡住的 {starters.length} 題</h2><a href={href('/questions/')}>看全部 {questions.length} 題</a></div><p class="section-caption">依學員上課後實際提問的次數排列。</p><div class="question-list">{starters.map(q=><QuestionCard question={q}/>)}</div></section>
   <div class="home-aside">
     <InstallSteps/>
     {buildMode==='production'&&<CourseResources/>}

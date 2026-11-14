@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {rankQuestions} from '../src/lib/rank.mjs';
 const audit=JSON.parse(fs.readFileSync('docs/content-source-audit.json','utf8'));
 const questions=new Map(fs.readdirSync('src/content/questions').filter(f=>f.endsWith('.md')).map(f=>{
  const raw=fs.readFileSync('src/content/questions/'+f,'utf8');
@@ -55,4 +56,11 @@ test('前十題優先處理跟課障礙，HTML 重複保留別名但不另算人
  assert.deepEqual(first,audit.priorityQuestionIds);
  assert.equal(new Set([...questions.values()].map(q=>q.faqOrder)).size,questions.size);
  for(const record of audit.legacyRecords.filter(r=>r.canonicalRecord))assert.ok(audit.records.some(r=>r.recordId===record.canonicalRecord));
+});
+test('題目順序與首頁前十題符合實際留言串數統計，新增題目後要重跑 npm run rank',()=>{
+ const {order,starters,counts}=rankQuestions(audit,questions);
+ assert.deepEqual([...questions].sort((a,b)=>a[1].faqOrder-b[1].faqOrder).map(([id])=>id),order);
+ assert.deepEqual(audit.priorityQuestionIds,starters);
+ for(const id of order)assert.deepEqual(audit.askCounts[id],{total:counts.get(id).total,afterOpen:counts.get(id).afterOpen},id);
+ assert.ok(!Object.keys(audit.askCounts).some(id=>!questions.has(id)));
 });
