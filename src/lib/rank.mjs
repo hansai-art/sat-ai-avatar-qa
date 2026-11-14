@@ -1,5 +1,5 @@
 // 依實際留言串數排列問答順序。
-// 只算 docs/content-source-audit.json 裡的原始紀錄（Q001 起）與上課教室匯入紀錄，
+// 只算 docs/content-source-audit.json 裡的原始紀錄（Q001 起），上課教室與公開留言的匯入紀錄，
 // 舊課堂存檔對照（legacyRecords）與後續補圖（LIB-）跟原留言重複，不另計。
 // 同一則留言拆成多題時，每題各算一次。
 
@@ -10,7 +10,7 @@ export const STARTER_COUNT = 10;
 const byText = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 
 export function threadCounts(audit, questions) {
-  const records = [...audit.records, ...audit.classroomImports.records];
+  const records = [...audit.records, ...audit.classroomImports.records, ...(audit.publicImports?.records || [])];
   const dates = new Map(records.map(r => [r.recordId, r.date]));
   const sets = new Map([...questions.keys()].map(id => [id, new Set()]));
   for (const r of records) for (const s of r.subquestions) sets.get(s.questionId)?.add(r.recordId);

@@ -49,6 +49,13 @@ test('全部來源紀錄與拆題均有去向，FAQ 可反查來源',()=>{
    assert.ok(r?.subquestions.some(p=>p.questionId===id&&p.part===s.part),id+' '+s.recordId);
   }
  }
+ for(const r of audit.publicImports.records){
+  assert.match(r.recordId,/^PUB-\d{2}$/);
+  for(const part of r.subquestions){
+   const q=questions.get(part.questionId);assert.ok(q,part.questionId);
+   assert.ok(q.sourceRefs.some(s=>s.recordId===r.recordId&&s.part===part.part&&s.askedAt===r.date),r.recordId+' '+part.part);
+  }
+ }
  assert.deepEqual(audit.followupsPending,[]);
 });
 test('前十題優先處理跟課障礙，HTML 重複保留別名但不另算人數',()=>{

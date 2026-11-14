@@ -1,26 +1,26 @@
 {
-  "date": "2026-10-03",
+  "date": "2026-11-14",
   "scope": "使用者提供資料夾內 Q001 至 Q066 的全部 66 筆問答紀錄，逐筆讀取正文與後續補充。另保留原版 CLASS 存檔映射，不代表平台未提供的其他頁面。 另核對本次可讀的「全部單元」第 1–2 頁，逐筆對照列於 classroomImports。",
   "summary": {
     "sourceRecords": 66,
     "recordsWithQuestions": 61,
     "nonQuestionRecords": 5,
     "mappedSubquestions": 104,
-    "publishedQuestions": 73,
+    "publishedQuestions": 75,
     "addedQuestions": 40
   },
-  "ranking": "首頁「新手最常卡住」依 09/12 第一筆跟課實作提問之後的不同留言串數排序，同數再看全部留言串數與最近提問日期，其餘題目依全部留言串數排序。只算原始紀錄與上課教室匯入紀錄，舊課堂存檔對照與後續補圖不另計，同一則留言拆成多題時各算一次。頁面不顯示人數，新增題目或來源後執行 npm run rank 重新統計。",
+  "ranking": "首頁「新手最常卡住」依 09/12 第一筆跟課實作提問之後的不同留言串數排序，同數再看全部留言串數與最近提問日期，其餘題目依全部留言串數排序。只算原始紀錄，上課教室與公開留言的匯入紀錄，舊課堂存檔對照與後續補圖不另計，同一則留言拆成多題時各算一次。頁面不顯示人數，新增題目或來源後執行 npm run rank 重新統計。",
   "priorityQuestionIds": [
     "qa-000051",
     "qa-000003",
     "qa-000053",
     "qa-000006",
+    "qa-000055",
     "qa-000054",
     "qa-000001",
     "qa-000002",
     "qa-000056",
-    "qa-000015",
-    "qa-000030"
+    "qa-000015"
   ],
   "followupsPending": [],
   "limitations": [
@@ -1301,7 +1301,7 @@
     }
   ],
   "classroomImports": {
-    "checkedAt": "2026-11-12",
+    "checkedAt": "2026-11-14",
     "sourceUrl": "https://sat.cool/classroom/201",
     "pagesReviewed": [
       1,
@@ -1309,12 +1309,28 @@
     ],
     "pagesShownInExport": 6,
     "summary": {
-      "threadsReviewed": 20,
+      "threadsReviewed": 21,
       "newQuestions": 11,
-      "updatedQuestions": 6,
-      "screenshotRefsInExports": 15
+      "updatedQuestions": 7,
+      "screenshotRefsInExports": 16
     },
     "records": [
+      {
+        "recordId": "CLASS-31",
+        "date": "2026-11-13",
+        "page": 1,
+        "lesson": "不分單元（學員註明單元 5-1）",
+        "replyDates": [
+          "2026-11-13"
+        ],
+        "screenshotRefs": 1,
+        "subquestions": [
+          {
+            "questionId": "qa-000055",
+            "part": "重建 bot 後沒有再出現配對碼"
+          }
+        ]
+      },
       {
         "recordId": "CLASS-11",
         "date": "2026-11-11",
@@ -1661,6 +1677,10 @@
       "total": 6,
       "afterOpen": 2
     },
+    "qa-000055": {
+      "total": 2,
+      "afterOpen": 2
+    },
     "qa-000054": {
       "total": 2,
       "afterOpen": 2
@@ -1681,8 +1701,8 @@
       "total": 4,
       "afterOpen": 1
     },
-    "qa-000030": {
-      "total": 2,
+    "qa-000035": {
+      "total": 4,
       "afterOpen": 1
     },
     "qa-000023": {
@@ -1701,10 +1721,6 @@
       "total": 4,
       "afterOpen": 0
     },
-    "qa-000035": {
-      "total": 3,
-      "afterOpen": 0
-    },
     "qa-000004": {
       "total": 3,
       "afterOpen": 0
@@ -1716,6 +1732,10 @@
     "qa-000011": {
       "total": 3,
       "afterOpen": 0
+    },
+    "qa-000030": {
+      "total": 2,
+      "afterOpen": 1
     },
     "qa-000005": {
       "total": 2,
@@ -1732,6 +1752,10 @@
     "qa-000024": {
       "total": 2,
       "afterOpen": 0
+    },
+    "qa-000075": {
+      "total": 1,
+      "afterOpen": 1
     },
     "qa-000063": {
       "total": 1,
@@ -1774,6 +1798,10 @@
       "afterOpen": 1
     },
     "qa-000073": {
+      "total": 1,
+      "afterOpen": 1
+    },
+    "qa-000074": {
       "total": 1,
       "afterOpen": 1
     },
@@ -1830,10 +1858,6 @@
       "afterOpen": 1
     },
     "qa-000057": {
-      "total": 1,
-      "afterOpen": 1
-    },
-    "qa-000055": {
       "total": 1,
       "afterOpen": 1
     },
@@ -1937,5 +1961,51 @@
       "total": 1,
       "afterOpen": 0
     }
+  },
+  "publicImports": {
+    "checkedAt": "2026-11-14",
+    "sourceUrl": "https://sat.cool/course/201/comment",
+    "note": "公開課程留言中，Q001 至 Q066 之後新增的留言串。",
+    "records": [
+      {
+        "recordId": "PUB-01",
+        "date": "2026-09-24",
+        "replyDates": [
+          "2026-09-25"
+        ],
+        "subquestions": [
+          {
+            "questionId": "qa-000074",
+            "part": "敏感個案資料的交接整理"
+          }
+        ]
+      },
+      {
+        "recordId": "PUB-02",
+        "date": "2026-10-09",
+        "replyDates": [
+          "2026-10-09"
+        ],
+        "subquestions": [
+          {
+            "questionId": "qa-000035",
+            "part": "FB 直播有沒有回放"
+          }
+        ]
+      },
+      {
+        "recordId": "PUB-03",
+        "date": "2026-11-11",
+        "replyDates": [
+          "2026-11-12"
+        ],
+        "subquestions": [
+          {
+            "questionId": "qa-000075",
+            "part": "已用其他自動發文工具會不會衝突"
+          }
+        ]
+      }
+    ]
   }
 }

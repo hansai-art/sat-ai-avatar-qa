@@ -25,7 +25,7 @@ for (const [index, id] of order.entries()) {
 }
 
 audit.priorityQuestionIds = starters;
-audit.ranking = `首頁「新手最常卡住」依 ${COURSE_OPENED_AT.slice(5).replace('-', '/')} 第一筆跟課實作提問之後的不同留言串數排序，同數再看全部留言串數與最近提問日期，其餘題目依全部留言串數排序。只算原始紀錄與上課教室匯入紀錄，舊課堂存檔對照與後續補圖不另計，同一則留言拆成多題時各算一次。頁面不顯示人數，新增題目或來源後執行 npm run rank 重新統計。`;
+audit.ranking = `首頁「新手最常卡住」依 ${COURSE_OPENED_AT.slice(5).replace('-', '/')} 第一筆跟課實作提問之後的不同留言串數排序，同數再看全部留言串數與最近提問日期，其餘題目依全部留言串數排序。只算原始紀錄，上課教室與公開留言的匯入紀錄，舊課堂存檔對照與後續補圖不另計，同一則留言拆成多題時各算一次。頁面不顯示人數，新增題目或來源後執行 npm run rank 重新統計。`;
 audit.askCounts = Object.fromEntries(order.map(id => [id, { total: counts.get(id).total, afterOpen: counts.get(id).afterOpen }]));
 fs.writeFileSync(auditPath, JSON.stringify(audit, null, 2) + '\n');
 
