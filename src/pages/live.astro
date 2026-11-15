@@ -1,9 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import {href} from '../lib/content';
 import {LIVE} from '../lib/live.mjs';
 ---
-<BaseLayout title={`${LIVE.name}｜學員專屬直播`} shareTitle={`${LIVE.name}｜${LIVE.title}`} description={`${LIVE.timeText}學員專屬直播，填寫 email 立刻收到直播連結，也可以先留下想問的問題。`} noindex>
+<BaseLayout title={`${LIVE.name}｜學員專屬直播`} shareTitle={`${LIVE.name}｜${LIVE.title}`} description={`${LIVE.timeText}學員專屬直播，填寫 email 立刻收到直播連結，也可以先留下想問的問題。`} noindex bare>
   <div class="live-page">
     <header class="live-hero">
       <p class="eyebrow">學員專屬直播</p>
@@ -47,7 +46,6 @@ import {LIVE} from '../lib/live.mjs';
         <ol>
           {LIVE.agenda.map(([head, body]) => <li><strong>{head}</strong><span>{body}</span></li>)}
         </ol>
-        <p class="live-more">平常遇到問題，可以先到<a href={href('/')}>問答庫</a>搜尋，或到上課教室的討論區發問。</p>
       </section>
     </div>
   </div>
@@ -93,7 +91,6 @@ import {LIVE} from '../lib/live.mjs';
   .live-agenda li::before{content:counter(agenda);position:absolute;left:18px;top:16px;width:26px;height:26px;border-radius:50%;background:var(--signal);color:#fff;font-size:.875rem;font-weight:700;display:grid;place-items:center;}
   .live-agenda strong{display:block;color:var(--ink);font-size:1.02rem;margin-bottom:2px;}
   .live-agenda span{display:block;color:var(--muted);font-size:.94rem;}
-  .live-more{font-size:.875rem;color:var(--muted);margin:16px 0 0;}
   @media(max-width:860px){
     .live-grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"signup" "agenda";}
     .live-signup{position:static;}
