@@ -1,0 +1,183 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import {href} from '../lib/content';
+import {LIVE} from '../lib/live.mjs';
+---
+<BaseLayout title={`${LIVE.name}｜學員專屬直播`} shareTitle={`${LIVE.name}｜${LIVE.title}`} description={`${LIVE.timeText}學員專屬直播，填寫 email 立刻收到直播連結，也可以先留下想問的問題。`} noindex>
+  <div class="live-page">
+    <header class="live-hero">
+      <p class="eyebrow">學員專屬直播</p>
+      <h1>{LIVE.name}</h1>
+      <p class="live-sub">{LIVE.title}</p>
+      <dl class="live-facts">
+        <div><dt>時間</dt><dd>{LIVE.timeText}</dd></div>
+        <div><dt>形式</dt><dd>{LIVE.format}</dd></div>
+        <div><dt>講師</dt><dd>林思翰 Hans</dd></div>
+      </dl>
+    </header>
+
+    <div class="live-grid">
+      <section class="live-signup" aria-labelledby="signup-title" data-endpoint={LIVE.endpoint}>
+        <form id="live-form" novalidate>
+          <h2 id="signup-title">填 email，立刻收到直播連結</h2>
+          <label for="live-email">Email</label>
+          <input id="live-email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" />
+          <label for="live-question">想在直播聽到什麼問題？<span class="live-optional">選填</span></label>
+          <textarea id="live-question" name="question" rows="4" maxlength="2000" placeholder="例如：課程裡的步驟跟現在的畫面不一樣，要怎麼調整？"></textarea>
+          <div class="live-hp" aria-hidden="true"><label>網站<input name="website" tabindex="-1" autocomplete="off" /></label></div>
+          <button type="submit" class="primary-button live-submit">寄給我直播連結</button>
+          <p class="live-error" role="alert" hidden></p>
+          <p class="live-note">送出後會立刻寄到你的信箱，這個頁面也會直接顯示連結。Email 只用來寄這場直播的連結。</p>
+        </form>
+        <div class="live-done" id="live-done" hidden tabindex="-1">
+          <p class="live-done-title">報名完成</p>
+          <div class="live-actions">
+            <a class="primary-button" id="live-join" href="#" target="_blank" rel="noopener">進入直播</a>
+            <a class="live-secondary" id="live-cal" href="#" target="_blank" rel="noopener">加入 Google 日曆</a>
+          </div>
+          <p class="live-done-msg" id="live-done-msg"></p>
+          <p class="live-link-text">直播連結：<a id="live-url-text" href="#" target="_blank" rel="noopener"></a></p>
+          <p class="live-q-ok" id="live-q-ok" hidden>你留下的問題我們收到了，直播時會挑大家最常問的一起回答。</p>
+          <button type="button" class="text-button live-again" id="live-again">再留一個問題</button>
+        </div>
+      </section>
+
+      <section class="live-agenda" aria-labelledby="agenda-title">
+        <h2 id="agenda-title">這場會聊什麼</h2>
+        <ol>
+          {LIVE.agenda.map(([head, body]) => <li><strong>{head}</strong><span>{body}</span></li>)}
+        </ol>
+        <p class="live-more">平常遇到問題，可以先到<a href={href('/')}>問答庫</a>搜尋，或到上課教室的討論區發問。</p>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .live-page{max-width:1000px;}
+  .live-hero{background:var(--surface);border-radius:18px;padding:30px 30px 26px;margin-bottom:20px;}
+  .live-hero .eyebrow{margin-bottom:10px;}
+  .live-hero h1{font-size:2.3rem;margin:0 0 6px;letter-spacing:-.02em;}
+  .live-sub{font-size:1.2rem;font-weight:650;color:var(--ink);margin:0 0 20px;}
+  .live-facts{display:flex;flex-wrap:wrap;gap:10px;margin:0;}
+  .live-facts div{background:var(--card);border-radius:12px;padding:10px 16px;}
+  .live-facts dt{font-size:.75rem;color:var(--muted);margin:0 0 2px;}
+  .live-facts dd{margin:0;font-weight:650;color:var(--ink);}
+  .live-grid{display:grid;grid-template-columns:minmax(0,1fr) 400px;grid-template-areas:"agenda signup";gap:20px;align-items:start;}
+  .live-signup{grid-area:signup;background:var(--signal-wash);border-radius:18px;padding:24px;position:sticky;top:20px;}
+  .live-signup h2{font-size:1.15rem;margin:0 0 4px;color:var(--ink);}
+  .live-signup label{display:block;font-size:.875rem;font-weight:650;color:var(--ink);margin:16px 0 6px;}
+  .live-optional{font-weight:400;color:var(--muted);margin-left:8px;}
+  .live-signup input,.live-signup textarea{display:block;width:100%;border:0;border-radius:10px;background:var(--card);color:var(--ink);padding:12px 14px;font:inherit;font-size:16px;line-height:1.6;}
+  .live-signup textarea{resize:vertical;min-height:110px;}
+  .live-signup input:focus,.live-signup textarea:focus{outline:none;box-shadow:0 0 0 2px var(--signal);}
+  .live-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+  .live-submit{width:100%;min-height:48px;margin-top:18px;font-size:1rem;border:0;}
+  .live-submit[disabled]{opacity:.65;cursor:progress;}
+  .live-note{font-size:.81rem;color:var(--muted);margin:12px 0 0;line-height:1.7;}
+  .live-error{background:var(--flare-wash);color:var(--flare-ink);border-radius:10px;padding:10px 12px;font-size:.875rem;margin:12px 0 0;}
+  .live-done:focus{outline:none;}
+  .live-done-title{font-size:1.25rem;font-weight:700;color:var(--ink);margin:0 0 14px;}
+  .live-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+  .live-actions .primary-button{flex:1 1 140px;border:0;white-space:nowrap;}
+  .live-secondary{flex:1 1 140px;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:9px 16px;border-radius:8px;background:var(--card);color:var(--signal-ink);font-weight:600;}
+  .live-secondary:hover{text-decoration:none;opacity:.9;}
+  .live-done-msg{font-size:.94rem;color:var(--text);margin:0 0 10px;line-height:1.75;}
+  .live-link-text{font-size:.81rem;color:var(--muted);overflow-wrap:anywhere;margin:0 0 10px;}
+  .live-q-ok{font-size:.875rem;background:var(--card);border-radius:10px;padding:10px 12px;color:var(--text);margin:0 0 6px;}
+  .live-again{padding-left:0;}
+  .live-agenda{grid-area:agenda;}
+  .live-agenda h2{font-size:1.3rem;margin:4px 0 14px;}
+  .live-agenda ol{list-style:none;padding:0;margin:0;display:grid;gap:10px;counter-reset:agenda;}
+  .live-agenda li{counter-increment:agenda;position:relative;background:var(--surface);border-radius:14px;padding:16px 18px 16px 58px;}
+  .live-agenda li::before{content:counter(agenda);position:absolute;left:18px;top:16px;width:26px;height:26px;border-radius:50%;background:var(--signal);color:#fff;font-size:.875rem;font-weight:700;display:grid;place-items:center;}
+  .live-agenda strong{display:block;color:var(--ink);font-size:1.02rem;margin-bottom:2px;}
+  .live-agenda span{display:block;color:var(--muted);font-size:.94rem;}
+  .live-more{font-size:.875rem;color:var(--muted);margin:16px 0 0;}
+  @media(max-width:860px){
+    .live-grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"signup" "agenda";}
+    .live-signup{position:static;}
+  }
+  @media(max-width:767px){
+    .live-hero{padding:22px 18px 20px;border-radius:16px;margin-bottom:16px;}
+    .live-hero h1{font-size:1.8rem;}
+    .live-sub{font-size:1.05rem;margin-bottom:16px;}
+    .live-facts{flex-direction:column;gap:6px;}
+    .live-facts div{display:flex;align-items:baseline;gap:14px;padding:10px 14px;}
+    .live-facts dt{margin:0;flex:0 0 2.6em;font-size:.81rem;}
+    .live-signup{padding:20px 16px;border-radius:16px;}
+    .live-actions{flex-direction:column;}
+    .live-actions .primary-button,.live-secondary{flex:none;width:100%;min-height:48px;}
+    .live-agenda li{padding:14px 14px 14px 52px;}
+    .live-agenda li::before{left:14px;top:14px;}
+  }
+</style>
+
+<script>
+  const box = document.querySelector<HTMLElement>('.live-signup')!;
+  const form = document.querySelector<HTMLFormElement>('#live-form')!;
+  const done = document.querySelector<HTMLElement>('#live-done')!;
+  const errorBox = form.querySelector<HTMLElement>('.live-error')!;
+  const submit = form.querySelector<HTMLButtonElement>('.live-submit')!;
+  const endpoint = box.dataset.endpoint || '';
+  const STORE = 'qa-live-1125';
+
+  type Result = {email: string; liveUrl: string; calendarUrl: string; sent: boolean; asked: boolean};
+
+  function showError(msg: string) { errorBox.textContent = msg; errorBox.hidden = false; }
+
+  function showDone(r: Result, fresh: boolean) {
+    const msg = done.querySelector('#live-done-msg')!;
+    msg.textContent = !fresh
+      ? `你之前已經用 ${r.email} 報名過，直播連結在這裡。`
+      : r.sent
+        ? `直播連結已經寄到 ${r.email}，沒收到的話看一下垃圾信件匣，也可以直接從這裡進入。`
+        : '這次沒有寄出信件，直播連結就在這裡，記得加入日曆。';
+    for (const id of ['#live-join', '#live-url-text']) done.querySelector<HTMLAnchorElement>(id)!.href = r.liveUrl;
+    done.querySelector('#live-url-text')!.textContent = r.liveUrl;
+    done.querySelector<HTMLAnchorElement>('#live-cal')!.href = r.calendarUrl;
+    done.querySelector<HTMLElement>('#live-q-ok')!.hidden = !(fresh && r.asked);
+    form.hidden = true;
+    done.hidden = false;
+    if (fresh) done.focus();
+  }
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORE) || 'null');
+    if (saved?.liveUrl && saved?.email) showDone(saved, false);
+  } catch {}
+
+  done.querySelector('#live-again')!.addEventListener('click', () => {
+    done.hidden = true;
+    form.hidden = false;
+    errorBox.hidden = true;
+    (form.elements.namedItem('question') as HTMLTextAreaElement).value = '';
+    (form.elements.namedItem('question') as HTMLTextAreaElement).focus();
+  });
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    errorBox.hidden = true;
+    const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim();
+    const question = (form.elements.namedItem('question') as HTMLTextAreaElement).value.trim();
+    const website = (form.elements.namedItem('website') as HTMLInputElement).value;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { showError('請填寫正確的 Email，直播連結會寄到這裡。'); return; }
+    if (!endpoint) { showError('報名系統還在準備中，請稍後再試。'); return; }
+    submit.disabled = true;
+    submit.textContent = '送出中…';
+    try {
+      const res = await fetch(endpoint, {method: 'POST', body: JSON.stringify({email, question, website})});
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error || '送出失敗，請再試一次。');
+      if (!data.liveUrl) throw new Error('送出失敗，請再試一次。');
+      const result: Result = {email, liveUrl: data.liveUrl, calendarUrl: data.calendarUrl, sent: !!data.sent, asked: !!question};
+      try { localStorage.setItem(STORE, JSON.stringify(result)); } catch {}
+      showDone(result, true);
+    } catch (err) {
+      showError(err instanceof Error && err.message && !/fetch|network|JSON/i.test(err.message) ? err.message : '送出失敗，請檢查網路後再試一次。');
+    } finally {
+      submit.disabled = false;
+      submit.textContent = '寄給我直播連結';
+    }
+  });
+</script>

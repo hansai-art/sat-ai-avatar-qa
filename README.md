@@ -151,3 +151,12 @@ VERIFY_URL=https://sathans.pages.dev npm run test:e2e
 ## 使用聲明
 
 公開 repository 不等於已選定開源授權。本階段未替程式、問答、教材或圖片授予 MIT／CC 等對外授權；由 Hans 決定後另補相應聲明。第三方套件維持其原授權。
+
+## 直播報名頁
+
+`/live/` 是學員專屬直播的報名頁，不列進網站地圖，也設定不被搜尋引擎收錄。學員填 email 和想問的問題後，資料由 Google Apps Script 寫進 Hans 雲端的「AI 分身小教室 1125 直播報名與提問」試算表，並從 Hans 的 Google 信箱寄出直播連結，頁面同時顯示連結與加入 Google 日曆按鈕。
+
+- 直播名稱、時間、內容與 Apps Script 網址在 `src/lib/live.mjs`。
+- Apps Script 原始碼在 `scripts/live-signup/Code.gs`，直播連結只放在 Google 端的專案裡，不寫進網站原始碼，避免沒報名的人從網頁看到。
+- 下一場直播要換連結或時間時，改 Apps Script 專案裡的 `CONFIG` 後重新部署同一個部署作業，再改 `src/lib/live.mjs` 的頁面文字。
+
