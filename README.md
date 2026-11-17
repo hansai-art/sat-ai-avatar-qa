@@ -154,7 +154,7 @@ VERIFY_URL=https://sathans.pages.dev npm run test:e2e
 
 ## 直播報名頁
 
-`/live/` 是學員專屬直播的報名頁，不列進網站地圖，也設定不被搜尋引擎收錄。學員填 email 和想問的問題後，資料由 Google Apps Script 寫進 Hans 雲端的「AI 分身小教室 1125 直播報名與提問」試算表，並從 Hans 的 Google 信箱寄出直播連結，頁面同時顯示連結與加入 Google 日曆按鈕。
+`/live/` 是學員專屬直播的報名頁，不列進網站地圖，也設定不被搜尋引擎收錄。學員填 email 和想問的問題後，資料由 Google Apps Script 寫進 Hans 雲端的「AI 分身小教室 1130 直播報名與提問」試算表，並從 Hans 的 Google 信箱寄出直播連結，頁面同時顯示連結與加入 Google 日曆按鈕。
 
 - 直播名稱、時間、內容與 Apps Script 網址在 `src/lib/live.mjs`。
 - Apps Script 原始碼在 `scripts/live-signup/Code.gs`，直播連結只放在 Google 端的專案裡，不寫進網站原始碼，避免沒報名的人從網頁看到。

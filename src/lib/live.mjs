@@ -3,7 +3,7 @@
 export const LIVE = {
   name: 'AI 分身小教室',
   title: '開課三個月，AI 又變了哪些？',
-  timeText: '11/25（三）晚上 7:30',
+  timeText: '11/30（一）晚上 7:30',
   format: 'Google Meet 線上直播',
   endpoint: 'https://script.google.com/macros/s/AKfycbwbYX4Lo3szKIVDIcu5HIeoW97zfFOGX_Pz5eWOTFvHPoOmIuiBKLURDrcHdbHZTIMI/exec',
   agenda: [

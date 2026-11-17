@@ -6,9 +6,9 @@ const CONFIG = {
   SHEET_NAME: '報名',
   LIVE_NAME: 'AI 分身小教室',
   LIVE_TITLE: 'AI 分身小教室｜開課三個月，AI 又變了哪些？',
-  LIVE_TIME_TEXT: '11/25（三）晚上 7:30',
-  LIVE_START: '20261125T193000',
-  LIVE_END: '20261125T210000',
+  LIVE_TIME_TEXT: '11/30（一）晚上 7:30',
+  LIVE_START: '20261130T193000',
+  LIVE_END: '20261130T210000',
   LIVE_URL: '在 Apps Script 專案裡填',
   SENDER_NAME: '林思翰 Hans',
 };
