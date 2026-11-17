@@ -24,5 +24,13 @@ export function renderPlainText(text) {
 
 export function plainTextExcerpt(text, max = 160) {
   const flat = String(text).replace(/\s+/g, ' ').trim();
-  return [...flat].length > max ? [...flat].slice(0, max).join('') + '…' : flat;
+  const chars = [...flat];
+  if (chars.length <= max) return flat;
+  let cut = max;
+  // 截斷點落在英文單字中間時，退回前一個空白，避免出現 choos… 這種半個字。
+  if (/[A-Za-z0-9]/.test(chars[cut - 1]) && /[A-Za-z0-9]/.test(chars[cut])) {
+    const space = chars.lastIndexOf(' ', cut - 1);
+    if (space > max - 16) cut = space;
+  }
+  return chars.slice(0, cut).join('').trimEnd() + '…';
 }

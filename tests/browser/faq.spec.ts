@@ -113,7 +113,7 @@ test('所有答案均有直接入口與匿名來源，編輯註記不進正文',
  }
 });
 
-test('桌機依序呈現學員提問、講師回覆與延伸補充，無目錄或重複步驟區，相關題目只有標題',async({page})=>{
+test('桌機依序呈現學員提問、講師回覆與延伸補充，無目錄或重複步驟區，右側相似問題只有標題',async({page})=>{
  await page.setViewportSize({width:1440,height:1000});await page.goto('questions/qa-000013/');await page.evaluate(()=>document.fonts.ready);
  const question=page.locator('.thread-question');
  const reply=page.getByRole('region',{name:'講師回覆',exact:true}),supplement=page.getByRole('region',{name:'延伸補充',exact:true});
@@ -132,12 +132,13 @@ test('桌機依序呈現學員提問、講師回覆與延伸補充，無目錄�
  const [questionBg,replyBg]=await Promise.all([question.evaluate(n=>getComputedStyle(n).backgroundColor),reply.evaluate(n=>getComputedStyle(n).backgroundColor)]);
  expect(questionBg).not.toBe(replyBg);
  expect(await question.evaluate(n=>getComputedStyle(n).borderTopWidth)).toBe('0px');
- expect((await page.locator('.answer').boundingBox())!.width).toBeLessThanOrEqual(720);
+ expect((await page.locator('.answer').boundingBox())!.width).toBeLessThanOrEqual(760);
  await expect(page.locator('.sidebar .chapter-nav.active')).toContainText('第 2 章');
  await expect(page.locator('.mobile-toc,.article-aside,[data-toc-link],.first-step,.operation-path')).toHaveCount(0);
  await page.goto('questions/qa-000002/');
  await expect(page.locator('.prose ol>li').first()).toContainText('Settings → Providers');
- await page.locator('#feedback-no').click();const related=page.locator('.related-links a').first();await expect(related).toHaveAttribute('href',/questions\/qa-\d+\//);
+ await expect(page.locator('.similar-bottom')).toBeHidden();
+ const related=page.locator('.similar-rail .similar-link').first();await expect(related).toHaveAttribute('href',/questions\/qa-\d+\//);
  expect((await related.boundingBox())!.height).toBeGreaterThanOrEqual(44);
  const target=await related.getAttribute('href');await related.click();expect(new URL(page.url()).pathname).toBe(target);
  await page.goto('questions/qa-000001/#conclusion');await expect(page.locator('#conclusion')).toBeInViewport();

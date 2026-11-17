@@ -6,13 +6,14 @@ import '../styles/student-experience.css';
 import '../styles/sathans-v2.css';
 import '../styles/novice-roadmap.css';
 import '../styles/qa-thread.css';
+import '../styles/similar-peer.css';
 import {Image,getImage} from 'astro:assets';
 import portrait from '../assets/brand/hans-portrait.jpg';
 import {taxonomy,href,label,buildMode,getPublished} from '../lib/content';
 import {getInstallSteps} from '../lib/install-steps';
 const portraitIcon=await getImage({src:portrait,width:64,height:64,fit:'cover',position:'top',format:'png'});
-interface Props {title:string;description?:string;noindex?:boolean;searchFirst?:boolean;activeChapter?:string;shareTitle?:string;bare?:boolean;}
-const {title,description='依課程章節、工具與問題類型查找知識衛星 AI 分身課程問答。',noindex=false,searchFirst=false,activeChapter,shareTitle=title,bare=false}=Astro.props;
+interface Props {title:string;description?:string;noindex?:boolean;searchFirst?:boolean;activeChapter?:string;shareTitle?:string;bare?:boolean;wide?:boolean;}
+const {title,description='依課程章節、工具與問題類型查找知識衛星 AI 分身課程問答。',noindex=false,searchFirst=false,activeChapter,shareTitle=title,bare=false,wide=false}=Astro.props;
 const canonical=!noindex&&Astro.site?.protocol==='https:' ? new URL(Astro.url.pathname,Astro.site).href : undefined;
 const socialSiteName='AI 分身課程問答資料庫';
 const socialImage=new URL(href('/social-preview.png'),Astro.site||Astro.url.origin).href;
@@ -36,7 +37,7 @@ const hasInstallSteps=(await getInstallSteps()).length>0;
     <script is:inline>try{if(localStorage.getItem('qa-theme')==='dark'){document.documentElement.dataset.theme='dark';document.getElementById('theme-color').content='#0f131b';}}catch{}</script>
     <link rel="icon" type="image/png" sizes="64x64" href={portraitIcon.src}/>
   </head>
-  <body class:list={["zh-ui",{"bare-page":bare}]}>
+  <body class:list={["zh-ui",{"bare-page":bare,"wide-page":wide}]}>
     <a class="skip-link" href="#main">跳到主要內容</a>
     {buildMode==='demo'&&<div class="demo-banner"><strong>架構預覽</strong><span>以下為示範資料，非正式課程答案</span></div>}
     <header class="site-header">

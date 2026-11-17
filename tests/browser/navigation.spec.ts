@@ -22,10 +22,10 @@ test('零結果提供可執行的換說法與留言入口',async({page})=>{
  await page.locator('.search-suggestions').getByRole('button',{name:'沒回應',exact:true}).click();
  await expect(page.locator('#result-list [data-question-id="qa-000054"]')).toBeVisible();await expect(page.getByLabel('搜尋問題',{exact:true})).toHaveValue('沒回應');
 });
-test('未解決展開一次相關題目與可複製求助格式，不假裝已送出',async({page,context})=>{
+test('未解決提示先看相似問題，並展開可複製求助格式，不假裝已送出',async({page,context})=>{
  await context.grantPermissions(['clipboard-read','clipboard-write']);await page.goto('questions/qa-000001/');
  await expect(page.locator('#feedback-help')).toBeHidden();await page.locator('#feedback-no').click();
- await expect(page.locator('#feedback-help')).toBeVisible();await expect(page.locator('#related-questions')).toHaveCount(1);
+ await expect(page.locator('#feedback-help')).toBeVisible();await expect(page.locator('#feedback-status')).toContainText('相似問題');await expect(page.locator('#feedback-help .related-links')).toHaveCount(0);
  await expect(page.locator('#feedback-template')).toHaveValue(/BotFather[\s\S]*作業系統與版本：[\s\S]*做到第幾步：[\s\S]*錯誤訊息/);
  await page.locator('#copy-question').click();await expect(page.locator('#feedback-status')).toContainText('已複製');
  expect(await page.evaluate(()=>navigator.clipboard.readText())).toContain('questions/qa-000001/');

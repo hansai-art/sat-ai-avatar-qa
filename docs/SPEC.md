@@ -68,7 +68,9 @@ flowchart TD
 | src/data/taxonomy.json | 所有分類與工具別名 |
 | src/assets/questions/qa-000001/ | 對應問答的已處理圖片 |
 | src/content.config.ts | Astro Content Collection schema |
-| src/lib/content.ts | 資料驗證、發布篩選、分類查詢與相關問題 |
+| src/lib/content.ts | 資料驗證、發布篩選、分類查詢與相似問題 |
+| src/lib/similar.mjs | 相似問題的文字與課程位置計分，建置時算一次 |
+| src/lib/peer-markdown.mjs | 「其他同學也遇到」卡片回答的安全 Markdown |
 | src/lib/paths.ts | 唯一的站內網址／base path 組合工具 |
 | src/lib/search-state.ts | URL 參數解析、輸入正規化與條件序列化 |
 | src/layouts/BaseLayout.astro | 共同頁框、meta、導覽 |
@@ -123,7 +125,8 @@ flowchart TD
 | reviewNote | string 或 null | 公開可見的待更新／封存原因；不得放內部私人筆記 |
 | appliesTo | string 或 null | 版本、方案及適用前提，沒有確切版本則如實描述 |
 | featured | boolean，預設 false | published＋verified 才能為 true |
-| related | string[]，預設 [] | 已存在且非 draft 問題 ID；最多 4 筆，不能含自己 |
+| related | string[]，預設 [] | 已存在且非 draft 問題 ID；最多 4 筆，不能含自己；相似問題排序會優先採用 |
+| peerCases | object[]，預設 [] | 其他同學問過同一件事的不同狀況，最多 8 張卡；每張卡的 records 必須是本題 sourceRefs 的紀錄，askedAt 要和其中一筆一致，同一筆紀錄不可出現在兩張卡；question 是整理者轉述，answer 是 Markdown，不接受 HTML、圖片與標題，細節見 FAQ-ANSWER-STANDARD.md |
 | supersededBy | string 或 null | 封存後的替代題 ID；不得指自己或形成循環 |
 | sources | object[]，預設 [] | 公開來源說明；發布至少一筆，細節見 3.4 |
 | videos | object[]，預設 [] | 最多 6 筆安全 HTTPS 影片連結；見 3.5 |
@@ -305,7 +308,7 @@ Astro config：
 5. 最近內容更新日及最後人工確認日。
 6. Markdown 正文、圖片與必要程式碼。
 7. 影片連結、來源。
-8. 相關問題與回到查找入口。
+8. 其他同學也遇到、相似問題（電腦版右側欄，手機版接在延伸補充後）與回到查找入口。
 
 正文建議使用「如何處理」「為什麼」「還是不行時」等符合題目的小標；不強制所有文章使用相同段落。頁面已有 H1，正文從 H2 開始。兩個以上 H2 才顯示簡單文章目錄，避免短題增加空架構。
 
@@ -422,9 +425,15 @@ URL 參數：
 - 複製按鈕失敗時顯示可選取的網址，不回報複製成功。
 - V1 沒有提問後端；「回課程提問」只是一個已確認的外部連結。
 
-## 7. 相關問題與去重
+## 7. 相似問題與去重
 
-先採用編輯者 related（最多 4 筆）；不足時以 shared tool 2 分／shared chapter 1 分／same type 1 分選補。候選限本次 build mode 可索引的 published 集合，再排除自己；因此 production 不會推薦 demo，demo 模式只推薦示範題。分數相同依 updatedAt 倒序，再依 qaId 升序，最多顯示 4 筆；沒有候選就隱藏整段。
+> 2026-11-17 改版：原本藏在「還沒解決」裡的 4 筆相關問題，改成每題都看得到的「相似問題」。
+
+相似度在建置時用 `src/lib/similar.mjs` 算一次，只在已發布題目之間比對。文字相近度佔一半：題目、關鍵字、摘要與學員原始提問開頭 280 字，中文以兩字一組、英文以單字比對，依稀有程度加權後取餘弦相似度。另一半是課程位置：同一小節 15%、同一個安裝步驟 10%（相鄰步驟 4%）、同樣的工具 10%（依稀有程度加權）、同一章 5%、同一問題類型 3%，編輯在本題指定的 related 加 20%，對方指向本題加 10%。每題取前 8 名，分數過低的不列，但至少保留 3 題。
+
+- 電腦版（1280px 以上）：右側固定欄顯示 8 題，捲動時停在畫面上，底部連到本章全部題目。問題頁外框加寬到 1520px，頁首與頁尾跟著對齊。
+- 手機與平板：不顯示右側欄，相似問題接在延伸補充後面，最多 5 題，已在「其他同學也問過」出現的題目不重複列。
+- 沒有 peerCases 的題目，延伸補充最後帶出相似度最高、且有原始問答的兩題，顯示學員原文與講師回覆節錄，整張卡可點。節錄不進本題的全文索引。
 
 自動推薦只是導覽，不改變內容正本或答案。去重由編輯流程做標題、工具、錯誤碼與既有答案檢索；V1 不自動合併，也不使用向量相似度當成合併依據。
 

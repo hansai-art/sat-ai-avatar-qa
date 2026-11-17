@@ -6,15 +6,17 @@ import InterfaceText from '../../components/InterfaceText.astro';
 import QuestionImages from '../../components/QuestionImages.astro';
 import AnswerFeedback from '../../components/AnswerFeedback.astro';
 import ImageViewer from '../../components/ImageViewer.astro';
-import {getQuestions,taxonomy,href,label,relatedQuestions,type Question} from '../../lib/content';
+import SimilarQuestions from '../../components/SimilarQuestions.astro';
+import {getQuestions,taxonomy,href,label,similarQuestions,type Question} from '../../lib/content';
 import {getInstallSteps,askedCount} from '../../lib/install-steps';
 import {Image} from 'astro:assets';
 import portrait from '../../assets/brand/hans-portrait.jpg';
-import {renderPlainText} from '../../lib/plain-text.mjs';
+import {renderPlainText,plainTextExcerpt} from '../../lib/plain-text.mjs';
+import {renderPeerMarkdown} from '../../lib/peer-markdown.mjs';
 export async function getStaticPaths(){return (await getQuestions()).map(q=>({params:{id:q.id},props:{question:q}}));}
 const q=Astro.props.question as Question,d=q.data;
 const {Content}=await render(q);
-const all=await getQuestions(),related=relatedQuestions(q,all);
+const similar=await similarQuestions(q,8);
 const installSteps=await getInstallSteps();
 const installStep=d.publication==='published'?installSteps.find(step=>step.questions.some(item=>item.id===q.id)):undefined;
 const asked=d.contentOrigin==='real'&&d.questionOrigin==='asked'?askedCount(q):0;
@@ -29,13 +31,22 @@ const [conclusion,...explanation]=d.summary.split(/(?<=[。！？])/u);
 const thread=d.originalThread;
 const askedAt=thread?.askedAt||[...d.sourceRefs].map(r=>r.askedAt).sort()[0];
 const slashDate=(day:string)=>day.replaceAll('-','/');
+// 延伸補充先放其他同學問過同一件事的不同狀況（整理者依留言紀錄寫）。
+// 沒有這類紀錄的題目，改帶出最相近的兩題其他同學提問，附學員原文與講師回覆節錄。
+const peers=await Promise.all(d.peerCases.map(async peer=>({...peer,html:await renderPeerMarkdown(peer.answer)})));
+const previews=peers.length?[]:similar.filter(item=>item.data.originalThread).slice(0,2);
+const bottomList=similar.filter(item=>!previews.includes(item)).slice(0,5);
+const chapterId=d.chapterRefs[0];
+const chapterTitle=taxonomy.chapters.find(c=>c.id===chapterId)?.title||label('chapters',chapterId);
+const chapterTotal=(await getQuestions()).filter(x=>x.data.publication==='published'&&x.data.chapterRefs.includes(chapterId)).length;
 ---
-<BaseLayout title={d.title} description={d.summary} noindex={!indexed} activeChapter={d.chapterRefs[0]}>
-  <nav class="breadcrumb answer-breadcrumb" aria-label="所在位置"><a href={href('/questions/')} id="back-to-search">全部問題</a><span aria-hidden="true">›</span><a href={href(`/chapters/${d.chapterRefs[0]}/`)}>{label('chapters',d.chapterRefs[0])}</a></nav>
+<BaseLayout title={d.title} description={d.summary} noindex={!indexed} activeChapter={chapterId} wide={similar.length>0}>
+  <div class:list={['article-shell',{'has-rail':similar.length>0}]}>
+  <div class="answer-column">
+  <nav class="breadcrumb answer-breadcrumb" aria-label="所在位置"><a href={href('/questions/')} id="back-to-search">全部問題</a><span aria-hidden="true">›</span><a href={href(`/chapters/${chapterId}/`)}>{label('chapters',chapterId)}</a></nav>
   <script is:inline define:vars={{searchPaths:[href('/'),href('/questions/')]}}>
     try {const previous=new URL(sessionStorage.getItem('qa-last-search')||searchPaths[1],location.origin);if(previous.origin===location.origin&&searchPaths.includes(previous.pathname)){const back=document.querySelector('#back-to-search');back.href=previous.pathname+previous.search;back.textContent=previous.search?'返回搜尋結果':'返回問題列表';}}catch{}
   </script>
-  <div class="article-shell">
     <article class="answer" data-pagefind-body={indexed?true:undefined}>
       <div class="qa-thread">
       <header class="answer-header thread-question" aria-label="學員提問">
@@ -70,16 +81,38 @@ const slashDate=(day:string)=>day.replaceAll('-','/');
         <QuestionImages question={q}/>
         <div class="prose zh-prose" id="first-step"><Content/></div>
         <QuestionImages question={q} placement="after"/>
+        {peers.length>0&&<section class="peer-cases" aria-labelledby="peer-heading" id="peer-cases">
+          <h2 id="peer-heading">其他同學也遇到</h2>
+          <p class="peer-lead" data-pagefind-ignore>其他同學問過同一件事，但卡的地方不太一樣，找跟你最像的情況。</p>
+          <ol class="peer-list">{peers.map(peer=><li class="peer-case">
+            <p class="peer-byline" data-pagefind-ignore><span class="thread-avatar thread-avatar-student" aria-hidden="true">學</span><span class="peer-who">同學問過</span><time datetime={peer.askedAt}>{slashDate(peer.askedAt)}</time></p>
+            <h3 class="peer-question">{peer.question}</h3>
+            <div class="peer-answer" set:html={peer.html}/>
+          </li>)}</ol>
+        </section>}
         {d.caution&&<aside class="answer-caution"><p><InterfaceText text={d.caution}/></p></aside>}
         {d.errorMessages.length>0&&<details class="error-text"><summary>對照錯誤訊息原文</summary>{d.errorMessages.map(error=><pre data-pagefind-weight="3"><code>{error}</code></pre>)}</details>}
         {d.videos.length>0&&<section class="video-section"><h2>影片補充</h2>{d.videos.map(v=><a class="video-card" href={v.url} target="_blank" rel="noopener noreferrer"><div><h3>{v.title}</h3><p>{v.description}</p>{v.timestampLabel&&<small>{v.timestampLabel}</small>}</div><span aria-hidden="true">↗</span></a>)}</section>}
         <nav class="next-links" aria-label="操作指南與課程入口">{d.nextLinks.map(link=><a href={link.url} target="_blank" rel="noopener noreferrer">{link.title} <span aria-hidden="true">↗</span></a>)}{!d.nextLinks.some(link=>link.url==='https://sat.cool/course/201/comment')&&<a href="https://sat.cool/course/201/comment" target="_blank" rel="noopener noreferrer">回課程留言提問 <span aria-hidden="true">↗</span></a>}</nav>
+        {previews.length>0&&<section class="peer-cases peer-related" aria-labelledby="peer-related-heading" id="peer-cases" data-pagefind-ignore>
+          <h2 id="peer-related-heading">其他同學也問過</h2>
+          <p class="peer-lead">跟這題相近的提問，附講師當時的回覆節錄。</p>
+          <ol class="peer-list">{previews.map(item=>{const t=item.data.originalThread!;return <li class="peer-case peer-preview">
+            <p class="peer-byline"><span class="thread-avatar thread-avatar-student" aria-hidden="true">學</span><span class="peer-who">學員提問</span><time datetime={t.askedAt}>{slashDate(t.askedAt)}</time></p>
+            <h3 class="peer-question"><a class="peer-link" href={href(`/questions/${item.id}/`)}>{item.data.title}</a></h3>
+            <p class="peer-quote">{plainTextExcerpt(t.question,72)}</p>
+            <div class="peer-reply"><p class="peer-byline"><span class="thread-avatar" aria-hidden="true"><Image src={portrait} width={56} alt="" format="webp" loading="lazy" decoding="async"/></span><span class="peer-who">林思翰</span><span class="instructor-badge">講師回覆</span></p><p>{plainTextExcerpt(t.replies[0].text,110)}</p></div>
+            <span class="peer-more" aria-hidden="true">看完整回答 ›</span>
+          </li>})}</ol>
+        </section>}
       </section>
+      {bottomList.length>0&&<SimilarQuestions class="similar-bottom" questions={bottomList} headingId="similar-bottom-heading" chapterId={chapterId} chapterTitle={chapterTitle} chapterTotal={chapterTotal}/>}
       {installStep&&<aside class="install-step-ref" aria-label="安裝流程位置" data-pagefind-ignore><p><strong>安裝流程第 {installStep.number} 步，共 {installSteps.length} 步</strong><span>{installStep.title}</span></p><a href={href(`/install/#${installStep.id}`)}>看前後步驟與其他常見卡關 <span aria-hidden="true">›</span></a></aside>}
       {lessons.length>0&&<section class="lesson-reference" aria-label="回課程對照" data-pagefind-ignore><h2>回課程對照</h2><ul>{lessons.map(l=><li><span>{l.id.replace(/ch0?/,'').replace('-0','-')} · {l.title}</span></li>)}</ul><a href="https://sat.cool/classroom/201" target="_blank" rel="noopener noreferrer">開啟上課教室，選上方單元 ↗</a></section>}
-      <AnswerFeedback question={q} related={related}/>
+      <AnswerFeedback question={q}/>
       <details class="sources" id="source-records" data-pagefind-ignore><summary>來源與核對紀錄</summary><div class="source-content">
         <p>提問來源：{d.questionOrigin==='asked'?'學員提問（已匿名）':'延伸問題，尚未收到學員提問'}{thread&&' · 學員提問與講師回覆依課程討論原文保留，只拿掉姓名與稱呼'}</p>
+        {peers.length>0&&<p>其他同學也遇到：依 {peers.flatMap(peer=>peer.records).join('、')} 留言紀錄整理，提問內容由整理者轉述，回答不是講師原話。</p>}
         <p>內容更新 <time datetime={d.updatedAt}>{d.updatedAt}</time> · 編輯核對 {d.verifiedAt||'未確認'}{d.reviewedBy&&` · ${taxonomy.contributors.find(c=>c.id===d.reviewedBy)?.name}`}</p>
         <p>對應章節：{d.chapterRefs.map(id=>label('chapters',id)).join('、')}{lessons.length>0&&` · ${lessons.map(l=>l.title).join('、')}`}</p>
         {d.reviewNote&&<p>{d.reviewNote}</p>}{d.editorialNotes.map(note=><p>{note}</p>)}
@@ -96,6 +129,10 @@ const slashDate=(day:string)=>day.replaceAll('-','/');
       <span hidden data-pagefind-filter={`origin:${d.questionOrigin}`} data-pagefind-meta={`questionOrigin:${d.questionOrigin}`}></span><span hidden data-pagefind-meta={`contentOrigin:${d.contentOrigin}`}></span>
       <span hidden data-pagefind-meta={`qaId:${q.id}`}></span><span hidden data-pagefind-meta={`updatedAt:${d.updatedAt}`} data-pagefind-sort={`updated:${d.updatedAt}`}></span><span hidden data-pagefind-meta={`answerStatus:${d.answerStatus}`}></span><span hidden data-pagefind-meta={`chapters:${d.chapterRefs.join(',')}`}></span><span hidden data-pagefind-meta={`tools:${d.toolRefs.join(',')}`}></span><span hidden data-pagefind-meta={`type:${d.type}`}></span>
     </article>
+  </div>
+  {similar.length>0&&<aside class="similar-rail" aria-labelledby="similar-rail-heading" data-pagefind-ignore>
+    <SimilarQuestions class="similar-rail-inner" questions={similar} headingId="similar-rail-heading" chapterId={chapterId} chapterTitle={chapterTitle} chapterTotal={chapterTotal}/>
+  </aside>}
   </div>
   <ImageViewer/>
 </BaseLayout>

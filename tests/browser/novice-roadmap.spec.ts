@@ -67,9 +67,10 @@ test('少見情況的截圖放在正文之後，不顯示未標示版本，也�
  await expect(page.locator('.prose strong').filter({hasText:'Allowed users'})).toHaveCount(1);
 });
 
-test('同學提問次數只算原始留言，求助格式用中文欄位並保留題號',async({page})=>{
+test('同學提問次數算不同的原始留言串，求助格式用中文欄位並保留題號',async({page})=>{
+ // Q003、Q018、Q036、Q047、Q049 加上上課教室的 CLASS-27，舊課堂存檔 CLASS-02、CLASS-04 不另計。
  await page.goto('questions/qa-000003/');
- await expect(page.locator('.asked-count')).toHaveText('5 則同學提問');
+ await expect(page.locator('.asked-count')).toHaveText('6 則同學提問');
  await page.locator('#feedback-no').click();
  const template=page.locator('#feedback-template');
  await expect(template).toHaveValue(/^題號（qa_id）：qa-000003\n/);

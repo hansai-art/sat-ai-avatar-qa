@@ -1,0 +1,106 @@
+/* 問題頁的「其他同學也遇到」與「相似問題」。
+   電腦版（1280px 以上）把相似問題放在右側欄，捲動時固定在畫面上，點一下就跳到那題。
+   手機與平板維持單欄，相似問題接在延伸補充後面。全部只用色塊區分，不加外框線。 */
+
+/* ===== 其他同學也遇到：每張卡是一位同學的狀況與整理回答 ===== */
+.zh-ui .peer-cases{margin:28px 0 0;}
+.zh-ui .peer-cases>h2{margin:0;font-size:18px;line-height:1.5;font-weight:650;color:var(--ink);}
+.zh-ui .peer-lead{margin:4px 0 14px;color:var(--muted);font-size:14px;line-height:1.6;}
+.zh-ui .peer-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:12px;}
+/* 原文節錄可能有很長的網址，卡片要能斷行，不能把手機版面撐寬 */
+.zh-ui .peer-case{position:relative;min-width:0;margin:0;padding:18px 20px 20px;background:var(--surface);border-radius:14px;overflow-wrap:anywhere;}
+.zh-ui .peer-byline{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;margin:0 0 8px;font-size:13px;line-height:1.4;color:var(--muted);}
+.zh-ui .peer-byline time{font-variant-numeric:tabular-nums;}
+.zh-ui .peer-byline .thread-avatar{width:26px;height:26px;font-size:12.5px;}
+.zh-ui .peer-who{color:var(--ink);font-size:14px;font-weight:650;}
+.zh-ui .peer-question{margin:0 0 10px;font-size:17px;line-height:1.55;font-weight:650;color:var(--ink);text-wrap:pretty;overflow-wrap:anywhere;}
+.zh-ui .peer-answer{font-size:16px;line-height:1.8;color:var(--text);overflow-wrap:anywhere;}
+.zh-ui .peer-answer>:first-child{margin-top:0;}
+.zh-ui .peer-answer>:last-child{margin-bottom:0;}
+.zh-ui .peer-answer p{margin:0 0 10px;}
+.zh-ui .peer-answer ul{margin:0 0 10px;padding-left:1.3em;}
+.zh-ui .peer-answer li{margin:0 0 6px;}
+/* 步驟編號跟延伸補充正文一樣用圓形數字，縮小一號放進卡片 */
+.zh-ui .peer-answer ol{list-style:none;counter-reset:peer-steps;margin:0 0 10px;padding:0;}
+.zh-ui .peer-answer ol>li{counter-increment:peer-steps;position:relative;padding:0 0 0 36px;margin:0 0 8px;}
+.zh-ui .peer-answer ol>li::before{content:counter(peer-steps);position:absolute;left:0;top:3px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:var(--paper);font-size:13px;font-weight:600;line-height:1;}
+.zh-ui .peer-answer code{font-family:var(--brand-font-mono);font-size:.92em;padding:1px 5px;border-radius:5px;background:var(--card);color:var(--ink);}
+.zh-ui .peer-answer a{color:var(--signal-ink);}
+
+/* 沒有同類留言的題目：帶出最相近的其他同學提問，整張卡都能點 */
+.zh-ui .peer-related{margin-top:36px;}
+.zh-ui .peer-preview{transition:background-color .15s;}
+.zh-ui .peer-preview:hover{background:var(--hair-soft);}
+.zh-ui .peer-preview .peer-question{margin-bottom:6px;}
+.zh-ui .peer-link{color:var(--ink);text-decoration:none;}
+.zh-ui .peer-link::after{content:"";position:absolute;inset:0;border-radius:14px;}
+.zh-ui .peer-link:hover{text-decoration:none;}
+.zh-ui .peer-preview:hover .peer-link{color:var(--signal-ink);}
+.zh-ui .peer-link:focus-visible{outline:none;}
+.zh-ui .peer-link:focus-visible::after{outline:3px solid var(--signal);outline-offset:2px;}
+.zh-ui .peer-quote{margin:0 0 12px;color:var(--text);font-size:15px;line-height:1.7;}
+.zh-ui .peer-reply{padding:12px 14px;background:var(--card);border-radius:10px;}
+.zh-ui .peer-reply .peer-byline{margin-bottom:6px;}
+.zh-ui .peer-reply .instructor-badge{height:20px;font-size:11.5px;}
+.zh-ui .peer-reply>p:last-child{margin:0;font-size:15px;line-height:1.7;color:var(--text);}
+.zh-ui .peer-more{display:inline-block;margin-top:10px;font-size:14px;font-weight:600;color:var(--signal-ink);}
+
+/* ===== 相似問題清單（右側欄與手機版共用） ===== */
+.zh-ui .similar-questions h2{margin:0 0 8px;color:var(--ink);}
+.zh-ui .similar-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);}
+.zh-ui .similar-link{display:block;color:var(--ink);text-decoration:none;}
+.zh-ui .similar-link:hover{text-decoration:none;}
+.zh-ui .similar-title{display:block;color:var(--ink);text-wrap:pretty;overflow-wrap:anywhere;}
+.zh-ui .similar-link:hover .similar-title{color:var(--signal-ink);}
+.zh-ui .similar-meta{display:block;margin-top:3px;font-size:12.5px;line-height:1.4;color:var(--muted);}
+.zh-ui .similar-more{display:inline-flex;align-items:center;gap:4px;color:var(--signal-ink);font-size:14px;font-weight:600;}
+
+/* 手機與平板：接在延伸補充後面，一題一個色塊，點擊區至少 44px */
+.zh-ui .similar-bottom{margin:44px 0 0;padding-inline:var(--question-gutter);}
+.zh-ui .similar-bottom h2{font-size:18px;line-height:1.5;font-weight:650;}
+.zh-ui .similar-bottom .similar-list{gap:8px;}
+.zh-ui .similar-bottom .similar-link{min-height:44px;padding:13px 16px;background:var(--surface);border-radius:12px;}
+.zh-ui .similar-bottom .similar-link:hover{background:var(--hair-soft);}
+.zh-ui .similar-bottom .similar-title{font-size:16px;line-height:1.55;font-weight:600;}
+.zh-ui .similar-bottom .similar-more{margin-top:12px;min-height:44px;}
+
+/* 右側欄預設不顯示，電腦版才出現 */
+.zh-ui .similar-rail{display:none;}
+.zh-ui .answer-column{min-width:0;}
+
+@media(min-width:1280px){
+  /* 有右側欄的問題頁把外框加寬，頁首與頁尾跟著對齊左側章節欄 */
+  .zh-ui.wide-page .app-shell:not(.search-first){max-width:1520px;}
+  .zh-ui.wide-page .site-header,.zh-ui.wide-page .site-footer{padding-left:max(32px,calc((100vw - 1520px)/2 + 32px));padding-right:max(32px,calc((100vw - 1520px)/2 + 32px));}
+  .zh-ui.wide-page .main-content{max-width:none;padding:40px 32px 64px;}
+  .zh-ui .article-shell.has-rail{display:grid;grid-template-columns:minmax(0,760px) clamp(272px,21vw,340px);column-gap:clamp(28px,2.6vw,48px);justify-content:center;align-items:start;}
+  .zh-ui .has-rail .answer,.zh-ui .has-rail .answer-breadcrumb{max-width:none;}
+  .zh-ui .has-rail .similar-bottom{display:none;}
+
+  .zh-ui .similar-rail{display:block;position:sticky;top:88px;margin-top:50px;max-height:calc(100dvh - 112px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;border-radius:16px;background:var(--surface);}
+  .zh-ui .similar-rail-inner{padding:18px 8px 14px;}
+  .zh-ui .similar-rail h2{margin:0 0 6px;padding:0 12px;font-size:15px;line-height:1.5;font-weight:650;letter-spacing:.02em;}
+  .zh-ui .similar-rail .similar-list{gap:2px;}
+  .zh-ui .similar-rail .similar-link{padding:9px 12px 10px;border-radius:10px;}
+  .zh-ui .similar-rail .similar-link:hover{background:var(--card);}
+  .zh-ui .similar-rail .similar-title{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-size:14.5px;line-height:1.55;font-weight:550;}
+  .zh-ui .similar-rail .similar-more{margin:8px 12px 2px;font-size:13.5px;}
+}
+@media(min-width:1440px){
+  .zh-ui.wide-page .main-content{padding:40px 40px 64px;}
+}
+
+@media(max-width:767px){
+  .zh-ui .peer-cases{margin-top:24px;}
+  .zh-ui .peer-cases>h2,.zh-ui .similar-bottom h2{font-size:17px;}
+  .zh-ui .peer-case{padding:16px 14px 18px;border-radius:12px;}
+  .zh-ui .peer-question{font-size:16.5px;}
+  .zh-ui .peer-related{margin-top:32px;}
+  .zh-ui .peer-reply{padding:12px;}
+  .zh-ui .similar-bottom{margin-top:36px;padding-inline:2px;}
+  .zh-ui .similar-bottom .similar-link{padding:12px 14px;}
+}
+
+:root[data-theme="dark"] .zh-ui .peer-preview:hover,:root[data-theme="dark"] .zh-ui .similar-bottom .similar-link:hover{background:var(--card);}
+:root[data-theme="dark"] .zh-ui .similar-rail .similar-link:hover{background:var(--paper);}
+:root[data-theme="dark"] .zh-ui .peer-reply{background:var(--paper);}

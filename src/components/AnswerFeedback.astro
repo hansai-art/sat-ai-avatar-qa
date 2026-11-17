@@ -1,7 +1,7 @@
 ---
-import {href,type Question} from '../lib/content';
-interface Props {question:Question;related:Question[]}
-const {question:q,related}=Astro.props;
+import {type Question} from '../lib/content';
+interface Props {question:Question}
+const {question:q}=Astro.props;
 ---
 <section class="answer-feedback" aria-labelledby="feedback-heading" data-pagefind-ignore data-id={q.id} data-qa-id={q.id} data-title={q.data.title}>
  <h2 id="feedback-heading">這題有解決你的問題嗎？</h2>
@@ -9,7 +9,6 @@ const {question:q,related}=Astro.props;
  <p id="feedback-status" role="status" class="muted"></p>
  <div id="feedback-help" hidden>
   <p class="muted">貼到課程留言時請保留題號 <code>{q.id}</code>，老師才知道你在問哪一題。</p>
-  {related.length>0&&<section id="related-questions" class="related-questions"><h3>也看看這幾題</h3><ul class="related-links">{related.map(item=><li><a href={href(`/questions/${item.id}/`)}>{item.data.title}</a></li>)}</ul></section>}
   <label for="feedback-kind">卡在哪裡</label>
   <select id="feedback-kind">
    <option value="answer-unclear">答案看不懂</option>
@@ -52,7 +51,7 @@ const {question:q,related}=Astro.props;
   function choose(solved:boolean){
    yes.setAttribute('aria-pressed',String(solved));no.setAttribute('aria-pressed',String(!solved));no.setAttribute('aria-expanded',String(!solved));help.hidden=solved;
    try{localStorage.setItem(`qa-feedback:${qaId}`,solved?'solved':'needs-help');}catch{}
-   status.textContent=solved?'已在本頁標記解決，不會送出資料。':'先看相關題目，或複製整理好的內容貼到課程留言。';
+   status.textContent=solved?'已在本頁標記解決，不會送出資料。':'先看看相似問題，或複製整理好的內容貼到課程留言。';
   }
   yes.addEventListener('click',()=>choose(true));no.addEventListener('click',()=>choose(false));
   document.querySelector('#copy-question')!.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(text.value);status.textContent='已複製，請到課程留言貼上並送出。';}catch{text.focus();text.select();status.textContent='請手動複製已選取的提問格式。';}});

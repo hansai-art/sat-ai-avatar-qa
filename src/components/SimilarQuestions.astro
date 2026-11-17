@@ -1,0 +1,20 @@
+---
+// 相似問題清單：電腦版放在右側欄（捲動時固定），手機與平板放在延伸補充後面。
+import {href,taxonomy,type Question} from '../lib/content';
+import {askedCount} from '../lib/install-steps';
+interface Props {questions:Question[];headingId:string;chapterId:string;chapterTitle:string;chapterTotal:number;class?:string}
+const {questions,headingId,chapterId,chapterTitle,chapterTotal,class:className}=Astro.props;
+const chapterShort=(id:string)=>taxonomy.chapters.find(c=>c.id===id)?.title||id;
+---
+<section class:list={['similar-questions',className]} aria-labelledby={headingId} data-pagefind-ignore>
+  <h2 id={headingId}>相似問題</h2>
+  <ol class="similar-list">
+    {questions.map(item=>{const count=askedCount(item);return <li>
+      <a class="similar-link" href={href(`/questions/${item.id}/`)}>
+        <span class="similar-title">{item.data.title}</span>
+        <span class="similar-meta">{chapterShort(item.data.chapterRefs[0])}{count>=2&&<> · {count} 則同學提問</>}</span>
+      </a>
+    </li>})}
+  </ol>
+  <a class="similar-more" href={href(`/chapters/${chapterId}/`)}>看{chapterTitle}全部 {chapterTotal} 題 <span aria-hidden="true">›</span></a>
+</section>

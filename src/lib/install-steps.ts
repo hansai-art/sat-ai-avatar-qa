@@ -1,5 +1,6 @@
 import steps from '../data/install-steps.json';
 import {taxonomy,buildMode,getPublished,type Question} from './content';
+import {countAskedThreads} from './ask-count.mjs';
 
 export interface InstallStep {id:string;title:string;short:string;lessons:string[];description:string;check:string;questions:string[]}
 export const installSteps=steps as InstallStep[];
@@ -24,5 +25,5 @@ export function resolveInstallSteps(published:Question[]){
 // 示範資料沒有正式題號，架構預覽不顯示安裝卡關地圖。
 export async function getInstallSteps(){return buildMode==='production'?resolveInstallSteps(await getPublished()):[];}
 export const lessonCode=(id:string)=>id.replace(/^ch0?(\d+)-0?(\d+)$/,'$1-$2');
-// 公開的同學提問次數只算原始留言（Q 編號）；舊課堂存檔與後續排錯畫面不另計。
-export const askedCount=(q:Question)=>new Set(q.data.sourceRefs.map(ref=>ref.recordId).filter(id=>/^Q\d+$/.test(id))).size;
+// 同學提問次數的算法放在 ask-count.mjs，單元測試會和 content-source-audit.json 的 askCounts 逐題比對。
+export const askedCount=(q:Question)=>countAskedThreads(q.data.sourceRefs);

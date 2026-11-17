@@ -37,6 +37,12 @@ export const questionSchema = z.object({
     replies: z.array(z.object({text:originalText,repliedAt:date}).strict()).min(1).max(6),
     excerpt: z.boolean().default(false)
   }).strict().optional(),
+  // 其他同學問過同一件事的不同狀況。每張卡對應 sourceRefs 裡的真實留言紀錄，
+  // question 是整理者轉述的同學狀況，answer 是整理者依講師回覆與課程內容寫的 Markdown，不是講師原話。
+  peerCases: z.array(z.object({
+    records: refs.min(1).max(4), askedAt: date, question: text(6,120),
+    answer: z.string().trim().refine(s => [...s].length >= 10 && [...s].length <= 1500, '需為 10～1500 字元').refine(s => !/<[^>]*>/.test(s), '回答不接受 HTML')
+  }).strict()).max(8).default([]),
   editorialNotes: z.array(text(1,800)).default([]),
   sourceRefs: z.array(z.object({recordId:text(1,80),part:text(1,120),askedAt:date}).strict()).default([]),
   askedBy: z.array(z.object({name:text(1,80),sourceUrl:https}).strict()).max(20).default([]),
@@ -89,7 +95,21 @@ export function validateQuestions(entries, taxonomy, mode, today=todayTaipei()) 
     if(d.lessonRefs.some(l=>!lessons.has(l) || !d.chapterRefs.includes(lessons.get(l)))) fail(id,'小節不存在或不屬於所選章節');
     if(d.reviewedBy && !taxonomy.contributors.some(c=>c.id===d.reviewedBy)) fail(id,'未知審核者');
     const thread=d.originalThread;
-    for(const day of [d.createdAt,d.updatedAt,d.verifiedAt,...d.sources.map(s=>s.checkedAt),...d.sourceRefs.map(s=>s.askedAt),thread?.askedAt,...(thread?.replies||[]).map(r=>r.repliedAt)].filter(Boolean)) if(day>today) fail(id,'日期不可在未來');
+    for(const day of [d.createdAt,d.updatedAt,d.verifiedAt,...d.sources.map(s=>s.checkedAt),...d.sourceRefs.map(s=>s.askedAt),thread?.askedAt,...(thread?.replies||[]).map(r=>r.repliedAt),...d.peerCases.map(p=>p.askedAt)].filter(Boolean)) if(day>today) fail(id,'日期不可在未來');
+    if(d.peerCases.length) {
+      if(d.questionOrigin!=='asked') fail(id,'只有學員已問的題目可以列其他同學的提問');
+      const refDates=new Map();
+      for(const ref of d.sourceRefs) refDates.set(ref.recordId,[...(refDates.get(ref.recordId)||[]),ref.askedAt]);
+      const used=new Set();
+      for(const peer of d.peerCases) {
+        for(const record of peer.records) {
+          if(!refDates.has(record)) fail(id,`其他同學的提問 ${record} 需對應此題的來源紀錄`);
+          if(used.has(record)) fail(id,`其他同學的提問 ${record} 不可重複出現在兩張卡`);
+          used.add(record);
+        }
+        if(!peer.records.some(record=>refDates.get(record).includes(peer.askedAt))) fail(id,'其他同學提問的日期需和來源紀錄一致');
+      }
+    }
     if(thread) {
       if(d.questionOrigin!=='asked') fail(id,'只有學員已問的題目可以放原始問答');
       if(thread.replies.some(r=>r.repliedAt<thread.askedAt)) fail(id,'講師回覆日期不可早於提問日期');
